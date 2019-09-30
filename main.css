@@ -6,6 +6,8 @@ body{
 	font: 16px/1.4 "Source Serif Pro", serif;
 	font-feature-settings: "kern", "liga";
     --sidebar-width: 250px;
+    --impl-sort: unset;
+    --fn-sort: none;
 }
 
 #infobox {
@@ -227,27 +229,17 @@ body{
     width: 1.2em;
     height: 1.2em;
 }
-.summary tr:nth-child(2n){
-    height: 1.2em;
-    background-color: rgb(230, 230, 230);
-}
-.summary.items td:nth-child(3n+2){
-    font-weight: bold;
-}
-.summary.methods td:nth-child(5n+3){
+.summary td:nth-child(5n+3){
     font-weight: bold;
     max-width: 8em;
     text-overflow: ellipsis;
     overflow: hidden;
 }
-.summary .summary.methods a {
+.summary .summary a {
     text-decoration: none;
     color: initial;
 }
-.summary .fullname {
-    display: none;    
-}
-.summary .fullimpl {
+.summary .fullname, .summary .fullimpl {
     display: none;    
 }
 .summary .expanded {
@@ -258,7 +250,39 @@ body{
     padding-top: 0.5em;
     margin-bottom: 0.4em;
 }
+.summary .eye {
+    cursor: pointer;
+    font-size: 90%;
+}
+.summary .fn_sort{
+    display: var(--fn-sort);
+}
+.summary .fn_sort tr:nth-child(2n){
+    height: 1.2em;
+    background-color: rgb(240, 240, 240);
+}
+.summary .impl_sort{
+    display: var(--impl-sort);
+}
+.summary .impl_sort .full_impl{
+    background-color: rgb(230, 230, 230);
+    font-weight: bold;
+    font: "Source Serif Pro";
+}
+.summary .impl_sort .full_impl br{
+    display: none;
+}
+.summary .impl_sort .full_impl code{
+    white-space: nowrap;
+}
+.summary .impl_sort td:nth-child(5n+3){
+    max-width: 9em;
+    padding-right: 1em; 
+}
 
+.summary .impl_type {
+    font-weight: bold;
+}
 /****************************************
  * Description              *
  ****************************************/
