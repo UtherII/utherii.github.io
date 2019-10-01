@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["black_box","An identity function that hints to the compiler to be maximally pessimistic about what `black_box` could do."],["spin_loop","Signals the processor that it is entering a busy-wait spin-loop."],["unreachable_unchecked","Informs the compiler that this point in the code is not reachable, enabling further optimizations."]]});

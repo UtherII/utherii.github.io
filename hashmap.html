@@ -5,11 +5,8 @@
     <!--<link rel="stylesheet" type="text/css" href="original.css" />-->
     <meta charset="utf-8" />
     <!-- meta http-equiv="refresh" content="3" -->
-</head>
-
-<body>
+    <!-- Load saved parameters that can alter the layout -->
     <script type="text/javascript">
-        // Load saved parameters
         var slider_position = localStorage.getItem("slider");
         if (slider_position != null) {
             document.body.style.setProperty("--sidebar-width", slider_position + "px");
@@ -23,22 +20,26 @@
             document.body.style.setProperty("--impl-sort", "none");
             document.body.style.setProperty("--fn-sort", "unset");
         }
-
     </script>
+</head>
+
+<body>
+    <!-- The invisible item that will contain the original documentation page -->
+    <section id="source" style="display: none">
+
+    </section>
+
+    <!-- The box used to dispay advanced tooltips -->
     <nav id="infobox" class="infobox">
         Tooltip text.
     </nav>
+
+    <!-- The resizable sidebar -->
     <nav class="sidebar" id="sidebar">
-        <div class="crateinfo">
+        <div id="crateinfo" class="crateinfo">
             <img class="logo" src="img/logo.png" /><br>
             Rust standard library
         </div>
-        <!--
-        <div id="debug">
-            scrolltop: <span id="scrollTop">x</span><br>
-            offsetTop: <span id="offsetTop">x</span>
-        </div>
-        -->
         <hr>
         <div class="searchbox">
             Search: <br>
@@ -2765,7 +2766,7 @@ We must also derive <a href="../../std/cmp/trait.PartialEq.html"><code>PartialEq
             </section>
             <hr>
 
-            <setion id="methods" class="methods">
+            <section id="methods" class="methods">
 <h2 id="title-methods" class="small-section-header">Methods<a href="#methods" class="anchor"></a></h2><h3 id="impl" class="impl" style="display: flex;"><code class="in-band">impl&lt;K:&nbsp;<a class="trait" href="../../std/hash/trait.Hash.html" title="trait std::hash::Hash">Hash</a> + <a class="trait" href="../../std/cmp/trait.Eq.html" title="trait std::cmp::Eq">Eq</a>, V&gt; <a class="struct" href="../../std/collections/struct.HashMap.html" title="struct std::collections::HashMap">HashMap</a>&lt;K, V, <a class="struct" href="../../std/collections/hash_map/struct.RandomState.html" title="struct std::collections::hash_map::RandomState">RandomState</a>&gt;</code><a href="#impl" class="anchor"></a><a class="srclink" href="../../src/std/collections/hash/map.rs.html#211-245" title="goto source code">[src]</a><a href="javascript:void(0)" class="collapse-toggle">[<span class="inner">−</span>]</a></h3><div class="impl-items" style="display: block;"><h4 id="method.new" class="method"><code id="new.v">pub fn <a href="#method.new" class="fnname">new</a>() -&gt; <a class="struct" href="../../std/collections/struct.HashMap.html" title="struct std::collections::HashMap">HashMap</a>&lt;K, V, <a class="struct" href="../../std/collections/hash_map/struct.RandomState.html" title="struct std::collections::hash_map::RandomState">RandomState</a>&gt;</code><a class="srclink" href="../../src/std/collections/hash/map.rs.html#225-227" title="goto source code">[src]</a><a href="javascript:void(0)" class="collapse-toggle">[<span class="inner">−</span>]</a></h4><div class="docblock"><p>Creates an empty <code>HashMap</code>.</p>
 <p>The hash map is initially created with a capacity of 0, so it will not allocate until it
 is first inserted into.</p>

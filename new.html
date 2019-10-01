@@ -1,0 +1,520 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="main.css" />
+    <!--<link rel="stylesheet" type="text/css" href="original.css" />-->
+    <meta charset="utf-8" />
+    <!-- meta http-equiv="refresh" content="3" -->
+</head>
+
+<body>
+    <!-- Load saved parameters that can alter the layout before the element to layout -->
+    <script type="text/javascript">
+        var slider_position = localStorage.getItem("slider");
+        if (slider_position != null) {
+            document.body.style.setProperty("--sidebar-width", slider_position + "px");
+        }
+        var group_mode = localStorage.getItem("summary-group");
+        if (group_mode == "fn") {
+            document.body.style.setProperty("--group-impl", "none");
+            document.body.style.setProperty("--group-fn", "unset");
+        }
+        else {
+            document.body.style.setProperty("--group-impl", "unset");
+            document.body.style.setProperty("--group-fn", "none");
+        }
+        var sort_mode = localStorage.getItem("summary-sort");
+        if (sort_mode == "sort") {
+            document.body.style.setProperty("--sort", "unset");
+            document.body.style.setProperty("--nosort", "none");
+        }
+        else {
+            document.body.style.setProperty("--sort", "none");
+            document.body.style.setProperty("--nosort", "unset");
+        }
+    </script>
+
+    <!-- The invisible item that will contain the original documentation page -->
+    <section id="source" style="display: none">
+
+    </section>
+
+    <!-- The box used to dispay advanced tooltips -->
+    <nav id="infobox" class="infobox">
+        Tooltip text.
+    </nav>
+
+    <!-- The resizable sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div id="crateinfo" class="crateinfo">
+            <img class="logo" src="img/logo.png" /><br>
+            Rust standard library
+        </div>
+        <hr>
+        <div class="searchbox">
+            Search: <br>
+            <input />
+        </div>
+        <hr>
+        <div id="cratetree" class="cratetree"">
+            <ul>
+                <li class="stick l1">
+                    <img src="img/arrow/fold.png" />
+                    <img src="img/book.png" />
+                    <a href="#">The Book</a>
+                </li>
+                <ul>
+                    <li>
+                        <img src="img/arrow/empty.png" />
+                        <img src="img/item/page.png" />
+                        <a href="#">Foreword</a>
+                    </li>
+                </ul>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- The invisible slider used to resize the sidebar -->
+    <nav id="slider" class="slider">
+    </nav>
+
+    <!-- The right side of the page containing the informations -->
+    <section class="main">
+        <!-- The title area-->
+        <section class="title">
+            <span class="item">Stuct <a href="#">std</a>::<a href="#">collection</a>::<a href="#">Hashmap</a></span>
+            <span class="arrow">🢂</span>
+            <span class="shortdesc">A hash map implemented with quadratic probing and SIMD lookup.</span>
+            <span class="since">since<br><b>1.0.0</b></span>
+        </section>
+
+        <!-- The menu bar-->
+        <nav class="menubar">
+            <a href="#summary">
+                <div class="section" id="menu_summary">Items</div>
+            </a>
+            <a href="#description">
+                <div class="section" id="menu_description">Description</div>
+            </a>
+            <a href="#methods">
+                <div class="section" id="menu_methods">Methods</div>
+            </a>
+            <div class="section empty"></div>
+            <nav class="descr_index" id="descr_index">
+
+            </nav>
+            <a href="#source">
+                <div class="section">Source</div>
+            </a>
+        </nav>
+
+        <!-- The scrollable content area -->
+        <section class="content">
+            <section id="summary" class="summary">
+            
+                <h4>Declaration: </h4>
+                <pre id="declaration" class="summary fiedls_declaration"></pre>
+                
+                <h4>Implemented: 
+                    <a class="summary_button" onclick="switch_group()" >
+                        <img src="img/arrow/flat.png" style="display: var(--group-fn)" />
+                        <img src="img/arrow/tree.png" style="display: var(--group-impl)" />
+                    </a>
+                    <a class="summary_button" onclick="switch_sort()" >
+                        <img src="img/arrow/sorted.png" style="display: var(--sort)" />
+                        <img src="img/arrow/unsorted.png" style="display: var(--nosort)" />
+                    </a>
+                </h4>
+                <table class="summary group-fn">
+                </table>
+                <template id="group-fn_row">
+                    <tr>
+                        <td class="folder"><img src="img/arrow/empty.png" /></td>
+                        <td class="icon"><img src="img/item/fn.png" /></td>
+                        <td class="shortname"><a href="#"></a></td>
+                        <td class="shortimpl"></td>
+                        <td class="shortdesc"></td>
+                        <td class="fullname"></td>
+                        <td class="fullimpl"></td>
+                    </tr>                      
+                </template>                  
+                <table class="summary group-impl">
+                </table>
+                <template id="group-impl_impl_row">
+                    <tr class="full_impl can_fold open">
+                        <td class="folder"><img src="img/arrow/open.png" /></td>
+                        <td class="full_impl" colspan="5"></td>
+                    </tr>
+                </template>
+                <template id="group-impl_fn_row">
+                    <tr class="expanded">
+                        <td class="folder"><img src="img/arrow/empty.png" /></td>
+                        <td class="icon"><img src="img/item/fn.png" /></td>
+                        <td class="shortname"><a href="#"></a></td>
+                        <td class="shortdesc"></td>
+                        <td class="fullname"></td>
+                        <td class="fullimpl"></td>
+                    </tr>
+                </template>
+                <p>
+                    <span class="impl_type">Implementations:</span> <a href="#">Clone<sup>🛈</sup></a>, <a href="#">Debug</a>, <a href="#">Default</a>, <a href="#">Eq<…></a>, <a href="#">Extend<…><sup>🛈</sup></a>, <a href="#">FromIterator<…></a>, <a href="#">HashMap<…><sup>🛈</sup></a>, <a href="#">Index<…><sup>🛈</sup></a>, <a href="#">IntoIterator<…><sup>🛈</sup></a>, <a href="#">PartialEq<…></a><br>
+                    <span class="impl_type">Auto-Implementations:</span> <a href="#">RefUnwindSafe</a>, <a href="#">Send</a>, <a href="#">Sync</a>, <a href="#">Unpin</a> <br> 
+                    <span class="impl_type">Blanket Implementations:</span> <a href="#">Any<sup>🛈</sup></a>, <a href="#">Borrow<…><sup>🛈</sup></a>, <a href="#">BorrowMut<…><sup>🛈</sup></a>, <a href="#">From<…></a>, <a href="#">Into<…></a>, <a href="#">IntoIterator</a>, <a href="#">ToOwned<sup>🛈</sup></a>, <a href="#">TryFrom<…></a>,  <a href="#">TryInto<…> </a><br>
+                </p>
+            </section>
+            <hr>
+
+            <h2>Description</h2>
+            <section id="description" class="description">
+                TODO
+            </section>
+            <hr>
+
+            <section id="methods" class="methods">
+                <h2 id="title-methods" class="small-section-header">Methods</h2>
+                TODO
+            </section>
+        </section>
+
+    </section>
+
+    <script type="text/javascript">
+        const img_fold = "img/arrow/fold.png";
+        const img_open = "img/arrow/open.png";
+        let content = document.querySelector(".content");
+        
+        set_page("std/vec/struct.Vec.html");
+
+        // Load content from a rustdoc page
+        var page = null;
+        async function set_page(url){
+            let response = await fetch(url);
+            let html = await response.text();
+            page = new DOMParser().parseFromString(html, "text/html");
+            console.log(page);
+            update_page();
+            set_unfold_sidebar();
+            set_unfold_summary();
+            set_popups();
+            set_slider();
+            set_scrolling();
+        }
+        function update_page(){
+            // update declarartion
+            var decl = document.getElementById("declaration");
+            decl.innerHTML="";
+            decl.appendChild(page.querySelector(".type-decl"));
+
+            // update description
+            var desc = document.getElementById("description");
+            desc.innerHTML="";
+            desc.appendChild(page.querySelector(".docblock"));
+
+            // update methods details
+            var methods = document.getElementById("methods");
+            methods.innerHTML="";
+            var item = page.getElementById("methods");
+            if (item){
+                do {
+                    methods.appendChild(item.cloneNode(true));
+                } while (item = item.nextSibling)
+            }
+            // update summary
+            var list = [];
+            var cur_impl;
+            let summary_impl = document.querySelector(".summary.group-impl")
+            let summary_fn = document.querySelector(".summary.group-fn");
+            summary_impl.innerHTML=""
+            summary_fn.innerHTML=""
+            for (item of page.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
+                if (item.tagName!="H4"){
+                    cur_impl=item;
+                    var new_tr = document.getElementById("group-impl_impl_row").content.cloneNode(true);
+                    var label;
+                    if (item.tagName=="H2") { 
+                        label = item.innerHTML;
+                    }
+                    else {
+                        label = item.firstElementChild.innerHTML;
+                        label = label.replace(/(&nbsp;)+/g,"&nbsp;");
+                    }   
+                    new_tr.firstElementChild.children[1].innerHTML = label;
+                    summary_impl.appendChild(new_tr);
+                }
+                else {
+                    var new_tr = document.getElementById("group-impl_fn_row").content.cloneNode(true);
+                    new_tr=new_tr.firstElementChild;
+                    new_tr.children[2].firstElementChild.appendChild(item.querySelector(".fnname").firstChild.cloneNode(true));
+                    new_tr.children[3].appendChild(item.nextElementSibling.firstChild.cloneNode(true));
+                    new_tr.children[4].appendChild(item.cloneNode(true));
+                    new_tr.children[5].appendChild(cur_impl.cloneNode(true));
+                    summary_impl.appendChild(new_tr.cloneNode(true));
+
+                    var new_tr = document.getElementById("group-fn_row").content.cloneNode(true);
+
+                    new_tr=new_tr.firstElementChild;
+                    new_tr.children[2].firstElementChild.appendChild(item.querySelector(".fnname").firstChild.cloneNode(true));
+                    //new_tr.children[3].appendChild();
+                    new_tr.children[4].appendChild(item.nextElementSibling.firstChild.cloneNode(true));
+                    new_tr.children[5].appendChild(item.cloneNode(true));
+                    new_tr.children[6].appendChild(cur_impl.cloneNode(true));
+                    summary_fn.appendChild(new_tr.cloneNode(true));
+                }
+            }
+
+        }
+        // Support unfolding in the sidebar 
+        function set_unfold_sidebar() {
+            let items = document.querySelectorAll("#sidebar li");
+            for (var i = 0; i < items.length; i++) {
+                let item = items[i];
+                let arrow = item.firstElementChild;
+                item.setAttribute("title", item.textContent.trim());
+                if (arrow.tagName == "IMG"
+                    && (
+                        arrow.getAttribute("src") == img_fold
+                        || arrow.getAttribute("src") == img_open
+                    )
+                ) {
+                    applyList(arrow);
+                    arrow.addEventListener("click", function () {
+                        switchList(arrow);
+                        applyList(arrow);
+                    }, false);
+                }
+            }
+        }
+        //Support unfolding in the item summary
+        function set_unfold_summary(){
+            for (let line of document.querySelectorAll(".summary .can_fold")) {
+                let arrow = line.querySelector("img");
+                if (arrow) {
+                    apply_folding(arrow, false);
+                    arrow.addEventListener("click", function(evt){
+                        apply_folding(evt.target,true);
+                    }, false);
+                }
+            }
+        }
+        function apply_folding(img, switch_state){
+            var tr = img.parentElement.parentElement;            
+            var display;
+            if (switch_state) tr.classList.toggle("open")
+            if (tr.classList.contains("open")) {
+                img.src=img_open;
+                display="table-row";                
+            }
+            else {
+                img.src=img_fold;
+                display="none";
+            }
+            while ((tr=tr.nextElementSibling) && tr.className.includes("expanded")){
+                tr.style.display=display;
+            }
+        }
+        function set_popups(){
+            for  (let line of document.querySelectorAll(".summary tr")){
+                //tooltip on method name
+                let name = line.querySelector(".shortname");
+                let fname = line.querySelector(".fullname");  
+                let impl = line.querySelector(".shortimpl");
+                let fimpl = line.querySelector(".fullimpl");  
+                if (name && fname) setPopup(name,fname);
+                if (impl && fimpl) setPopup(impl,fimpl);
+                if(fname){
+                    let target = fname.querySelector("h4");
+                    if (target) {
+                        let old_id = target.id;
+                        target.id = "popup_"+old_id;
+                        //name.querySelector("a").href = "#"+old_id;
+                        name.querySelector("a").addEventListener("click",function(){stick_aware_link(old_id)});
+                    }
+                }
+            }
+        }
+        
+        function switchList(arrow) {
+            if (arrow.getAttribute("src") == img_fold) {
+                arrow.setAttribute("src", img_open);
+                return true;
+            }
+            else {
+                arrow.setAttribute("src", img_fold);
+                return false;
+            }
+        }
+
+        function applyList(arrow) {
+            let item = arrow.parentElement;
+            let next = item.nextElementSibling;
+            if (next && next.tagName == "UL") {
+                if (arrow.getAttribute("src") == img_fold) {
+                    next.style.display = "none";
+                }
+                else {
+                    next.style.display = "block";
+                }
+            }
+        }
+
+        // Handling of the slider
+        var dragging = false;
+        var cratetree = document.getElementById("cratetree");
+        function set_slider(){
+            document.body.addEventListener("mousemove", drag_pending);
+            document.body.addEventListener("mouseup", drag_end);
+            document.getElementById("slider").addEventListener("mousedown", drag_start);
+        }
+        function drag_start(evt) {
+            document.body.style.setProperty("user-select", "none");
+            dragging = true;
+        }
+        function drag_end(evt) {
+            if (dragging) {
+                dragging = false;
+                localStorage.setItem("slider", evt.pageX);
+                drag_pending(evt);
+                document.body.style.setProperty("user-select", "auto");
+            }
+        }
+        function drag_pending(evt) {
+            if (dragging) {
+                document.body.style.setProperty("--sidebar-width", evt.pageX + "px");
+                cratetree.scrollTo({ left: 0 });
+            }
+        }
+
+        // Description popup        
+        let display_popup_timeout;
+        let hide_popup_timeout;
+        let infobox = document.getElementById("infobox");
+        function setPopup(elt, content) {           
+            elt.addEventListener("mouseenter", function (evt) {
+                display_popup_timeout = setTimeout(function(){
+                    let x = window.scrollX + evt.target.getBoundingClientRect().left
+                    let y = window.scrollY + evt.target.getBoundingClientRect().top // Y
+
+                    infobox.innerHTML=content.innerHTML;
+                    infobox.style.display="block";
+                    infobox.style.left="calc("+x+"px + 2.5em)";
+                    infobox.style.top="calc("+y+"px + 1.25em)";
+                },600);
+            }, false);
+            
+            elt.addEventListener("mouseleave", function (evt) {
+                clearTimeout(display_popup_timeout);
+                hide_popup_timeout = setTimeout(function(){
+                    infobox.style.display="none";
+                },200);                
+            }, false);
+        }
+
+        infobox.addEventListener("mouseenter", function (evt) {
+            clearTimeout(hide_popup_timeout);
+        }, false);
+
+        infobox.addEventListener("mouseleave", function (evt) {
+            infobox.style.display="none";
+        }, false);
+
+        // Scrolling management (stick + menubar color)
+        function set_scrolling(){
+            content.addEventListener("scroll",handle_scrolling);
+            handle_scrolling();
+        }        
+        function handle_scrolling(evt){
+            manage_color(document.querySelector("#menu_summary"), document.querySelector("#summary"));
+            manage_color(document.querySelector("#menu_description"), document.querySelector("#description"));
+            manage_color(document.querySelector("#menu_methods"), document.querySelector("#methods"));
+            manage_stick();    
+        }
+        function manage_color(menu_item, item){
+            let view_begin = content.scrollTop;
+            let view_end = view_begin + content.clientHeight;
+            let elt_begin = item.offsetTop - content.clientTop;
+            let elt_end = elt_begin + item.offsetHeight;
+            var ratio; 
+            if (elt_begin<view_begin) {
+                if (elt_end<view_begin) {
+                    ratio=0;
+                }
+                else if (elt_end<view_end) {
+                    ratio=(elt_end-view_begin)/content.clientHeight;
+                }
+                else{
+                    ratio=1;
+                }
+            }
+            else if (elt_begin<view_end){
+                if (elt_end<view_end) {
+                    ratio=(elt_end-elt_begin)/content.clientHeight;
+                }
+                else {
+                    ratio=(view_end-elt_begin)/content.clientHeight;
+                }
+            }else {
+                ratio = 0
+            }
+            menu_item.style.setProperty("background-color", "rgba(156,194,229,"+ratio+")");
+        }
+       
+        var stuck_item=null;
+        var stuck_original;
+        function manage_stick(){
+            let impl_list = document.querySelectorAll("#methods .impl");
+            let globalOffset = document.querySelector("#summary").offsetTop;
+            
+            for (var impl of impl_list){
+                let old = content.scrollTop;
+                if (impl.offsetTop-globalOffset<=content.scrollTop+2){
+                    impl.className="impl stuck";
+                }
+                else {
+                    impl.className="impl sticky";    
+                }
+                content.scrollTop=old;
+            }
+        }
+        function stick_aware_link(id){
+            let item = document.getElementById(id);
+            let item_impl = item.parentElement.previousElementSibling
+            let impl_list = document.querySelectorAll("#methods .impl");
+            for (cur_impl of impl_list){
+                cur_impl.className="impl stuck";
+                if (cur_impl==impl) break;
+            }
+            content.scrollTop=item.offsetTop-content.offsetTop-36;
+            return false;
+        }
+                
+        //
+        function switch_group(evt){
+            var group = localStorage.getItem("summary-group");
+            if (group == "fn") {
+                localStorage.setItem("summary-group","impl")
+                document.body.style.setProperty("--group-impl", "unset");
+                document.body.style.setProperty("--group-fn", "none");
+            }
+            else {
+                localStorage.setItem("summary-group","fn")
+                document.body.style.setProperty("--group-impl", "none");
+                document.body.style.setProperty("--group-fn", "unset");
+            }
+        }
+        function switch_sort(evt){
+            var summary_sort = localStorage.getItem("summary-sort");
+            if (summary_sort == "sort") {
+                localStorage.setItem("summary-sort","nosort")
+                document.body.style.setProperty("--sort", "none");
+                document.body.style.setProperty("--nosort", "unset");
+            }
+            else {
+                localStorage.setItem("summary-sort","sort")
+                document.body.style.setProperty("--sort", "unset");
+                document.body.style.setProperty("--nosort", "none");
+            }
+        }
+    </script>
+</body>
+
+</html>
