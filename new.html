@@ -20,6 +20,7 @@
             document.body.style.setProperty("--group-fn", "unset");
         }
         else {
+            group_mode="impl"
             document.body.style.setProperty("--group-impl", "unset");
             document.body.style.setProperty("--group-fn", "none");
         }
@@ -29,6 +30,7 @@
             document.body.style.setProperty("--nosort", "none");
         }
         else {
+            sort_mode="nosort";
             document.body.style.setProperty("--sort", "none");
             document.body.style.setProperty("--nosort", "unset");
         }
@@ -117,17 +119,17 @@
                 
                 <h4>Implemented: 
                     <a class="summary_button" onclick="switch_group()" >
-                        <img src="img/arrow/flat.png" style="display: var(--group-fn)" />
-                        <img src="img/arrow/tree.png" style="display: var(--group-impl)" />
+                        <img src="img/arrow/flat.png" title="Grouped by method name" style="display: var(--group-fn)" />
+                        <img src="img/arrow/tree.png" title="Grouped by implementation" style="display: var(--group-impl)" />
                     </a>
                     <a class="summary_button" onclick="switch_sort()" >
-                        <img src="img/arrow/sorted.png" style="display: var(--sort)" />
-                        <img src="img/arrow/unsorted.png" style="display: var(--nosort)" />
+                        <img src="img/arrow/sorted.png" title="Ordered by method name" style="display: var(--sort)" />
+                        <img src="img/arrow/unsorted.png" title="Oredered as in the source code" style="display: var(--nosort)" />
                     </a>
                 </h4>
-                <table class="summary group-fn">
+                <table id="index">
                 </table>
-                <template id="group-fn_row">
+                <template id="fn_row">
                     <tr>
                         <td class="folder"><img src="img/arrow/empty.png" /></td>
                         <td class="icon"><img src="img/item/fn.png" /></td>
@@ -138,22 +140,10 @@
                         <td class="fullimpl"></td>
                     </tr>                      
                 </template>                  
-                <table class="summary group-impl">
-                </table>
-                <template id="group-impl_impl_row">
+                <template id="impl_row">
                     <tr class="full_impl can_fold open">
                         <td class="folder"><img src="img/arrow/open.png" /></td>
                         <td class="full_impl" colspan="5"></td>
-                    </tr>
-                </template>
-                <template id="group-impl_fn_row">
-                    <tr class="expanded">
-                        <td class="folder"><img src="img/arrow/empty.png" /></td>
-                        <td class="icon"><img src="img/item/fn.png" /></td>
-                        <td class="shortname"><a href="#"></a></td>
-                        <td class="shortdesc"></td>
-                        <td class="fullname"></td>
-                        <td class="fullimpl"></td>
                     </tr>
                 </template>
                 <p>
@@ -192,14 +182,10 @@
             let html = await response.text();
             page = new DOMParser().parseFromString(html, "text/html");
             console.log(page);
-            update_page();
-            set_unfold_sidebar();
-            set_unfold_summary();
-            set_popups();
-            set_slider();
-            set_scrolling();
+            update_page(page);
         }
-        function update_page(){
+        function update_page(p){
+            var page = p.cloneNode(true);
             // update declarartion
             var decl = document.getElementById("declaration");
             decl.innerHTML="";
@@ -222,46 +208,59 @@
             // update summary
             var list = [];
             var cur_impl;
-            let summary_impl = document.querySelector(".summary.group-impl")
-            let summary_fn = document.querySelector(".summary.group-fn");
-            summary_impl.innerHTML=""
-            summary_fn.innerHTML=""
+            let summary = document.querySelector("#index")
+            summary.innerHTML="";
+            summary.className= group_mode=="fn" ? "group-fn" : "group-impl";
             for (item of page.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
                 if (item.tagName!="H4"){
                     cur_impl=item;
-                    var new_tr = document.getElementById("group-impl_impl_row").content.cloneNode(true);
-                    var label;
-                    if (item.tagName=="H2") { 
-                        label = item.innerHTML;
+                    if (group_mode=="impl"){
+                        var new_tr = document.getElementById("impl_row").content.cloneNode(true);
+                        var label;
+                        if (item.tagName=="H2") { 
+                            label = item.innerHTML;
+                        }
+                        else {
+                            label = item.firstElementChild.innerHTML;
+                            label = label.replace(/(&nbsp;)+/g,"&nbsp;");
+                        }   
+                        new_tr.firstElementChild.children[1].innerHTML = label;
+                        summary.appendChild(new_tr);
                     }
-                    else {
-                        label = item.firstElementChild.innerHTML;
-                        label = label.replace(/(&nbsp;)+/g,"&nbsp;");
-                    }   
-                    new_tr.firstElementChild.children[1].innerHTML = label;
-                    summary_impl.appendChild(new_tr);
                 }
                 else {
-                    var new_tr = document.getElementById("group-impl_fn_row").content.cloneNode(true);
+                    //création du modèle
+                    var new_tr = document.getElementById("fn_row").content.cloneNode(true);
                     new_tr=new_tr.firstElementChild;
+                    //shortname
                     new_tr.children[2].firstElementChild.appendChild(item.querySelector(".fnname").firstChild.cloneNode(true));
-                    new_tr.children[3].appendChild(item.nextElementSibling.firstChild.cloneNode(true));
-                    new_tr.children[4].appendChild(item.cloneNode(true));
-                    new_tr.children[5].appendChild(cur_impl.cloneNode(true));
-                    summary_impl.appendChild(new_tr.cloneNode(true));
-
-                    var new_tr = document.getElementById("group-fn_row").content.cloneNode(true);
-
-                    new_tr=new_tr.firstElementChild;
-                    new_tr.children[2].firstElementChild.appendChild(item.querySelector(".fnname").firstChild.cloneNode(true));
-                    //new_tr.children[3].appendChild();
-                    new_tr.children[4].appendChild(item.nextElementSibling.firstChild.cloneNode(true));
+                    //shortimpl
+                    new_tr.children[3].appendChild(document.createTextNode("Todo<…>"));
+                    //shortdesc
+                    var next = item.nextElementSibling;
+                    if (next.querySelector(".stability .unstable")){
+                        new_tr.children[4].appendChild(document.createTextNode("🔬"));
+                        next=next.nextElementSibling;
+                    }
+                    if (next.querySelector(".stability .deprecated")){
+                        new_tr.children[4].appendChild(document.createTextNode("⚠️"));
+                        next=next.nextElementSibling;
+                    }
+                    var text = next.textContent.split(".",2)[0] + ".";
+                    new_tr.children[4].appendChild(document.createTextNode(text));
+                    //fullname
                     new_tr.children[5].appendChild(item.cloneNode(true));
+                    //fullimpl
                     new_tr.children[6].appendChild(cur_impl.cloneNode(true));
-                    summary_fn.appendChild(new_tr.cloneNode(true));
+                    summary.appendChild(new_tr.cloneNode(true));
                 }
             }
 
+            set_unfold_sidebar();
+            set_unfold_summary();
+            set_popups();
+            set_slider();
+            set_scrolling();
         }
         // Support unfolding in the sidebar 
         function set_unfold_sidebar() {
@@ -489,30 +488,36 @@
                 
         //
         function switch_group(evt){
-            var group = localStorage.getItem("summary-group");
-            if (group == "fn") {
-                localStorage.setItem("summary-group","impl")
+            if (group_mode == "fn") {
+                group_mode="impl";
                 document.body.style.setProperty("--group-impl", "unset");
                 document.body.style.setProperty("--group-fn", "none");
             }
             else {
-                localStorage.setItem("summary-group","fn")
+                group_mode="fn";
                 document.body.style.setProperty("--group-impl", "none");
                 document.body.style.setProperty("--group-fn", "unset");
+                sort_mode="sort"
+                document.body.style.setProperty("--sort", "unset");
+                document.body.style.setProperty("--nosort", "none");
+                localStorage.setItem("summary-sort",sort_mode);
             }
+            localStorage.setItem("summary-group",group_mode);
+            update_page(page);
         }
         function switch_sort(evt){
-            var summary_sort = localStorage.getItem("summary-sort");
-            if (summary_sort == "sort") {
-                localStorage.setItem("summary-sort","nosort")
+            if (sort_mode == "sort") {
+                sort_mode="nosort";
                 document.body.style.setProperty("--sort", "none");
                 document.body.style.setProperty("--nosort", "unset");
             }
             else {
-                localStorage.setItem("summary-sort","sort")
+                sort_mode="sort";
                 document.body.style.setProperty("--sort", "unset");
                 document.body.style.setProperty("--nosort", "none");
             }
+            localStorage.setItem("summary-sort",sort_mode)
+            update_page(page);
         }
     </script>
 </body>

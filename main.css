@@ -219,7 +219,7 @@ body{
 /****************************************
  * Format the item summary              *
  ****************************************/
-.summary {
+.summary, #index {
     font-size: 95%;
     max-width: 100%;
     white-space: nowrap;
@@ -257,33 +257,33 @@ body{
     position: relative;
     top: 6px;
 }
-.summary .group-fn{
-    display: var(--group-fn);
+#index td {
+    padding-right: 0.5em; 
 }
-.summary .group-fn tr:nth-child(2n){
-    height: 1.2em;
+#index.group-fn tr:nth-child(2n){
     background-color: rgb(240, 240, 240);
 }
-.summary .group-impl{
-    display: var(--group-impl);
-}
-.summary .group-impl .full_impl{
+
+#index.group-impl .full_impl{
     background-color: rgb(230, 230, 230);
     font-weight: bold;
     font: "Source Serif Pro";
 }
-.summary .group-impl .full_impl br{
+#index.group-impl .full_impl br{
     display: none;
 }
-.summary .group-impl .full_impl code{
+#index.group-impl .full_impl code{
     white-space: nowrap;
 }
-.summary .group-impl td:nth-child(5n+3){
+#index.group-impl td:nth-child(5n+3){
     max-width: 9em;
     padding-right: 1em; 
 }
+#index.group-impl td:nth-child(5n+4){
+    display: none;
+}
 
-.summary .impl_type {
+#index. .impl_type {
     font-weight: bold;
 }
 /****************************************
