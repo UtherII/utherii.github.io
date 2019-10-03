@@ -1,0 +1,407 @@
+@import "font/font.css";
+@import "light.css";
+
+body{
+    background: white;
+	font: 16px/1.4 "Source Serif Pro", serif;
+	font-feature-settings: "kern", "liga";
+    --sidebar-width: 250px;
+    --group-impl: unset;
+    --group-fn: none;
+}
+
+#infobox {
+    display: none;
+    z-index: 200;
+    position: fixed;
+    max-width: 600px;
+    min-height: 1em;
+    padding: 0.4em; 
+    background-color: whitesmoke;
+    border: 1px black solid;
+    box-shadow: 5px 2px 2px gray;
+}
+#infobox h4, #infobox h3{
+    font-size: 95%;
+    margin: 0px;
+    padding: 0px;
+}
+#infobox .important-traits{
+    display: none;
+}
+
+/****************************************
+ * Format the content of the sidebar    *
+ ****************************************/
+/* General */
+ .sidebar{
+    position: fixed;
+    width: var(--sidebar-width);
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    margin: 0px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    background-color: #F1F1F1;
+}
+.sidebar hr {
+    width: 95%;
+    margin-bottom: 4px;
+}
+
+/* Crate Informations */
+.crateinfo{
+    text-align: center;
+    font-weight: bold;
+}
+.crateinfo img {
+    max-height: 64px;
+}
+
+/* Search box */
+.sidebar input {
+    width: 95%;
+}
+
+/* Crate content tree */
+.cratetree{
+    --item-height: 1.20em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    flex: 1;
+    overflow: auto;
+}
+.cratetree img {
+    width: calc(var(--item-height) - 0.2em);
+    height: calc(var(--item-height) - 0.2em);
+}
+.cratetree ul {
+    margin-top: 0px;
+    list-style: none;
+    font-weight: normal;
+    padding-left: 0em;
+}
+.cratetree ul ul {
+    padding-left: 1em;
+}
+.cratetree li {
+    position: sticky;
+    background-color: #F1F1F1;
+    height: var(--item-height);
+    white-space: nowrap;
+    width: 100%;
+}
+.cratetree a {
+    text-decoration: none;
+    color: unset;
+}
+.cratetree .current {
+    background-color: lightskyblue;
+}
+.cratetree .stick.l1{
+    top:calc(0 * var(--item-height));
+    z-index: calc(100 - 0);
+}
+.cratetree .stick.l2{
+    top:calc(1 * var(--item-height));
+    z-index: calc(100 - 1);
+}
+.cratetree .stick.l3{
+    top:calc(2 * var(--item-height));
+    z-index: calc(100 - 2);
+}
+.cratetree .stick.l4{
+    top:calc(3 * var(--item-height));
+    z-index: calc(100 - 3);
+}
+.cratetree .stick.l5{
+    top:calc(4 * var(--item-height));
+    z-index: calc(100 - 4);
+}
+.cratetree .stick.l6{
+    top:calc(5 * var(--item-height));
+    z-index: calc(100 - 5);
+}
+
+/****************************************
+ * Slider (between two sides)           *
+ ****************************************/
+ .slider {
+    position: fixed;
+    left: var(--sidebar-width);
+    cursor: col-resize;
+    width: 5px;
+    height: 100vh;
+    margin-left: 5px;
+}
+
+/****************************************
+ * Main Area (right side)               *
+ ****************************************/
+ /* General */
+ .main{
+    position: fixed;
+    margin-left: calc(var(--sidebar-width) + 5px);
+    top: 0px;
+    height: 100vh;
+    width: calc(100vw - var(--sidebar-width) - 12px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Title section */
+ .title {
+    margin-top: 4px;
+    margin-bottom: 0.5em;
+    font-family: "Source Serif Pro";
+    display: flex;
+}
+.title .item,.arrow {
+    color: #1f4d78;
+    font-weight:bold;
+    font-size: 120%;
+}
+.title .shortdesc{
+    font-size: 100%;
+    flex: 1;
+}
+.title .since{
+    font-size: 100%;
+    font-family: "Fira Sans";
+    margin-right: 1em;
+    margin-left: 1em;
+    margin-top: 0px;
+    padding: 0px;
+    line-height: 1em;
+}
+
+/* schortcut bar */
+ .menubar{
+    display: flex;
+    border-bottom: #505050 1px solid;
+    text-align: center;
+    width: calc(100% - 2px);
+    max-width: 960px;
+ }
+.menubar .section{
+    font-weight: bold;
+    padding-bottom: 0.2em;
+    border: black 1px solid;
+    width: 8em;
+}
+.menubar .empty {
+    flex: 1 1;
+    background-color: inherit;    
+    border: none;
+}
+.menubar .empty:hover {
+    background-color: inherit;    
+}
+.descr_index {
+    display: none;
+    text-align: left;
+    list-style: none;
+    padding: 1em;
+    margin: 0px;
+    background-color: azure;
+    position: fixed;
+}
+
+/****************************************
+ * Format the main content area         *
+ ****************************************/
+ .content {
+    flex:1;
+    overflow: auto;
+}
+
+/****************************************
+ * Format the item summary              *
+ ****************************************/
+.summary, #index {
+    font-size: 95%;
+    max-width: 100%;
+    white-space: nowrap;
+    border-spacing: 0;
+}
+.summary img{
+    width: 1.2em;
+    height: 1.2em;
+}
+.summary td:nth-child(5n+3){
+    font-weight: bold;
+    max-width: 8em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.summary .summary a {
+    text-decoration: none;
+    color: initial;
+}
+.summary .fullname, .summary .fullimpl {
+    display: none;    
+}
+.summary .expanded {
+    display: none;    
+}
+.summary h4 {
+    margin-top: 0em;
+    padding-top: 0.5em;
+    margin-bottom: 0.4em;
+}
+.summary .summary_button img {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    top: 6px;
+}
+#index td {
+    padding-right: 0.5em; 
+}
+#index.group-fn tr:nth-child(2n){
+    background-color: rgb(240, 240, 240);
+}
+
+#index.group-impl .full_impl{
+    background-color: rgb(230, 230, 230);
+    font-weight: bold;
+    font: "Source Serif Pro";
+}
+#index.group-impl .full_impl br{
+    display: none;
+}
+#index.group-impl .full_impl code{
+    white-space: nowrap;
+}
+#index.group-impl td:nth-child(5n+3){
+    max-width: 9em;
+    padding-right: 1em; 
+}
+#index.group-impl td:nth-child(5n+4){
+    display: none;
+}
+
+#index. .impl_type {
+    font-weight: bold;
+}
+/****************************************
+ * Description              *
+ ****************************************/
+.description{
+    font-family: "Source Serif Pro";
+    max-width: 960px;
+    margin-left: 1em;
+}
+.description a {
+    color: #3873AD;
+}
+.description h1{
+    border-bottom: gray ridge 2px;
+    font-size: 120%;
+    left: 1em;
+}
+.description h2{
+    font-size: 110%;
+}
+.description h3{
+    font-size: 100%;
+}
+.example-wrap {
+    display: block;
+    margin-bottom: 10px;
+}
+.description code {
+    font-family: "Source Code Pro", monospace;
+}
+.description pre {
+    font-family: "Source Code Pro", monospace;
+    font-size: 90%;
+    background-color: #F5F5F5;
+    margin: 10px;
+    padding: 6px;
+}
+
+/****************************************
+ * Methods description                               *
+ ****************************************/
+ .in-band {
+    background-color: unset !important;
+}
+a.test-arrow:hover {
+    background-color: #4e8bca;
+    text-decoration: none;
+}
+a.test-arrow {
+    background-color: rgba(78,139,202,0.2);
+    color: #f5f5f5;
+    display: none;
+    position: absolute;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    font-size: 0%;
+    top: 5px;
+    right: 5px;
+}
+.srclink, .collapse-toggle {
+    display: none;
+}
+.methods .impl {
+    padding-top: 0.2em;
+    min-height: 1.7em;   
+    border-bottom: 1px gray solid; 
+    background-color: whitesmoke;
+}
+.methods .method {
+    padding-top: 0.2em;
+    width: 100%;
+} 
+.methods .type {
+    margin-left: 1.5em; 
+
+}
+.methods .method code {    
+    border-bottom: 1px gray solid;
+    background-color: whitesmoke;
+    margin-left: 1.5em; 
+    display: block;
+    width: 100%;
+}
+.methods .docblock {
+    margin-left: 3em;
+}
+.methods .stability {
+    margin-left: 4em;
+}
+.methods .important-traits {
+    display: none;
+}
+.methods .sticky {
+    position: sticky;
+    top: 0px;    
+    z-index: 200;
+}
+.methods .stuck {
+    position: sticky;
+    top: 0px;
+    z-index: 200;
+    height: 1.7em;   
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;    
+}
+.methods .stuck:hover {
+    height: unset;   
+    white-space: normal;
+    overflow: unset;
+    text-overflow: unset;    
+    z-index: 202;
+}
+.methods .stuck br {
+    display: none;
+}
+.methods .stuck:hover br {
+    display: unset;
+}
+
