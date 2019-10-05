@@ -60,42 +60,42 @@
         <hr>
         <div id="cratetree" class="cratetree"">
             <ul>
-                <li id="book_root" data-path="book" class="stick l1">
+                <li id="book_root" data-path="book" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/book.png" />
                     <a href="#">The Book</a>
                 </li>
-                <li id="keywords_root" data-path="std" class="stick l1">
+                <li id="keywords_root" data-path="std" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/primitive.png" />
                     <a href="#">Keywords</a>
                 </li>
-                <li id="primitives_root" data-path="std" class="stick l1">
+                <li id="primitives_root" data-path="std" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/primitive.png" />
                     <a href="#">Primitives</a>
                 </li>
-                <li id="alloc_root"  data-path="alloc" class="stick l1">
+                <li id="alloc_root"  data-path="alloc" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
                     <a href="#">alloc</a>
                 </li>
-                <li id="core_root" data-path="core" class="stick l1">
+                <li id="core_root" data-path="core" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
                     <a href="#">core</a>
                 </li>
-                <li id="proc_macro_root" data-path="proc_macro" class="stick l1">
+                <li id="proc_macro_root" data-path="proc_macro" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
                     <a href="#">proc_macro</a>
                 </li>
-                <li id="std_root" data-path="std" class="stick l1">
+                <li id="std_root" data-path="std" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
                     <a href="#">std</a>
                 </li>
-                <li id="test_root" data-path="test" class="stick l1">
+                <li id="test_root" data-path="test" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
                     <a href="#">test</a>
@@ -112,19 +112,17 @@
     <section class="main">
         <!-- The title area-->
         <section class="title">
-            <span class="item">Stuct <a href="#">std</a>::<a href="#">collection</a>::<a href="#">Hashmap</a></span>
-            <span class="arrow">🢂</span>
-            <span class="shortdesc">A hash map implemented with quadratic probing and SIMD lookup.</span>
+            <span id="title_item" class="item"></span>
             <span class="since">since<br><b>1.0.0</b></span>
         </section>
 
         <!-- The menu bar-->
         <nav class="menubar">
-            <a href="#summary">
-                <div class="section" id="menu_summary">Items</div>
-            </a>
             <a href="#description">
                 <div class="section" id="menu_description">Description</div>
+            </a>
+            <a href="#summary">
+                <div class="section" id="menu_summary">Summary</div>
             </a>
             <a href="#methods">
                 <div class="section" id="menu_methods">Methods</div>
@@ -140,12 +138,17 @@
 
         <!-- The scrollable content area -->
         <section class="content">
+
+            <section id="description" class="description">
+                <h2>Description</h2>
+            </section>
+            <hr>
+
             <section id="summary" class="summary">
-            
                 <h4>Declaration: </h4>
                 <pre id="declaration" class="summary fiedls_declaration"></pre>
                 
-                <h4>Implemented: 
+                <h4>Methods: 
                     <a class="summary_button" onclick="switch_group()" >
                         <img src="img/arrow/flat.png" title="Grouped by method name" style="display: var(--group-fn)" />
                         <img src="img/arrow/tree.png" title="Grouped by implementation" style="display: var(--group-impl)" />
@@ -155,7 +158,7 @@
                         <img src="img/arrow/unsorted.png" title="Oredered as in the source code" style="display: var(--nosort)" />
                     </a>
                 </h4>
-                <table id="index">
+                <table id="method_table">
                 </table>
                 <template id="fn_row">
                     <tr>
@@ -182,12 +185,6 @@
             </section>
             <hr>
 
-            <h2>Description</h2>
-            <section id="description" class="description">
-                TODO
-            </section>
-            <hr>
-
             <section id="methods" class="methods">
                 <h2 id="title-methods" class="small-section-header">Methods</h2>
                 TODO
@@ -200,26 +197,108 @@
         const img_fold = "img/arrow/fold.png";
         const img_open = "img/arrow/open.png";
         const img_empty = "img/arrow/empty.png";
+        const mappings={
+            book:{
+                order:0, 
+                icon:"img/book.png", 
+                expand:true, 
+                link:"/$/index.html", 
+                to:"book_root"
+            },
+            chapter:{
+                order:1, 
+                icon:"img/book.png", 
+                expand:true, 
+                link:"/$/index.html", 
+                to:"book_root"
+            },
+            page:{
+                order:1, 
+                icon:"img/book.png", 
+                expand:true, 
+                link:"/$/index.html", 
+                to:"book_root"
+            },
+            keyword:{
+                order:5, 
+                icon:"img/item/page.png", 
+                expand:false, 
+                link:"/keyword.$.html", 
+                to:"keywords_root"
+            },
+            primitive:{
+                order:6, 
+                icon:"img/item/block.png", 
+                expand:false, 
+                link:"/primitive.$.html", 
+                to:"primitives_root"
+            },
+            crate:{
+                order:10,
+                icon:"img/item/crate.png",
+                expand:true,
+                link:"/$/index.html"
+            },
+            mod:{
+                order:11, 
+                icon:"img/item/mod.png", 
+                expand:true, 
+                link:"/$/index.html"
+            },
+            type:{
+                order:12, 
+                icon:"img/item/type.png", 
+                link:"/type.$.html", 
+                expand:false
+            },
+            struct:{
+                order:13,
+                icon:"img/item/struct.png", 
+                link:"/struct.$.html", 
+                expand:false
+            },
+            constant:{
+                order:13,
+                icon:"img/item/const.png", 
+                link:"/struct.$.html", 
+                expand:false
+            },
+            enum:{
+                order:14, 
+                icon:"img/item/enum.png", 
+                link:"/enum.$.html", 
+                expand:false
+            },
+            trait:{
+                order:15, 
+                icon:"img/item/trait.png", 
+                link:"/trait.$.html", 
+                expand:false
+            },
+            fn:{
+                order:16, 
+                icon:"img/item/fn.png", 
+                link:"/fn.$.html", 
+                expand:false
+            },
+            macro:{
+                order:17, 
+                icon:"img/item/macro.png", 
+                link:"/macro.$.html", 
+                expand:false
+            }
+        };
+
         let content = document.querySelector(".content");
         
+        set_unfold_sidebar();
         set_page("std/vec/struct.Vec.html");
 
-        // Load the content od the sidebar
-        function set_sidebar(url){
+        // Set the sidebar eady for the current page
+        function sidebar_current(url){
             
         }
 
-        const mappings={
-            keyword:{order:0, icon:"img/item/page.png", expand:false, link:"/keyword.$.html", to:"keywords_root"},
-            primitive:{order:0, icon:"img/item/block.png", expand:false, link:"/primitive.$.html", to:"primitives_root"},
-            mod:{order:1, icon:"img/item/mod.png", expand:true, link:"/$/index.html"},
-            type:{order:2, icon:"img/item/type.png", link:"/type.$.html", expand:false},
-            struct:{order:3, icon:"img/item/struct.png", link:"/struct.$.html", expand:false},
-            enum:{order:4, icon:"img/item/enum.png", link:"/enum.$.html", expand:false},
-            trait:{order:5, icon:"img/item/trait.png", link:"/trait.$.html", expand:false},
-            fn:{order:6, icon:"img/item/fn.png", link:"/fn.$.html", expand:false},
-            macro:{order:7, icon:"img/item/macro.png", link:"/macro.$.html", expand:false}
-        };
         async function load_node(elt){
             let path = elt.getAttribute("data-path");
             if (path){
@@ -232,6 +311,11 @@
                 let ul = document.createElement("ul");
 
                 var level=1;
+                for (cls of elt.classList){
+                    if(cls.startsWith("l")){
+                        level=parseInt(cls.substring(1),10)+1;
+                    }
+                }
 
                 var types =[];
                 for (item_type in items) types.push(item_type);
@@ -243,24 +327,67 @@
 
                     for (item of items[item_type]){
                         let li = document.createElement("li");
-                        li.className="stick l"+ (1+level);
+                        li.className="stick l"+ level;
                         li.setAttribute("data-path",path+"/"+item[0])
                         let img1 = document.createElement("img");
-                        img1.src=map.expand ? img_fold : img_empty;
+                        if (map.expand){
+                            li.classList.add("can_fold");
+                            img1.src=img_fold;
+                            img1.onclick=function(){ li_folding(img1,true)};
+                        }
+                        else {
+                            img1.src=img_empty;
+                        }
                         li.appendChild(img1);
                         let img2 = document.createElement("img");
                         img2.src=map.icon;
                         li.appendChild(img2);
                         let a = document.createElement("a");
-                        a.href=path+map.link.replace("$",item[0]);
+                        let href=path+map.link.replace("$",item[0]);
+                        a.href=href;
+                        a.onclick=function(){set_page(href); return false;}
                         a.textContent=" "+item[0];
                         li.appendChild(a);
                         ul.appendChild(li);
                     }
+                    if (map.to && map.to==elt.id) break;
                 }
                 elt.insertAdjacentElement("afterend",ul);
+                return ul
             }
         }
+        
+        // Support unfolding in the sidebar 
+        function set_unfold_sidebar(elt = null) {
+            if (!elt){ 
+                elt = document.querySelector("#sidebar"); 
+            }
+            for (item of elt.querySelectorAll("li.can_fold")) {
+                let arrow = item.firstElementChild;
+                li_folding(arrow);
+                arrow.addEventListener("click", function () {
+                    li_folding(arrow,true);
+                }, false);
+            }
+        }        
+        function li_folding(arrow, switch_state=false) {
+            let li = arrow.parentElement;
+            if (switch_state){
+                li.classList.toggle("open");
+            } 
+            if (li.classList.contains("open")) {
+                arrow.setAttribute("src", img_open);
+                let ul = li.nextElementSibling
+                if (!ul || ul.tagName!="UL"){
+                    ul=load_node(li)
+                    set_unfold_sidebar(li);
+                }
+            }
+            else {
+                arrow.setAttribute("src", img_fold);
+            }
+        }
+
         // Load content from a rustdoc page
         var page = null;
         async function set_page(url){
@@ -268,19 +395,19 @@
             let html = await response.text();
             page = new DOMParser().parseFromString(html, "text/html");
             console.log(page);
-            update_page(page);
+            refresh_content(page);
         }
-        function update_page(p){
+        function refresh_content(p){
             var page = p.cloneNode(true);
+            // update description
+            var desc = document.getElementById("description");
+            desc.innerHTML="<h2>Description</h2>";
+            desc.appendChild(page.querySelector(".docblock"));
+
             // update declarartion
             var decl = document.getElementById("declaration");
             decl.innerHTML="";
             decl.appendChild(page.querySelector(".type-decl"));
-
-            // update description
-            var desc = document.getElementById("description");
-            desc.innerHTML="";
-            desc.appendChild(page.querySelector(".docblock"));
 
             // update methods details
             var methods = document.getElementById("methods");
@@ -292,9 +419,9 @@
                 } while (item = item.nextSibling)
             }
             // update summary
-            let index = document.querySelector("#index")
-            index.innerHTML="";
-            index.className= group_mode=="fn" ? "group-fn" : "group-impl";
+            let table = document.querySelector("#method_table")
+            table.innerHTML="";
+            table.className= group_mode=="fn" ? "group-fn" : "group-impl";
             var list = [];
             var cur_impl;
             for (item of page.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
@@ -303,29 +430,22 @@
                 }
                 if (item.tagName!="H4" || !item.nextElementSibling){
                     if (group_mode=="impl" && cur_impl){
-                        index.appendChild(make_impl_row(cur_impl));
-                        flush_fn_rows(list,index);
+                        table.appendChild(make_impl_row(cur_impl));
+                        flush_fn_rows(list,table);
                     }
                     cur_impl=item;
                 }
             }
-            flush_fn_rows(list,index);
+            flush_fn_rows(list,table);
 
-            set_unfold_sidebar();
             set_unfold_summary();
             set_popups();
             set_slider();
             set_scrolling();
         }
-        function flush_fn_rows(list,index){
+        function flush_fn_rows(list,table){
             if (sort_mode=="sort"){
-                list.sort((a,b) => {
-                    let x = a.querySelector(".shortname").textContent;
-                    let y = b.querySelector(".shortname").textContent;
-                    if (x<y) return -1
-                    else if (x>y) return 1
-                    else return 0;
-                })
+                sort(list,a=>a.querySelector(".shortname").textContent);
             }
             
             var parent=null;
@@ -337,7 +457,7 @@
                         if (parent==null){
                             parent=list[i].cloneNode(true);
                             parent.className="can_fold";
-                            index.appendChild(parent);
+                            table.appendChild(parent);
                         }
                         list[i].className="expanded";
                     }
@@ -347,7 +467,7 @@
                     }
 
                 }
-                index.appendChild(list[i]);
+                table.appendChild(list[i]);
             }
             list.length=0;
         }
@@ -391,40 +511,20 @@
             new_tr.children[6].appendChild(cur_impl.cloneNode(true));
             return new_tr;
         }
-        // Support unfolding in the sidebar 
-        function set_unfold_sidebar(elt = document) {
-            let items = elt.querySelectorAll("#sidebar li");
-            for (var i = 0; i < items.length; i++) {
-                let item = items[i];
-                let arrow = item.firstElementChild;
-                item.setAttribute("title", item.textContent.trim());
-                if (arrow.tagName == "IMG"
-                    && (
-                        arrow.getAttribute("src") == img_fold
-                        || arrow.getAttribute("src") == img_open
-                    )
-                ) {
-                    applyList(arrow);
-                    arrow.addEventListener("click", function () {
-                        switchList(arrow);
-                        applyList(arrow);
-                    }, false);
-                }
-            }
-        }
+
         //Support unfolding in the item summary
         function set_unfold_summary(){
             for (let line of document.querySelectorAll(".summary .can_fold")) {
                 let arrow = line.querySelector("img");
                 if (arrow) {
-                    apply_folding(arrow, false);
+                    tr_folding(arrow, false);
                     arrow.addEventListener("click", function(evt){
-                        apply_folding(evt.target,true);
+                        tr_folding(evt.target,true);
                     }, false);
                 }
             }
         }
-        function apply_folding(img, switch_state){
+        function tr_folding(img, switch_state){
             var tr = img.parentElement.parentElement;            
             var display;
             if (switch_state) tr.classList.toggle("open")
@@ -461,35 +561,6 @@
             }
         }
         
-        function switchList(arrow) {
-            if (arrow.getAttribute("src") == img_fold) {
-                arrow.setAttribute("src", img_open);
-                let li = arrow.parentElement
-                let next = li.nextElementSibling
-                if (!next || next.tagName!="UL"){
-                    load_node(li)
-                }
-                return true;
-            }
-            else {
-                arrow.setAttribute("src", img_fold);
-                return false;
-            }
-        }
-
-        function applyList(arrow) {
-            let item = arrow.parentElement;
-            let next = item.nextElementSibling;
-            if (next && next.tagName == "UL") {
-                if (arrow.getAttribute("src") == img_fold) {
-                    next.style.display = "none";
-                }
-                else {
-                    next.style.display = "block";
-                }
-            }
-        }
-
         // Handling of the slider
         var dragging = false;
         var cratetree = document.getElementById("cratetree");
@@ -566,13 +637,19 @@
             let view_end = view_begin + content.clientHeight;
             let elt_begin = item.offsetTop - content.clientTop;
             let elt_end = elt_begin + item.offsetHeight;
-            var ratio; 
+            let elt_size = elt_end - elt_begin;
+            
+            // compute item_displayed_height / viewable_height
+            var ratio;
             if (elt_begin<view_begin) {
                 if (elt_end<view_begin) {
                     ratio=0;
                 }
                 else if (elt_end<view_end) {
-                    ratio=(elt_end-view_begin)/content.clientHeight;
+                    ratio = Math.max(
+                        (elt_end-view_begin)/content.clientHeight,
+                        (elt_end-view_begin)/elt_size
+                    );
                 }
                 else{
                     ratio=1;
@@ -580,14 +657,19 @@
             }
             else if (elt_begin<view_end){
                 if (elt_end<view_end) {
-                    ratio=(elt_end-elt_begin)/content.clientHeight;
+                    ratio=1;
                 }
                 else {
-                    ratio=(view_end-elt_begin)/content.clientHeight;
+                    ratio = Math.max(
+                        (view_end-elt_begin)/content.clientHeight,
+                        (view_end-elt_begin)/elt_size
+                    );
                 }
             }else {
-                ratio = 0
+                ratio = 0;
             }
+            // compute item_displayed_height / item_height
+
             menu_item.style.setProperty("background-color", "rgba(156,194,229,"+ratio+")");
         }
        
@@ -637,7 +719,7 @@
                 localStorage.setItem("summary-sort",sort_mode);
             }
             localStorage.setItem("summary-group",group_mode);
-            update_page(page);
+            refresh_content(page);
         }
         function switch_sort(evt){
             if (sort_mode == "sort") {
@@ -651,7 +733,7 @@
                 document.body.style.setProperty("--nosort", "none");
             }
             localStorage.setItem("summary-sort",sort_mode)
-            update_page(page);
+            refresh_content(page);
         }
         function sort(array, fn){
             array.sort((a,b)=>{

@@ -72,9 +72,15 @@ body{
     flex: 1;
     overflow: auto;
 }
-.cratetree img {
+.cratetree img, .cratetree .arrow {
     width: calc(var(--item-height) - 0.2em);
     height: calc(var(--item-height) - 0.2em);
+}
+.arrow.can_fold.open{
+    background: cover url("img/arrow/open.png");
+}
+.arrow.can_fold:not(.open){
+    background: cover url("img/arrow/fold.png");
 }
 .cratetree ul {
     margin-top: 0px;
@@ -85,6 +91,12 @@ body{
 .cratetree ul ul {
     padding-left: 1em;
 }
+.cratetree li.can_fold + ul {
+    display: none
+}
+.cratetree li.can_fold.open + ul {
+    display: block;
+}
 .cratetree li {
     position: sticky;
     background-color: #F1F1F1;
@@ -92,36 +104,37 @@ body{
     white-space: nowrap;
     width: 100%;
 }
+
+.cratetree .l1{
+    top:calc(0 * var(--item-height));
+    z-index: calc(100 - 0);
+}
+.cratetree .l2{
+    top:calc(1 * var(--item-height));
+    z-index: calc(100 - 1);
+}
+.cratetree .l3{
+    top:calc(2 * var(--item-height));
+    z-index: calc(100 - 2);
+}
+.cratetree .l4{
+    top:calc(3 * var(--item-height));
+    z-index: calc(100 - 3);
+}
+.cratetree .l5{
+    top:calc(4 * var(--item-height));
+    z-index: calc(100 - 4);
+}
+.cratetree .l6{
+    top:calc(5 * var(--item-height));
+    z-index: calc(100 - 5);
+}
 .cratetree a {
     text-decoration: none;
     color: unset;
 }
 .cratetree .current {
     background-color: lightskyblue;
-}
-.cratetree .stick.l1{
-    top:calc(0 * var(--item-height));
-    z-index: calc(100 - 0);
-}
-.cratetree .stick.l2{
-    top:calc(1 * var(--item-height));
-    z-index: calc(100 - 1);
-}
-.cratetree .stick.l3{
-    top:calc(2 * var(--item-height));
-    z-index: calc(100 - 2);
-}
-.cratetree .stick.l4{
-    top:calc(3 * var(--item-height));
-    z-index: calc(100 - 3);
-}
-.cratetree .stick.l5{
-    top:calc(4 * var(--item-height));
-    z-index: calc(100 - 4);
-}
-.cratetree .stick.l6{
-    top:calc(5 * var(--item-height));
-    z-index: calc(100 - 5);
 }
 
 /****************************************
@@ -219,7 +232,7 @@ body{
 /****************************************
  * Format the item summary              *
  ****************************************/
-.summary, #index {
+.summary, #method_table {
     font-size: 95%;
     max-width: 100%;
     white-space: nowrap;
@@ -257,33 +270,33 @@ body{
     position: relative;
     top: 6px;
 }
-#index td {
+#method_table td {
     padding-right: 0.5em; 
 }
-#index.group-fn tr:nth-child(2n){
+#method_table.group-fn tr:nth-child(2n){
     background-color: rgb(240, 240, 240);
 }
 
-#index.group-impl .full_impl{
+#method_table.group-impl .full_impl{
     background-color: rgb(230, 230, 230);
     font-weight: bold;
     font: "Source Serif Pro";
 }
-#index.group-impl .full_impl br{
+#method_table.group-impl .full_impl br{
     display: none;
 }
-#index.group-impl .full_impl code{
+#method_table.group-impl .full_impl code{
     white-space: nowrap;
 }
-#index.group-impl td:nth-child(5n+3){
+#method_table.group-impl td:nth-child(5n+3){
     max-width: 9em;
     padding-right: 1em; 
 }
-#index.group-impl td:nth-child(5n+4){
+#method_table.group-impl td:nth-child(5n+4){
     display: none;
 }
 
-#index. .impl_type {
+#method_table .impl_type {
     font-weight: bold;
 }
 /****************************************
