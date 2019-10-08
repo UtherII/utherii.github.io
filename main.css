@@ -232,7 +232,7 @@ body{
 /****************************************
  * Format the item summary              *
  ****************************************/
-.summary, #method_table {
+.summary, #method_table, #item_table {
     font-size: 95%;
     max-width: 100%;
     white-space: nowrap;
@@ -241,12 +241,6 @@ body{
 .summary img{
     width: 1.2em;
     height: 1.2em;
-}
-.summary td:nth-child(5n+3){
-    font-weight: bold;
-    max-width: 8em;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 .summary .summary a {
     text-decoration: none;
@@ -270,13 +264,19 @@ body{
     position: relative;
     top: 6px;
 }
+
 #method_table td {
     padding-right: 0.5em; 
+}
+#method_table td:nth-child(5n+3){
+    font-weight: bold;
+    max-width: 8em;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 #method_table.group-fn tr:nth-child(2n){
     background-color: rgb(240, 240, 240);
 }
-
 #method_table.group-impl .full_impl{
     background-color: rgb(230, 230, 230);
     font-weight: bold;
@@ -299,6 +299,31 @@ body{
 #method_table .impl_type {
     font-weight: bold;
 }
+#inline_impl_list {
+    display: var(--group-fn);
+}
+
+#item_table .shortname {
+    font-weight: bold;
+    max-width: 8em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#item_table .shortdesc {
+    font-weight: normal;
+}
+#item_table td {
+    padding-right: 0.5em; 
+}
+#item_table.group-fn tr:nth-child(2n){
+    background-color: rgb(240, 240, 240);
+}
+#item_table p {
+    display: inline;
+    padding-left: 3px;
+}
+
+
 /****************************************
  * Description              *
  ****************************************/
@@ -335,7 +360,9 @@ body{
     margin: 10px;
     padding: 6px;
 }
-
+.since {
+    text-align: right;
+}
 /****************************************
  * Methods description                               *
  ****************************************/

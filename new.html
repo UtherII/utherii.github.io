@@ -63,42 +63,42 @@
                 <li id="book_root" data-path="book" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/book.png" />
-                    <a href="#">The Book</a>
+                    <a href="book/index.png" onclick="set_page('book/index.html');return false">The Book</a>
                 </li>
                 <li id="keywords_root" data-path="std" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/primitive.png" />
-                    <a href="#">Keywords</a>
+                    <a href="std/index.html" onclick="set_page('std/keywords.html');return false">Keywords</a>
                 </li>
                 <li id="primitives_root" data-path="std" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/primitive.png" />
-                    <a href="#">Primitives</a>
+                    <a href="std/index.html" onclick="set_page('std/primitives.html');return false">Primitives</a>
                 </li>
                 <li id="alloc_root"  data-path="alloc" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
-                    <a href="#">alloc</a>
+                    <a href="alloc/index.html" onclick="set_page('alloc/index.html');return false">alloc</a>
                 </li>
                 <li id="core_root" data-path="core" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
-                    <a href="#">core</a>
+                    <a href="core/index.html" onclick="set_page('core/index.html');return false">core</a>
                 </li>
                 <li id="proc_macro_root" data-path="proc_macro" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
-                    <a href="#">proc_macro</a>
+                    <a href="proc_macro/index.html" onclick="set_page('proc_macro/index.html');return false">proc_macro</a>
                 </li>
                 <li id="std_root" data-path="std" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
-                    <a href="#">std</a>
+                    <a href="std/index.html" onclick="set_page('std/index.html');return false">std</a>
                 </li>
                 <li id="test_root" data-path="test" class="can_fold l1">
                     <img src="img/arrow/fold.png" />
                     <img src="img/item/crate.png" />
-                    <a href="#">test</a>
+                    <a href="test/index.html" onclick="set_page('test/index.html');return false">test</a>
                 </li>
             </ul>
         </div>
@@ -113,6 +113,7 @@
         <!-- The title area-->
         <section class="title">
             <span id="title_item" class="item"></span>
+            <span class="shortdesc"></span>
             <span class="since">since<br><b>1.0.0</b></span>
         </section>
 
@@ -145,49 +146,63 @@
             <hr>
 
             <section id="summary" class="summary">
-                <h4>Declaration: </h4>
-                <pre id="declaration" class="summary fiedls_declaration"></pre>
-                
-                <h4>Methods: 
-                    <a class="summary_button" onclick="switch_group()" >
-                        <img src="img/arrow/flat.png" title="Grouped by method name" style="display: var(--group-fn)" />
-                        <img src="img/arrow/tree.png" title="Grouped by implementation" style="display: var(--group-impl)" />
-                    </a>
-                    <a class="summary_button" onclick="switch_sort()" >
-                        <img src="img/arrow/sorted.png" title="Ordered by method name" style="display: var(--sort)" />
-                        <img src="img/arrow/unsorted.png" title="Oredered as in the source code" style="display: var(--nosort)" />
-                    </a>
-                </h4>
-                <table id="method_table">
-                </table>
-                <template id="fn_row">
-                    <tr>
-                        <td class="folder"><img src="img/arrow/empty.png" /></td>
-                        <td class="icon"><img src="img/item/fn.png" /></td>
-                        <td class="shortname"><a href="#"></a></td>
-                        <td class="shortimpl"></td>
-                        <td class="shortdesc"></td>
-                        <td class="fullname"></td>
-                        <td class="fullimpl"></td>
-                    </tr>                      
-                </template>                  
-                <template id="impl_row">
-                    <tr class="full_impl can_fold open">
-                        <td class="folder"><img src="img/arrow/open.png" /></td>
-                        <td class="full_impl" colspan="5"></td>
-                    </tr>
-                </template>
-                <p>
-                    <span class="impl_type">Implementations:</span> <a href="#">Clone<sup>🛈</sup></a>, <a href="#">Debug</a>, <a href="#">Default</a>, <a href="#">Eq<…></a>, <a href="#">Extend<…><sup>🛈</sup></a>, <a href="#">FromIterator<…></a>, <a href="#">HashMap<…><sup>🛈</sup></a>, <a href="#">Index<…><sup>🛈</sup></a>, <a href="#">IntoIterator<…><sup>🛈</sup></a>, <a href="#">PartialEq<…></a><br>
-                    <span class="impl_type">Auto-Implementations:</span> <a href="#">RefUnwindSafe</a>, <a href="#">Send</a>, <a href="#">Sync</a>, <a href="#">Unpin</a> <br> 
-                    <span class="impl_type">Blanket Implementations:</span> <a href="#">Any<sup>🛈</sup></a>, <a href="#">Borrow<…><sup>🛈</sup></a>, <a href="#">BorrowMut<…><sup>🛈</sup></a>, <a href="#">From<…></a>, <a href="#">Into<…></a>, <a href="#">IntoIterator</a>, <a href="#">ToOwned<sup>🛈</sup></a>, <a href="#">TryFrom<…></a>,  <a href="#">TryInto<…> </a><br>
-                </p>
+                <section id="item_section">
+                    <h4>Items: </h4>
+                    <table id="item_table">
+                    </table>
+                    <template id="item_row">
+                        <tr>
+                            <td class="icon"><img src="img/item/fn.png" /></td>
+                            <td class="shortname"><a href="#"></a></td>
+                            <td class="shortdesc"></td>
+                        </tr>                      
+                    </template>                  
+                </section>
+                <section id="declaration_section">
+                    <h4>Declaration: </h4>
+                    <pre id="declaration" class="summary fiedls_declaration"></pre>
+                </section>
+                <section id="method_section">
+                    <h4>Methods: 
+                        <a class="summary_button" onclick="switch_group()" >
+                            <img src="img/arrow/flat.png" title="Grouped by method name" style="display: var(--group-fn)" />
+                            <img src="img/arrow/tree.png" title="Grouped by implementation" style="display: var(--group-impl)" />
+                        </a>
+                        <a class="summary_button" onclick="switch_sort()" >
+                            <img src="img/arrow/sorted.png" title="Ordered by method name" style="display: var(--sort)" />
+                            <img src="img/arrow/unsorted.png" title="Oredered as in the source code" style="display: var(--nosort)" />
+                        </a>
+                    </h4>
+                    <table id="method_table">
+                    </table>
+                    <template id="fn_row">
+                        <tr>
+                            <td class="folder"><img src="img/arrow/empty.png" /></td>
+                            <td class="icon"><img src="img/item/fn.png" /></td>
+                            <td class="shortname"><a href="#"></a></td>
+                            <td class="shortimpl"></td>
+                            <td class="shortdesc"></td>
+                            <td class="fullname"></td>
+                            <td class="fullimpl"></td>
+                        </tr>                      
+                    </template>                  
+                    <template id="impl_row">
+                        <tr class="full_impl can_fold open">
+                            <td class="folder"><img src="img/arrow/open.png" /></td>
+                            <td colspan="5"></td>
+                        </tr>
+                    </template>
+                    <p id="inline_impl_list">
+                        <span class="impl_type">Implementations:</span> <span class="impl"></span> <br>
+                        <span class="impl_type">Auto-Implementations:</span> <span class="auto-impl"></span> <br> 
+                        <span class="impl_type">Blanket Implementations:</span> <span class="blanket-impl"></span> <br>
+                    </p>
+                </section>
             </section>
             <hr>
 
             <section id="methods" class="methods">
-                <h2 id="title-methods" class="small-section-header">Methods</h2>
-                TODO
+
             </section>
         </section>
 
@@ -292,7 +307,7 @@
         let content = document.querySelector(".content");
         
         set_unfold_sidebar();
-        set_page("std/vec/struct.Vec.html");
+        set_page("std/index.html");
 
         // Set the sidebar eady for the current page
         function sidebar_current(url){
@@ -396,48 +411,100 @@
             page = new DOMParser().parseFromString(html, "text/html");
             console.log(page);
             refresh_content(page);
+            return false;
         }
-        function refresh_content(p){
-            var page = p.cloneNode(true);
-            // update description
-            var desc = document.getElementById("description");
-            desc.innerHTML="<h2>Description</h2>";
-            desc.appendChild(page.querySelector(".docblock"));
+        function refresh_content(loaded_page){
+            var page = loaded_page.cloneNode(true);
+            // update title
+            var title = document.getElementById("title_item");
+            var page_type = page.querySelector(".fqn .in-band").firstChild.textContent;
+            for (map in mappings){
+                if (mappings[map].text==page_type){
+                    page_type=map;
+                    break;
+                }
+            }
+            title.innerHTML="";
+            title.appendChild(page.querySelector(".fqn .in-band"));
 
             // update declarartion
-            var decl = document.getElementById("declaration");
-            decl.innerHTML="";
-            decl.appendChild(page.querySelector(".type-decl"));
+            let decl_src=page.querySelector(".type-decl");
+            if (decl_src){
+                document.getElementById("declaration_section").style.display="block";
+                var decl_dest = document.getElementById("declaration");
+                decl_dest.innerHTML="";
+                decl_dest.appendChild(decl_src);
+            }
+            else{
+                document.getElementById("declaration_section").style.display="none";
+            }
+            
+            // update items
+            let items = page.querySelectorAll(".module-item");
+            if (items.length>0){
+                document.getElementById("item_section").style.display="block";
+                let item_table = document.getElementById("item_table");
+                item_table.innerHTML="";
+                for (item of items){
+                    let new_tr = document.getElementById("item_row").content.firstElementChild.cloneNode(true);
+                    let a = item.firstChild.firstChild;
+                    new_tr.children[0].firstChild.src=mappings[a.className].icon;
+                    new_tr.children[1].firstChild.textContent=a.textContent;
+                    new_tr.children[2].appendChild(item.children[1]);
+                    item_table.appendChild(new_tr);
+                }
+            }
+            else {
+                document.getElementById("item_section").style.display="none";
+            }
 
-            // update methods details
-            var methods = document.getElementById("methods");
-            methods.innerHTML="";
-            var item = page.getElementById("methods");
-            if (item){
+            // update description
+            var desc = document.getElementById("description");
+            desc.innerHTML="";
+            desc.appendChild(page.querySelector(".docblock"));
+
+            // update methods information
+            var methods_begin = page.querySelector("#methods,#deref-methods,#implementations,#synthetic-implementations,#blanket-implementations");
+            if (methods_begin){
+                document.getElementById("method_section").style.display="block";
+                document.getElementById("menu_methods").style.display="block";
+
+                // update method detail
+                var methods = document.getElementById("methods");
+                methods.style.display="block";
+                methods.innerHTML="";
+                var item=methods_begin;
                 do {
                     methods.appendChild(item.cloneNode(true));
                 } while (item = item.nextSibling)
-            }
-            // update summary
-            let table = document.querySelector("#method_table")
-            table.innerHTML="";
-            table.className= group_mode=="fn" ? "group-fn" : "group-impl";
-            var list = [];
-            var cur_impl;
-            for (item of page.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
-                if (item.tagName=="H4"){
-                    list.push(make_fn_row(item,cur_impl));
-                }
-                if (item.tagName!="H4" || !item.nextElementSibling){
-                    if (group_mode=="impl" && cur_impl){
-                        table.appendChild(make_impl_row(cur_impl));
-                        flush_fn_rows(list,table);
+            
+                // update method summary
+                let table = document.querySelector("#method_table")
+                table.innerHTML="";
+                table.className= group_mode=="fn" ? "group-fn" : "group-impl";
+                var list = [];
+                var cur_impl;
+                for (item of page.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
+                    if (item.tagName=="H4"){
+                        list.push(make_fn_row(item,cur_impl));
                     }
-                    cur_impl=item;
+                    if (item.tagName!="H4" || !item.nextElementSibling){
+                        if (group_mode=="impl" && cur_impl){
+                            table.appendChild(make_impl_row(cur_impl, list.length>0));
+                            flush_fn_rows(list,table);
+                        }
+                        cur_impl=item;
+                    }
                 }
+                flush_fn_rows(list,table);
             }
-            flush_fn_rows(list,table);
+            else {
+                document.getElementById("method_section").style.display="none";
+                document.getElementById("methods").style.display="none";
+                document.getElementById("menu_methods").style.display="none";
+            }
 
+            // set dynamic elements
             set_unfold_summary();
             set_popups();
             set_slider();
@@ -467,11 +534,14 @@
                     }
 
                 }
+                if (group_mode=="impl"){
+                    list[i].className="expanded";
+                }
                 table.appendChild(list[i]);
             }
             list.length=0;
         }
-        function make_impl_row(item){
+        function make_impl_row(item, expand){
             // Instantiate template
             var new_tr = document.getElementById("impl_row").content.cloneNode(true);
             var label;
@@ -482,6 +552,9 @@
                 label = item.firstElementChild.innerHTML;
                 label = label.replace(/(&nbsp;)+/g,"&nbsp;");
             }   
+            if (!expand){
+                new_tr.firstElementChild.children[0].innerHTML="";
+            }
             new_tr.firstElementChild.children[1].innerHTML = label;
             return new_tr;
         }
@@ -708,6 +781,9 @@
                 group_mode="impl";
                 document.body.style.setProperty("--group-impl", "unset");
                 document.body.style.setProperty("--group-fn", "none");
+                sort_mode="nosort"
+                document.body.style.setProperty("--sort", "none");
+                document.body.style.setProperty("--nosort", "unset");
             }
             else {
                 group_mode="fn";
@@ -716,8 +792,8 @@
                 sort_mode="sort"
                 document.body.style.setProperty("--sort", "unset");
                 document.body.style.setProperty("--nosort", "none");
-                localStorage.setItem("summary-sort",sort_mode);
             }
+            localStorage.setItem("summary-sort",sort_mode);
             localStorage.setItem("summary-group",group_mode);
             refresh_content(page);
         }
