@@ -275,7 +275,7 @@
             constant:{
                 order:13,
                 icon:"img/item/const.png", 
-                link:"/struct.$.html", 
+                link:"/constant.$.html", 
                 expand:false
             },
             enum:{
@@ -311,7 +311,43 @@
 
         // Set the sidebar eady for the current page
         function sidebar_current(url){
-            
+            let path_elt = url.split("/");
+            let path = ""
+            var elt;
+            for (var i=0; i+1<path_elt.length; i++){
+                let dir = path_elt[i];
+                path += dir;
+                if (i==0 && path=="std") {
+                    if (url.includes("/keyword.")){
+                        elt = document.getElementById("keywords_root")
+                    }
+                    else if (url.includes("/primitives.")){
+                        elt = document.getElementById("keywords_root")
+                    }
+                    else  {
+                        elt = document.getElementById("std_root");
+                    }
+                }
+                else {
+                    elt = document.querySelector("li[data-path='"+path+"']")
+                }
+                if (elt.classList.contains("can_fold")){
+                    elt.classList.add("open");
+                }
+                let next = elt.nextElementSibling
+                if (next && next.tagName!="UL"){
+                    load_node(elt);
+                }
+                path += "/";
+            }
+            let last=path_elt[path_elt.length-1];
+            if (last!="index.html"){
+                path += last.replace(/.*\.(.+?)\.html/,"$1");
+                elt = document.querySelector("li[data-path='"+path+"']")
+            }
+            old_elt = document.querySelector(".selected");
+            if (old_elt) {old_elt.classList.remove("selected")}
+            elt.classList.add("selected");
         }
 
         async function load_node(elt){
@@ -404,16 +440,17 @@
         }
 
         // Load content from a rustdoc page
-        var page = null;
         async function set_page(url){
+            current_path = url.replace(/(.*)\/.*/,"$1");
+            sidebar_current(url);
             let response = await fetch(url);
             let html = await response.text();
             page = new DOMParser().parseFromString(html, "text/html");
             console.log(page);
             refresh_content(page);
-            return false;
+            content.scrollTo(0,0);
         }
-        function refresh_content(loaded_page){
+        function refresh_content(loaded_page){            
             var page = loaded_page.cloneNode(true);
             // update title
             var title = document.getElementById("title_item");
@@ -446,10 +483,19 @@
                 let item_table = document.getElementById("item_table");
                 item_table.innerHTML="";
                 for (item of items){
-                    let new_tr = document.getElementById("item_row").content.firstElementChild.cloneNode(true);
                     let a = item.firstChild.firstChild;
-                    new_tr.children[0].firstChild.src=mappings[a.className].icon;
+                    let map= mappings[a.className];
+                    if (map.to) {continue;}
+
+                    let new_tr = document.getElementById("item_row").content.firstElementChild.cloneNode(true);
+                    new_tr.children[0].firstChild.src=map.icon;
                     new_tr.children[1].firstChild.textContent=a.textContent;
+                    let href=current_path+map.link.replace("$",a.textContent);
+                    new_tr.children[1].firstChild.href=href;
+                    new_tr.children[1].firstChild.onclick=function(){
+                        set_page(href);
+                        return false;
+                    };
                     new_tr.children[2].appendChild(item.children[1]);
                     item_table.appendChild(new_tr);
                 }

@@ -133,7 +133,7 @@ body{
     text-decoration: none;
     color: unset;
 }
-.cratetree .current {
+.cratetree .selected {
     background-color: lightskyblue;
 }
 
@@ -301,6 +301,7 @@ body{
 }
 #inline_impl_list {
     display: var(--group-fn);
+    margin-top: 0.75em
 }
 
 #item_table .shortname {
