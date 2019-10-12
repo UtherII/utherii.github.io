@@ -503,6 +503,10 @@
             else {
                 document.getElementById("item_section").style.display="none";
             }
+            
+            if (!decl_src && items.length==0){
+                document.getElementById("menu_summary").style.display="none";
+            }  
 
             // update description
             var desc = document.getElementById("description");
