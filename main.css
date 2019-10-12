@@ -21,11 +21,12 @@ body{
     border: 1px black solid;
     box-shadow: 5px 2px 2px gray;
 }
-#infobox h4, #infobox h3{
+#infobox h4, #infobox h3, #infobox h2{
     font-size: 95%;
     margin: 0px;
     padding: 0px;
 }
+
 #infobox .important-traits{
     display: none;
 }
@@ -273,6 +274,10 @@ body{
     max-width: 8em;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+#method_table .prefix{
+    font-style: italic;
+    font-weight: normal;
 }
 #method_table.group-fn tr:nth-child(2n){
     background-color: rgb(240, 240, 240);

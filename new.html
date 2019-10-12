@@ -570,9 +570,16 @@
                         if (parent==null){
                             parent=list[i].cloneNode(true);
                             parent.className="can_fold";
+                            parent.querySelector(".shortimpl").textContent="…";
+                            parent.querySelector(".fullimpl").textContent="Multiple implementations";
                             table.appendChild(parent);
                         }
                         list[i].className="expanded";
+                        let parent_desc=parent.querySelector(".shortdesc"); 
+                        let child_desc=list[i].querySelector(".shortdesc"); 
+                        if (child_desc.textContent != parent_desc.textContent) {
+                            parent_desc.textContent="…"
+                        }
                     }
                     else if (parent) {
                         parent=null;
@@ -611,7 +618,7 @@
             //shortname
             new_tr.children[2].firstElementChild.appendChild(item.querySelector(".fnname").firstChild.cloneNode(true));
             //shortimpl
-            new_tr.children[3].appendChild(document.createTextNode("Todo<…>"));
+            new_tr.children[3].appendChild(make_short_impl(cur_impl));
             //shortdesc
             var next = item.nextElementSibling;
             if (next.querySelector(".stability .unstable")){
@@ -630,7 +637,99 @@
             new_tr.children[6].appendChild(cur_impl.cloneNode(true));
             return new_tr;
         }
+        function make_short_impl(elt) {
+            let a = document.querySelectorAll("#title_item .in-band a")
+            let main_type=a[a.length-1].textContent;
 
+            let out = document.createElement("span");
+            let text = elt.querySelector(".in-band").textContent.trim();
+            //text=text.replace("[src]","");
+            text=text.replace(/\s/g," ");
+            let info = false;
+            let prefix = "";
+            let is_from = false;
+            if (text.startsWith("Methods from")) {
+                prefix = "from";
+                text=text.replace(/.*?=(.*).*>/,"$1");
+            }
+            else if(text.startsWith("impl")){
+                //impl arguments
+                let pos = 4;
+                var impl_args="";
+                if (text.startsWith("impl<")){
+                    pos = get_block(text,4,"<",">");
+                    impl_args = text.substring(4,pos);
+                    if (impl_args.includes(":")) info=true;
+                }
+                text=text.substring(pos).trim();
+                
+                //where clause
+                var pos_where = text.indexOf(" where ");
+                var where_clause
+                if (pos_where > 0){
+                    where_clause = text.substring(pos_where+7);
+                    text = text.substring(0,pos_where);
+                    info=true;
+                } 
+
+                //for clause
+                let pos_for = text.indexOf(" for ");
+                var for_clause;
+                var short_for_clause;
+                if (pos_for > 0) {
+                    for_clause = text.substring(pos_for+5).trim();
+                    text = text.substring(0,pos_for);
+                    if (for_clause!=main_type+impl_args) info=true;
+                    short_for_clause = for_clause.replace(/<.*/,"<…>");
+                }
+
+                //implemented trait
+                var impl_trait=text.trim();
+                var short_impl_trait=impl_trait.replace(/<.*/,"<…>");
+                if (impl_trait.startsWith(main_type) && impl_trait!=main_type+impl_args){
+                    info=true
+                }
+
+                //final text
+                if (impl_trait.startsWith(main_type)){
+                    if (for_clause && !for_clause.includes(main_type)){
+                        prefix="for";
+                        text=short_for_clause;
+                    }
+                    else {
+                        text="";
+                    }
+                }
+                else {
+                    text=short_impl_trait;
+                }
+            }
+            if (prefix!="") {
+                let elt_prefix = document.createElement("span");
+                elt_prefix.className="prefix";
+                elt_prefix.appendChild(document.createTextNode(prefix+" "));
+                out.appendChild(elt_prefix);
+            }
+            out.appendChild(document.createTextNode(text));
+            if (info) {
+                out.appendChild(document.createTextNode("\xA0"))
+                let sup = document.createElement("sup");
+                sup.appendChild(document.createTextNode("🛈"));
+                out.appendChild(sup);
+            }
+            return out;
+        }
+        function get_block(str, start, open, close){
+            if (str[start]!=open) return -1;
+            let count =1;
+            var pos;
+            for (pos=start+1; count>0; pos++){
+                if (pos>=str.length) return -1;
+                if (str[pos]==open) count++;
+                if (str[pos]==close) count--;
+            }
+            return pos;
+        }
         //Support unfolding in the item summary
         function set_unfold_summary(){
             for (let line of document.querySelectorAll(".summary .can_fold")) {
@@ -815,7 +914,7 @@
             let impl_list = document.querySelectorAll("#methods .impl");
             for (cur_impl of impl_list){
                 cur_impl.className="impl stuck";
-                if (cur_impl==impl) break;
+                if (cur_impl==item_impl) break;
             }
             content.scrollTop=item.offsetTop-content.offsetTop-36;
             return false;
