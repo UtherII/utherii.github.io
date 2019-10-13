@@ -20,6 +20,7 @@ body{
     background-color: whitesmoke;
     border: 1px black solid;
     box-shadow: 5px 2px 2px gray;
+    overflow: auto;
 }
 #infobox h4, #infobox h3, #infobox h2{
     font-size: 95%;
@@ -233,7 +234,7 @@ body{
 /****************************************
  * Format the item summary              *
  ****************************************/
-.summary, #method_table, #item_table {
+#method_table, #item_table {
     font-size: 95%;
     max-width: 100%;
     white-space: nowrap;

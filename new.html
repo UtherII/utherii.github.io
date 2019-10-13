@@ -162,6 +162,10 @@
                     <h4>Declaration: </h4>
                     <pre id="declaration" class="summary fiedls_declaration"></pre>
                 </section>
+                <section id="implementation_section">
+                    <h4 class="impl_type">Implementations:</h4> 
+                    <span id="impl_list" class="impl"></span>
+                </section>
                 <section id="method_section">
                     <h4>Methods: 
                         <a class="summary_button" onclick="switch_group()" >
@@ -192,11 +196,6 @@
                             <td colspan="5"></td>
                         </tr>
                     </template>
-                    <p id="inline_impl_list">
-                        <span class="impl_type">Implementations:</span> <span class="impl"></span> <br>
-                        <span class="impl_type">Auto-Implementations:</span> <span class="auto-impl"></span> <br> 
-                        <span class="impl_type">Blanket Implementations:</span> <span class="blanket-impl"></span> <br>
-                    </p>
                 </section>
             </section>
             <hr>
@@ -284,20 +283,26 @@
                 link:"/enum.$.html", 
                 expand:false
             },
-            trait:{
+            union:{
                 order:15, 
+                icon:"img/item/union.png", 
+                link:"/union.$.html", 
+                expand:false
+            },
+            trait:{
+                order:16, 
                 icon:"img/item/trait.png", 
                 link:"/trait.$.html", 
                 expand:false
             },
             fn:{
-                order:16, 
+                order:17, 
                 icon:"img/item/fn.png", 
                 link:"/fn.$.html", 
                 expand:false
             },
             macro:{
-                order:17, 
+                order:18, 
                 icon:"img/item/macro.png", 
                 link:"/macro.$.html", 
                 expand:false
@@ -333,6 +338,7 @@
                 }
                 if (elt.classList.contains("can_fold")){
                     elt.classList.add("open");
+                    elt.firstElementChild.src=img_open;
                 }
                 let next = elt.nextElementSibling
                 if (next && next.tagName!="UL"){
@@ -504,15 +510,52 @@
                 document.getElementById("item_section").style.display="none";
             }
             
-            if (!decl_src && items.length==0){
-                document.getElementById("menu_summary").style.display="none";
-            }  
-
             // update description
             var desc = document.getElementById("description");
             desc.innerHTML="";
             desc.appendChild(page.querySelector(".docblock"));
 
+            //update implementation list
+            let line=document.getElementById("impl_list");
+            line.innerHTML="";
+            let impl_hidden = localStorage.getItem("impl_hidden");
+            if (!impl_hidden) impl_hidden=[];
+            let impl_inline={};
+            for (item of page.querySelectorAll("h3.impl")){
+                let short = make_short_impl(item.cloneNode(true));
+                let trait = short.getAttribute("data-trait");
+                if (trait){
+                    if (!impl_inline[trait]){
+                        impl_inline[trait]={
+                            hidden:impl_hidden.includes(trait), 
+                            display:short,
+                            detail:[]
+                        };
+                    }
+                    impl_inline[trait].detail.push(item.cloneNode(true));
+                }
+            }
+            for (trait in impl_inline) {
+                span = document.createElement("span");
+                span.appendChild(impl_inline[trait].display);
+                popup = document.createElement("div");
+                popup.style.display="none";
+                var first = true;
+                for (impl of impl_inline[trait].detail) {
+                    if (first==true){
+                        first=false;
+                    }
+                    else {
+                        popup.appendChild(document.createElement("hr"));
+                    }
+                    popup.appendChild(impl);
+                }
+                span.appendChild(popup);
+                setPopup(impl_inline[trait].display, popup);
+                line.appendChild(span);
+                line.appendChild(document.createTextNode(", "));
+            }
+            
             // update methods information
             var methods_begin = page.querySelector("#methods,#deref-methods,#implementations,#synthetic-implementations,#blanket-implementations");
             if (methods_begin){
@@ -553,6 +596,10 @@
                 document.getElementById("methods").style.display="none";
                 document.getElementById("menu_methods").style.display="none";
             }
+
+            if (!decl_src && !methods_begin && items.length==0){
+                document.getElementById("menu_summary").style.display="none";
+            }  
 
             // set dynamic elements
             set_unfold_summary();
@@ -646,17 +693,17 @@
             let main_type=a[a.length-1].textContent;
 
             let out = document.createElement("span");
-            let text = elt.querySelector(".in-band").textContent.trim();
-            //text=text.replace("[src]","");
-            text=text.replace(/\s/g," ");
+            let text;
             let info = false;
             let prefix = "";
-            let is_from = false;
-            if (text.startsWith("Methods from")) {
+            if (elt.tagName=="H2") {
                 prefix = "from";
-                text=text.replace(/.*?=(.*).*>/,"$1");
+                text = elt.textContent.trim();
+                text = text.replace(/.*?=(.*).*>/,"$1");
             }
-            else if(text.startsWith("impl")){
+            else {
+                text = elt.querySelector(".in-band").textContent.trim();
+                text = text.replace(/\s/g," ");
                 //impl arguments
                 let pos = 4;
                 var impl_args="";
@@ -706,6 +753,7 @@
                 }
                 else {
                     text=short_impl_trait;
+                    out.setAttribute("data-trait",short_impl_trait.replace(/<.*/,""));
                 }
             }
             if (prefix!="") {
