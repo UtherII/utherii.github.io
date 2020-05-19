@@ -34,6 +34,16 @@
             document.body.style.setProperty("--sort", "none");
             document.body.style.setProperty("--nosort", "unset");
         }
+        var blanket_mode = localStorage.getItem("summary-sort");
+        if (blanket_mode == "visible") {
+            document.body.style.setProperty("--blanket", "unset");
+            document.body.style.setProperty("--noblanket", "none");
+        }
+        else {
+            blanket_mode="hidden";
+            document.body.style.setProperty("--blanket", "none");
+            document.body.style.setProperty("--noblanket", "unset");
+        }
     </script>
 
     <!-- The invisible item that will contain the original documentation page -->
@@ -175,6 +185,10 @@
                         <a class="summary_button" onclick="switch_sort()" >
                             <img src="img/arrow/sorted.png" title="Ordered by method name" style="display: var(--sort)" />
                             <img src="img/arrow/unsorted.png" title="Oredered as in the source code" style="display: var(--nosort)" />
+                        </a>
+                        <a class="summary_button" onclick="switch_blanket()" >
+                            <img src="img/arrow/blanket5.png" title="Blanket implementations visible" style="display: var(--blanket)" />
+                            <img src="img/arrow/blanket6.png" title="Blanket implementation hidden" style="display: var(--noblanket)" />
                         </a>
                     </h4>
                     <table id="method_table">
@@ -579,9 +593,15 @@
                 var cur_impl;
                 for (item of page.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
                     if (item.tagName=="H4"){
+                        if (blanket_mode=="hidden" && item.parentNode && item.parentNode.parentNode && item.parentNode.parentNode.id=="blanket-implementations-list"){
+                            continue;
+                        }
                         list.push(make_fn_row(item,cur_impl));
                     }
                     if (item.tagName!="H4" || !item.nextElementSibling){
+                        if (blanket_mode=="hidden" && item.parentNode && item.parentNode.id=="blanket-implementations-list"){
+                            continue;
+                        }
                         if (group_mode=="impl" && cur_impl){
                             table.appendChild(make_impl_row(cur_impl, list.length>0));
                             flush_fn_rows(list,table);
@@ -1006,6 +1026,20 @@
                 document.body.style.setProperty("--nosort", "none");
             }
             localStorage.setItem("summary-sort",sort_mode)
+            refresh_content(page);
+        }
+        function switch_blanket(evt){
+            if (blanket_mode == "visible") {
+                blanket_mode="hidden";
+                document.body.style.setProperty("--blanket", "none");
+                document.body.style.setProperty("--noblanket", "unset");
+            }
+            else {
+                blanket_mode="visible";
+                document.body.style.setProperty("--blanket", "unset");
+                document.body.style.setProperty("--noblanket", "none");
+            }
+            localStorage.setItem("blanket",blanket_mode)
             refresh_content(page);
         }
         function sort(array, fn){
