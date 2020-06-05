@@ -1,0 +1,41 @@
+@import "font/font.css";
+html {
+	font: 16px/1.4 "Source Serif Pro", serif;
+	font-feature-settings: "kern", "liga";    color: var(--fg);
+    background-color: var(--bg);
+}
+
+/************************
+    Menu Bar
+************************/
+.title {
+    margin-top: 4px;
+    margin-bottom: 0.5em;
+    font-family: "Source Serif Pro";
+    display: flex;
+}
+.title .name{
+    flex: 1;
+}
+.title .since{
+    font-size: 100%;
+    font-family: "Fira Sans";
+    margin-right: 1em;
+    margin-left: 1em;
+    margin-top: 0px;
+    padding: 0px;
+    line-height: 1em;
+}
+
+/************************
+    Content
+************************/
+#method_table, #item_table {
+    font-size: 95%;
+    white-space: nowrap;
+    border-spacing: 0;
+}
+
+#declaration_section .docblock {
+    background-color: var(--);
+} 

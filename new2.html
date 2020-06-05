@@ -1,0 +1,155 @@
+<html class="rust">
+
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/variables.css" />
+        <link rel="stylesheet" href="css/general.css" />
+        <link rel="stylesheet" href="css/chrome.css" />
+        <script type="text/javascript" src="script/types.js"></script>
+        <script type="text/javascript" src="script/main.js"></script>
+    </head>
+
+    <body onload="init()">
+
+        <!-- The box used to dispay advanced tooltips -->
+        <nav id="infobox" class="infobox">
+            Tooltip text.
+        </nav>
+
+        <!-- The resizable sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div id="crateinfo" class="crateinfo">
+                <img class="logo" src="img/logo.png" /><br>
+                Rust standard library
+            </div>
+            <hr>
+            <div class="searchbox">
+                Search: <br>
+                <input />
+            </div>
+            <hr>
+            <div id="cratetree" class="cratetree">
+            </div>
+        </nav>
+
+        <!-- The invisible slider used to resize the sidebar -->
+        <nav id="slider" class="slider">
+        </nav>
+
+        <!-- The right side of the page containing the informations -->
+        <section class="main">
+            <!-- The title area-->
+            <section id="title" class="title">
+                <span class="name"></span>
+                <span class="since">since<br><b>1.0.0</b></span>
+            </section>
+
+            <!-- The menu bar-->
+            <nav class="menubar">
+                <a href="#description">
+                    <div class="section" id="menu_description">Description</div>
+                </a>
+                <a href="#summary">
+                    <div class="section" id="menu_summary">Summary</div>
+                </a>
+                <a href="#methods">
+                    <div class="section" id="menu_methods">Methods</div>
+                </a>
+                <div class="section empty"></div>
+                <nav class="descr_index" id="descr_index">
+
+                </nav>
+                <a href="#source">
+                    <div class="section">Source</div>
+                </a>
+            </nav>
+
+            <!-- The scrollable content area -->
+            <section class="content">
+
+                <!-- The description section -->
+                <section id="description" class="description" >
+                </section>
+                
+                <hr>
+
+                <!-- The item subsection (only for modules) -->
+                <section id="item_section" style="display: none;">
+                    <h4>Items: </h4>
+                    <table id="item_table">
+                    </table>
+                    <template id="item_row">
+                        <tr>
+                            <td class="icon"><img src="img/item/empty.png" /></td>
+                            <td class="shortname"><a href="#"></a></td>
+                            <td class="shortdesc"></td>
+                        </tr>                      
+                    </template>                  
+                </section>
+
+                <!-- The summary section -->
+                <section id="summary" class="summary">
+                    <!-- The item declaration subsection (for most items) -->
+                    <section id="declaration_section" style="display: none;">
+                        <h4>Declaration: </h4>
+                        <pre id="declaration" class="summary fiedls_declaration"></pre>
+                    </section>
+
+                    <!-- The implementation list subsection (for types and traits) -->
+                    <section id="implementation_section" style="display: none;">
+                        <h4 class="impl_type">Implementations:</h4> 
+                        <span id="impl_list" class="impl"></span>
+                    </section>
+
+                    <!-- The method list subsection (for types and traits) -->
+                    <section id="method_summary_section" style="display: none;">
+                        <h4>Methods: 
+                            <template id="method_filter_button">
+                                <a class="method_filter_button" onclick="" >
+                                    <img src="img/arrow/empty.png" title="filter button" />
+                                </a>
+                            </template>
+                        </h4>
+                        <table id="method_table">
+                        </table>
+                        <template id="impl_row">
+                            <tr id="impl_index">
+                                <td class="folder"><img src="img/arrow/open.png" /></td>
+                                <td colspan="5"></td>
+                            </tr>
+                        </template>
+                        <template id="fn_row">
+                            <tr id="fn_index">
+                                <td class="folder"><img src="img/arrow/empty.png" /></td>
+                                <td class="icon"><img src="img/item/fn.png" /></td>
+                                <td class="shortname"><a href="#"></a></td>
+                                <td class="shortimpl"></td>
+                                <td class="shortdesc"></td>
+                            </tr>                      
+                        </template>                  
+                        <template id="fn_subrow">
+                            <tr id="fn_sub_index">
+                                <td class="folder"><img src="img/arrow/empty.png" /></td>
+                                <td class="icon"><img src="img/item/fn.png" /></td>
+                                <td class="shortname"><a href="#"></a></td>
+                                <td class="shortimpl" colspan="2"></td>
+                                <td class="fullname"></td>
+                                <td class="fullimpl"></td>
+                            </tr>                      
+                        </template>                  
+
+                    </section>
+                </section>
+
+                <hr>
+
+                <section id="methods" class="methods" style="display: none;">
+
+                </section>
+            </section>
+
+        </section>
+
+    </body>
+
+</html>

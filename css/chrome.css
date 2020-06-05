@@ -1,0 +1,66 @@
+/************************
+    Sidebar 
+************************/
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    font-size: 0.875em;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-fg);  
+    padding: 6px;
+}
+.sidebar .crateinfo {
+    text-align: center;
+    font-weight: bold;
+    font-size: 110%;
+}
+.sidebar .logo {
+    max-height: 64px;
+    filter: drop-shadow(0 0 5px #fff);    
+    padding-bottom: 6px;
+} 
+.sidebar .searchbox input {
+    width: 100%;
+}
+/************************
+    Main Panel 
+************************/
+.main {
+    margin-left: var(--sidebar-width);
+    background-color: var(--bg);
+    color: var(--fg);  
+}
+
+/************************
+    Menu Bar
+************************/
+.menubar{
+    display: flex;
+    border-bottom: #505050 1px solid;
+    text-align: center;
+    width: calc(100% - 2px);
+    max-width: 960px;
+ }
+.menubar .section{
+    font-weight: bold;
+    padding-bottom: 0.2em;
+    border: var(--table-border-color) 1px solid;
+    width: 8em;
+    background-color: var(--table-header-bg);
+    color: var(--theme-popup-fg);
+}
+.menubar .empty {
+    flex: 1 1;
+    background-color: inherit;    
+    border: none;
+}
+.menubar .empty:hover {
+    background-color: inherit;    
+}
+
