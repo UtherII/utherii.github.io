@@ -32,28 +32,55 @@
     Main Panel 
 ************************/
 .main {
+    position: fixed;
+    top: 0px;
+    width: calc(100vw - var(--sidebar-width));
+    height: 100vh;
     margin-left: var(--sidebar-width);
     background-color: var(--bg);
     color: var(--fg);  
+    display: flex;
+    flex-direction: column;
 }
 
+header {
+    padding: 5px;
+    z-index: 1;
+}
+
+.content {
+    padding: 7px;
+    overflow: scroll;
+    flex: 1;
+}
 /************************
     Menu Bar
 ************************/
 .menubar{
     display: flex;
-    border-bottom: #505050 1px solid;
+    border-bottom: var(--table-border-color) 1px solid;
+    color: var(--fg);
     text-align: center;
     width: calc(100% - 2px);
     max-width: 960px;
- }
+}
+.menubar a .section {
+    color: var(--theme-popup-fg);
+}
 .menubar .section{
     font-weight: bold;
     padding-bottom: 0.2em;
     border: var(--table-border-color) 1px solid;
     width: 8em;
     background-color: var(--table-header-bg);
-    color: var(--theme-popup-fg);
+}
+.menubar .button{
+    border: var(--table-border-color) 1px solid;
+    background-color: var(--table-header-bg);
+    width: 2em;
+}
+.menubar a#source{
+    text-decoration: none;
 }
 .menubar .empty {
     flex: 1 1;
@@ -63,4 +90,3 @@
 .menubar .empty:hover {
     background-color: inherit;    
 }
-

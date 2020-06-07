@@ -1,12 +1,29 @@
 @import "font/font.css";
+@import "light.css";
+
 html {
 	font: 16px/1.4 "Source Serif Pro", serif;
 	font-feature-settings: "kern", "liga";    color: var(--fg);
     background-color: var(--bg);
 }
+body {
+    margin: 0px;
+}
+#infobox {
+    display: none;
+    z-index: 200;
+    position: fixed;
+    max-width: 600px;
+    min-height: 1em;
+    padding: 0.4em; 
+    background-color: whitesmoke;
+    border: 1px black solid;
+    box-shadow: 5px 2px 2px gray;
+    overflow: auto;
+}
 
 /************************
-    Menu Bar
+    Title section
 ************************/
 .title {
     margin-top: 4px;
@@ -18,7 +35,7 @@ html {
     flex: 1;
 }
 .title .since{
-    font-size: 100%;
+    font-size: 80%;
     font-family: "Fira Sans";
     margin-right: 1em;
     margin-left: 1em;
@@ -27,15 +44,131 @@ html {
     line-height: 1em;
 }
 
+
 /************************
     Content
 ************************/
+.title {
+    color: #1f4d78;
+    font-weight:bold;
+    font-size: 130%;
+}
+
 #method_table, #item_table {
     font-size: 95%;
     white-space: nowrap;
     border-spacing: 0;
 }
 
-#declaration_section .docblock {
-    background-color: var(--);
-} 
+/****************************
+ * Description              *
+ ****************************/
+ .description{
+    font-family: "Source Serif Pro";
+    max-width: 960px;
+    margin-left: 1em;
+}
+.description a {
+    color: var(--links);
+}
+.description h1{
+    border-bottom: var(--table-border-color) ridge 2px;
+    font-size: 120%;
+    left: 1em;
+}
+.description h2{
+    font-size: 110%;
+}
+.description h3{
+    font-size: 100%;
+}
+.example-wrap {
+    display: block;
+    margin-bottom: 10px;
+}
+.description code {
+    font-family: "Source Code Pro", monospace;
+}
+.description pre {
+    font-family: "Source Code Pro", monospace;
+    font-size: 90%;
+    background-color: #F5F5F5;
+    margin: 10px;
+    padding: 6px;
+}
+.since {
+    text-align: right;
+}
+
+/****************************************
+ * Format everything in the summary     *
+ ****************************************/
+ .summary img{
+    width: 1.2em;
+    height: 1.2em;
+}
+.summary a {
+    text-decoration: none;
+    color: initial;
+}
+.summary .fullname, .summary .fullimpl {
+    display: none;    
+}
+.summary .expanded {
+    display: none;    
+}
+.summary h4 {
+    margin-top: 0em;
+    padding-top: 0.5em;
+    margin-bottom: 0.4em;
+}
+.summary .summary_button img {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    top: 6px;
+}
+
+/****************************************
+ * Format the declaration               *
+ ****************************************/
+ #declaration_section .docblock{
+    background-color: var(--quote-bg);
+}
+
+/****************************************
+ * Format the item summary              *
+ ****************************************/
+ #item_table {
+    font-size: 95%;
+    max-width: 100%;
+    white-space: nowrap;
+    border-spacing: 0;
+}
+#item_table .shortname {
+    font-weight: bold;
+    max-width: 8em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#item_table td {
+    padding-right: 0.5em;
+}
+
+/****************************************
+ * Format the method summary            *
+ ****************************************/
+ .impl_row{
+    background-color: var(--quote-bg);
+    font-weight: bold;
+}
+.fn_row .shortname{
+    font-weight: bold;
+}
+.in-band{
+    background-color: initial;
+}
+.docblock code{
+    background-color: var(--quote-bg);
+}

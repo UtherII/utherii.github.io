@@ -2,87 +2,57 @@
 // Global variables
 //*******************************************
 const defaultPage = "std/index.html"
-let content;
 
 //*******************************************
 // Init the environement 
 //*******************************************
 async function init(){
     // get page to load from parameter
-    let page = defaultPage;
-    let url = location.toString();
-    if (url.indexOf("?item=") > 0) {
-        page = url.replace(/.*?\?item=(.*)/,"$1");
+    let docPage = defaultPage;
+    let realUrl = location.toString();
+    if (realUrl.indexOf("?item=") > 0) {
+        docPage = realUrl.replace(/.*?\?item=(.*)/,"$1");
     }
 
     // load the page
-    await loadDocPage(page);
+    await loadDocPage(docPage);
     refreshContent();
 
     // init history handling
-    history.replaceState({url: page, scroll: 0},"");
+    history.replaceState({url: docPage, scroll: 0},"");
     onpopstate = historyMove;
+
+    // init scrolling handling
+    handle_scrolling();
 }
 
 //*******************************************
 // Load the classic documentation web page
 //*******************************************
-async function loadDocPage(url){
-    let response = await fetch(url);
+async function goToPage(url){
+    let eltContent = document.querySelector(".content");
+    let oldState = { url: history.state.url, scroll: eltContent.scrollTop };
+    history.replaceState(oldState,"")
+    let newState = { url, scroll: 0};
+    history.pushState(newState, "", "new2.html?item=" + encodeURI(url));
+    await loadDocPage(url);
+    eltContent.scrollTop = 0;
+    refreshContent();
+}
+
+async function loadDocPage(docPage){
+    let response = await fetch(docPage);
     let html = await response.text();
     let dom = new DOMParser().parseFromString(html, "text/html");
-    content = {};
+    content = { docPage };
 
     // Load informations for a rustdoc page
     if (dom.querySelector("meta[name=generator]").content == "rustdoc") {
-        // Get item type
-        //let page_type = dom.querySelector(".fqn .in-band").firstChild.textContent.toLowerCase().trim();
-        let sidebarScript = dom.querySelector(".sidebar-elems script").textContent;
-        let typeText = sidebarScript.replace(/.*ty: '(.*?)'.*/,"$1");
-        content.type = DocItems[typeText];
-
-        // Get item title as HTML
-        content.domTitle = dom.querySelector(".fqn .in-band").cloneNode(true);
-        
-        // Get item description
-        content.domDescription = dom.querySelector(".docblock:not(.type-decl):not(.attributes)").cloneNode(true);
-
-        // Get item declaration
-        let decl_src=dom.querySelector(".type-decl");
-        if (decl_src){
-            content.domDeclaration=decl_src.cloneNode(true);
-        }
-
-        // Get sub-items for module
-        let module_items = dom.querySelectorAll(".module-item");
-        if (module_items.length>0){
-            content.items=[];
-            for (domItem of module_items){
-                let item = {};
-                // Get item type
-                let a = domItem.firstChild.firstChild;
-                item.type = DocItems[a.className];
-                // Ignore special items
-                if (item.type.to) {continue;}
-                // Get name
-                item.name = a.textContent;
-                // Get href
-                let current_path = url.replace(/(.*)\/.*/,"$1")
-                item.href = current_path+item.type.link.replace("$",a.textContent);
-                // Get description
-                item.domDescription = domItem.children[1].cloneNode(true);
-                // push
-                content.items.push(item);
-            }  
-        }
-
-        // Get implementations and methods
-        
-    } 
-
+        loadRustdocContent(dom, content);
+    }
     // Load informations from a mdBook page
     else if (html.indexOf("<!-- Book generated using mdBook -->")>0) {
-        alert("Book page");
+        loadBookContent(dom, content);
     }
     else {
         alert("Not a valid rustdoc page!");
@@ -98,6 +68,10 @@ async function loadDocPage(url){
 // Format the main section of the page according to loaded data
 //*******************************************
 function refreshContent(){
+    // Menubar
+    document.querySelector("#menu_methods").style.display=content.methods ? "block" :"none";
+    document.querySelector("#menu_summary").style.display=(content.items||content.impls) ? "block" :"none";
+
     // Set title
     let title = document.querySelector("#title .name");
     title.innerHTML = "";
@@ -160,6 +134,24 @@ function refreshContent(){
     let methodSummarySection = document.querySelector("#method_summary_section");
     if (content.impls) {
         methodSummarySection.style.display = "block";
+        let table=document.querySelector("#method_table");
+        table.innerHTML="";
+        for (impl of content.impls) {
+            let implRow = document.querySelector("#impl_row").content.cloneNode(true);
+            implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
+            table.appendChild(implRow);
+            for (fn of impl.fns) {
+                let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
+                //TODO:arrow
+                fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
+                let a = fnRow.querySelector(".shortname a");
+                a.appendChild(document.createTextNode(fn.name));
+                fnRow.querySelector(".shortimpl").style.display="none";
+                fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
+                table.appendChild(fnRow);
+            }
+            table.appendChild(implRow);
+        }
     }
     else {
         methodSummarySection.style.display = "none";
@@ -173,25 +165,97 @@ function refreshContent(){
     else {
         methods.style.display = "none";
     }
-}
 
+}
+//*******************************************
+// Generic functions
+//*******************************************
+// Remove all <br> and merge multiple &nbsp;
+function oneLine(dom){
+    let label = dom.innerHTML;
+    label = label.replace("<br>","");
+    label = label.replace(/(&nbsp;)+/g,"&nbsp;");
+    dom.innerHTML = label;
+    return dom;
+}
+// Keep only the first sentence
 function firstSentence(text){
     return text.split(".",2)[0] + ".";
 }
-
-async function goToPage(url){
-    let oldState = { url: history.state.url, scroll: document.body.scrollTop };
-    history.replaceState(oldState,"")
-    let newState = { url, scroll: 0};
-    history.pushState(newState, "", "new2.html?item=" + encodeURI(url));
-    await loadDocPage(url);
-    document.body.scrollTop = 0;
-    refreshContent();
+// Change links to load doc internaly if possible
+function internalLinks(dom){
+    for (a of dom.querySelector("a")){
+        let link = a.href;
+        if (link.startsWith("http:")||link.startsWith("https:")){
+            return;
+        }
+        let href = a.href
+        a.onclick=function(){goToPage(href); return false;}
+    }
 }
-
+//*******************************************
+// Handle navigator history
+//*******************************************
 async function historyMove(event){
     url = event.state.url;
     await loadDocPage(url);
     refreshContent();
-    document.body.scrollTop = event.state.scroll;
+    document.querySelector(".content").scrollTop = event.state.scroll;
 }
+
+//*******************************************
+// Scrolling management (stick + menubar color)
+//*******************************************
+function handle_scrolling(){
+    domContent = document.querySelector(".content")
+    domContent.addEventListener("scroll",update_on_scrolling);
+    update_on_scrolling();
+}        
+function update_on_scrolling(evt){
+    manage_color(document.querySelector("#menu_summary"), document.querySelector("#summary"));
+    manage_color(document.querySelector("#menu_description"), document.querySelector("#description"));
+    manage_color(document.querySelector("#menu_methods"), document.querySelector("#methods"));
+    //manage_stick();    
+}
+function manage_color(menu_item, item){
+    domContent = document.querySelector(".content")
+    let view_begin = domContent.scrollTop;
+    let view_end = view_begin + domContent.clientHeight;
+    let elt_begin = item.offsetTop - domContent.clientTop;
+    let elt_end = elt_begin + item.offsetHeight;
+    let elt_size = elt_end - elt_begin;
+    
+    // compute item_displayed_height / viewable_height
+    var ratio;
+    if (elt_begin<view_begin) {
+        if (elt_end<view_begin) {
+            ratio=0;
+        }
+        else if (elt_end<view_end) {
+            ratio = Math.max(
+                (elt_end-view_begin)/domContent.clientHeight,
+                (elt_end-view_begin)/elt_size
+            );
+        }
+        else{
+            ratio=1;
+        }
+    }
+    else if (elt_begin<view_end){
+        if (elt_end<view_end) {
+            ratio=1;
+        }
+        else {
+            ratio = Math.max(
+                (view_end-elt_begin)/domContent.clientHeight,
+                (view_end-elt_begin)/elt_size
+            );
+        }
+    }else {
+        ratio = 0;
+    }
+    // compute item_displayed_height / item_height
+    let opacity = ratio * 0.5 + 0.5;
+    menu_item.style.setProperty("opacity", opacity);
+}
+
