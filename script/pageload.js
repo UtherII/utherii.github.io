@@ -30,8 +30,7 @@ function loadRustdocContent(dom, content) {
             // Get name
             item.name = a.textContent;
             // Get href
-            let current_path = content.docPage.replace(/(.*)\/.*/,"$1")
-            item.href = current_path+item.type.link.replace("$",a.textContent);
+            item.href = a.getAttribute("href");
             // Get description
             item.domDescription = domItem.children[1].cloneNode(true);
             // push
@@ -61,7 +60,7 @@ function loadRustdocContent(dom, content) {
             }
             let domSrc = item.querySelector("a.srclink")
             if (domSrc) {
-                impl.src = domSrc.href;
+                impl.src = domSrc.getAttribute("href");
             }
             impl.fns = [];
             cur_impl = impl;
@@ -89,7 +88,7 @@ function loadRustdocContent(dom, content) {
             }
             let domSrc = item.querySelector("a.srclink")
             if (domSrc) {
-                fn.src = domSrc.href;
+                fn.src = domSrc.getAttribute("href");
             }
             fn.shortDescription = next.textContent.split(".",2)[0] + ".";
             fn.domDescription = next.cloneNode(true); 

@@ -96,6 +96,7 @@ function refreshContent(){
     let desc = document.querySelector("#description");
     desc.innerHTML = "";
     desc.appendChild(content.domDescription);
+    internalLinks(content.domDescription);
 
     // List module item
     let itemTable = document.querySelector("#item_table");
@@ -111,9 +112,7 @@ function refreshContent(){
             //name and link
             let a = itemRow.querySelector(".shortname a")
             a.textContent = item.name;
-            let href = item.href;
-            a.href = href;
-            a.onclick=function(){goToPage(href); return false;}
+            a.href = item.href;
             //description
             let desc = itemRow.querySelector(".shortdesc");
             desc.textContent = firstSentence(item.domDescription.textContent); 
@@ -182,21 +181,6 @@ function refreshContent(){
     }
     internalLinks(document.body);
 }
-//*******************************************
-// Generic functions
-//*******************************************
-// Remove all <br> and merge multiple &nbsp;
-function oneLine(dom){
-    let label = dom.innerHTML;
-    label = label.replace("<br>","");
-    label = label.replace(/(&nbsp;)+/g,"&nbsp;");
-    dom.innerHTML = label;
-    return dom;
-}
-// Keep only the first sentence
-function firstSentence(text){
-    return text.split(".",2)[0] + ".";
-}
 // Change links to load doc internaly if possible
 function internalLinks(dom){
     let currentItemPath = pathParent(content.docPage);
@@ -219,6 +203,21 @@ function internalLinks(dom){
         a.href = realPageUrl + "?item=" + href;
         a.onclick = function(){ goToPage(href); return false; }
     }
+}
+//*******************************************
+// Generic functions
+//*******************************************
+// Remove all <br> and merge multiple &nbsp;
+function oneLine(dom){
+    let label = dom.innerHTML;
+    label = label.replace("<br>","");
+    label = label.replace(/(&nbsp;)+/g,"&nbsp;");
+    dom.innerHTML = label;
+    return dom;
+}
+// Keep only the first sentence
+function firstSentence(text){
+    return text.split(".",2)[0] + ".";
 }
 function pathItem(path){
     return path.substring(path.lastIndexOf("/")+1);
