@@ -1,13 +1,17 @@
 //*******************************************
 // Global variables
 //*******************************************
-const defaultPage = "std/index.html"
+const defaultPage = "std/index.html";
+const realPageUrl = location.toString().replace(/(.*?)[?#].*/,"$1");
+const realPagePath = pathParent(realPageUrl);
+const realPageName = pathItem(realPageUrl);
+let content;
 
 //*******************************************
 // Init the environement 
 //*******************************************
 async function init(){
-    // get page to load from parameter
+    // get the name of the first page to load from page parameter
     let docPage = defaultPage;
     let realUrl = location.toString();
     if (realUrl.indexOf("?item=") > 0) {
@@ -15,8 +19,7 @@ async function init(){
     }
 
     // load the page
-    await loadDocPage(docPage);
-    refreshContent();
+    goToPage(docPage, false);
 
     // init history handling
     history.replaceState({url: docPage, scroll: 0},"");
@@ -26,20 +29,34 @@ async function init(){
     handle_scrolling();
 }
 
-//*******************************************
-// Load the classic documentation web page
-//*******************************************
-async function goToPage(url){
-    let eltContent = document.querySelector(".content");
-    let oldState = { url: history.state.url, scroll: eltContent.scrollTop };
-    history.replaceState(oldState,"")
-    let newState = { url, scroll: 0};
-    history.pushState(newState, "", "new2.html?item=" + encodeURI(url));
+// Perform the full operation of opening a documentation page (typicaly when a link is clicked)
+async function goToPage(url, history = true){
+    //set page change in history (except for first page, since it is already there)
+    if (history) {
+        historyInsert(url);
+    }
+    //load the page
     await loadDocPage(url);
-    eltContent.scrollTop = 0;
     refreshContent();
+    //déplacement à l'ancre si necessaire
+    let domContent =  document.querySelector(".content")
+    if (url.indexOf("#") > 0){
+        let anchor = url.replace(/.*?#(.*)/,"$1");
+        domAnchor = document.getElementById(anchor);
+        if (domAnchor) { 
+            let diff = offsetTop(domAnchor,domContent);
+            domContent.scrollTop=diff
+        }
+    }
+    else{
+        domContent.scrollTop = 0;
+    }
 }
 
+//*******************************************
+// Load the original documentation web page
+//*******************************************
+// Get the original page and parse its data to JavaScript object
 async function loadDocPage(docPage){
     let response = await fetch(docPage);
     let html = await response.text();
@@ -59,8 +76,6 @@ async function loadDocPage(docPage){
         console.log("Not a valid rustdoc page");
         return;
     }
-
-    refreshContent();
 
 }
 
@@ -165,7 +180,7 @@ function refreshContent(){
     else {
         methods.style.display = "none";
     }
-
+    internalLinks(document.body);
 }
 //*******************************************
 // Generic functions
@@ -184,14 +199,58 @@ function firstSentence(text){
 }
 // Change links to load doc internaly if possible
 function internalLinks(dom){
-    for (a of dom.querySelector("a")){
-        let link = a.href;
-        if (link.startsWith("http:")||link.startsWith("https:")){
-            return;
+    let currentItemPath = pathParent(content.docPage);
+    for (a of dom.querySelectorAll("a")){
+        let originalLink = a.getAttribute("href");
+        let href;
+        // if it is an empty or absolute link keep it unchanged
+        if (originalLink.startsWith("http:")||originalLink.startsWith("https:")){
+            continue;
         }
-        let href = a.href
-        a.onclick=function(){goToPage(href); return false;}
+        // if there is only a tag, we keep on the same page 
+        else if (originalLink.startsWith("#")) {
+            let rawPage = content.docPage.replace(/#.*/,"");
+            href = rawPage + originalLink;
+        }
+        // set the new sub-page relative to the current one
+        else {
+            href = pathMerge(currentItemPath, originalLink);
+        }
+        a.href = realPageUrl + "?item=" + href;
+        a.onclick = function(){ goToPage(href); return false; }
     }
+}
+function pathItem(path){
+    return path.substring(path.lastIndexOf("/")+1);
+}
+function pathParent(path){
+    //remove trailing slash
+    if (path.endsWith("/")){
+        path = path.slice(0,-1)
+    }
+    //remove after the last slash
+    return path.substring(0,path.lastIndexOf("/")+1);
+}
+function pathMerge(a, b){
+    while (b.startsWith("../")){
+        a = pathParent(a);
+        b = b.substring(3);        
+    }
+    return a+b;
+}
+// get the offset of an item relative to any ancestor
+function offsetTop(a, b){
+    let aTop=0;    
+    for (let current = a; current; current = current.offsetParent) {
+        aTop += current.offsetTop;
+    }
+
+    let bTop=0;    
+    for (let current = b; current; current = current.offsetParent) {
+        bTop += current.offsetTop;
+    }
+
+    return aTop - bTop;
 }
 //*******************************************
 // Handle navigator history
@@ -202,7 +261,13 @@ async function historyMove(event){
     refreshContent();
     document.querySelector(".content").scrollTop = event.state.scroll;
 }
-
+function historyInsert(url) {
+    let eltContent = document.querySelector(".content");
+    let oldState = { url: history.state.url, scroll: eltContent.scrollTop };
+    history.replaceState(oldState,"")
+    let newState = { url, scroll: 0};
+    history.pushState(newState, "", realPageName + "?item=" + encodeURI(url));
+}
 //*******************************************
 // Scrolling management (stick + menubar color)
 //*******************************************

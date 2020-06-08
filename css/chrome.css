@@ -64,19 +64,21 @@ header {
     width: calc(100% - 2px);
     max-width: 960px;
 }
-.menubar a .section {
+.menubar a:visited, .menubar a:link {
     color: var(--theme-popup-fg);
+    text-decoration: none;
 }
-.menubar .section{
-    font-weight: bold;
+.menubar div{
     padding-bottom: 0.2em;
     border: var(--table-border-color) 1px solid;
-    width: 8em;
     background-color: var(--table-header-bg);
 }
+.menubar .text {
+    font-weight: bold;
+    text-decoration: underline;
+    width: 8em;
+}
 .menubar .button{
-    border: var(--table-border-color) 1px solid;
-    background-color: var(--table-header-bg);
     width: 2em;
 }
 .menubar a#source{

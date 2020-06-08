@@ -16,7 +16,7 @@ function loadRustdocContent(dom, content) {
         content.domDeclaration=decl_src.cloneNode(true);
     }
 
-    // Get sub-items for module
+    // For module, get sub-items
     let module_items = dom.querySelectorAll(".module-item");
     if (module_items.length>0){
         content.items=[];
