@@ -5,6 +5,103 @@ const defaultPage = "std/index.html";
 const realPageUrl = location.toString().replace(/(.*?)[?#].*/,"$1");
 const realPagePath = pathParent(realPageUrl);
 const realPageName = pathItem(realPageUrl);
+const DocItems = {
+    book:{
+        order:0, 
+        icon:"img/book.png", 
+        expand:true, 
+        link:"/$/index.html", 
+        to:"book_root"
+    },
+    chapter:{
+        order:1, 
+        icon:"img/book.png", 
+        expand:true, 
+        link:"/$/index.html", 
+        to:"book_root"
+    },
+    page:{
+        order:1, 
+        icon:"img/book.png", 
+        expand:true, 
+        link:"/$/index.html", 
+        to:"book_root"
+    },
+    keyword:{
+        order:5, 
+        icon:"img/item/page.png", 
+        expand:false, 
+        link:"/keyword.$.html", 
+        to:"keywords_root"
+    },
+    primitive:{
+        order:6, 
+        icon:"img/item/block.png", 
+        expand:false, 
+        link:"/primitive.$.html", 
+        to:"primitives_root"
+    },
+    crate:{
+        order:10,
+        icon:"img/item/crate.png",
+        expand:true,
+        link:"/$/index.html"
+    },
+    mod:{
+        order:11, 
+        icon:"img/item/mod.png", 
+        expand:true, 
+        link:"/$/index.html"
+    },
+    type:{
+        order:12, 
+        icon:"img/item/type.png", 
+        link:"/type.$.html", 
+        expand:false
+    },
+    struct:{
+        order:13,
+        icon:"img/item/struct.png", 
+        link:"/struct.$.html", 
+        expand:false
+    },
+    constant:{
+        order:13,
+        icon:"img/item/const.png", 
+        link:"/constant.$.html", 
+        expand:false
+    },
+    enum:{
+        order:14, 
+        icon:"img/item/enum.png", 
+        link:"/enum.$.html", 
+        expand:false
+    },
+    union:{
+        order:15, 
+        icon:"img/item/union.png", 
+        link:"/union.$.html", 
+        expand:false
+    },
+    trait:{
+        order:16, 
+        icon:"img/item/trait.png", 
+        link:"/trait.$.html", 
+        expand:false
+    },
+    fn:{
+        order:17, 
+        icon:"img/item/fn.png", 
+        link:"/fn.$.html", 
+        expand:false
+    },
+    macro:{
+        order:18, 
+        icon:"img/item/macro.png", 
+        link:"/macro.$.html", 
+        expand:false
+    }
+};
 let content;
 
 //*******************************************
@@ -29,7 +126,9 @@ async function init(){
     handle_scrolling();
 }
 
+//*******************************************
 // Perform the full operation of opening a documentation page (typicaly when a link is clicked)
+//*******************************************
 async function goToPage(url, history = true){
     //set page change in history (except for first page, since it is already there)
     if (history) {
@@ -44,7 +143,7 @@ async function goToPage(url, history = true){
         let anchor = url.replace(/.*?#(.*)/,"$1");
         domAnchor = document.getElementById(anchor);
         if (domAnchor) { 
-            let diff = offsetTop(domAnchor,domContent);
+            let diff = globalOffsetTop(domAnchor) - globalOffsetTop(domContent);
             domContent.scrollTop=diff
         }
     }
@@ -52,160 +151,18 @@ async function goToPage(url, history = true){
         domContent.scrollTop = 0;
     }
 }
-
-//*******************************************
-// Load the original documentation web page
-//*******************************************
-// Get the original page and parse its data to JavaScript object
-async function loadDocPage(docPage){
-    let response = await fetch(docPage);
-    let html = await response.text();
-    let dom = new DOMParser().parseFromString(html, "text/html");
-    content = { docPage };
-
-    // Load informations for a rustdoc page
-    if (dom.querySelector("meta[name=generator]").content == "rustdoc") {
-        loadRustdocContent(dom, content);
-    }
-    // Load informations from a mdBook page
-    else if (html.indexOf("<!-- Book generated using mdBook -->")>0) {
-        loadBookContent(dom, content);
-    }
-    else {
-        alert("Not a valid rustdoc page!");
-        console.log("Not a valid rustdoc page");
-        return;
-    }
-
+// get the offsetTop until the root of the document
+function globalOffsetTop(item){
+    let top=0;    
+    while (item){
+        top += item.offsetTop;
+        item = item.offsetParent;
+    }    
+    return top;
 }
 
 //*******************************************
-// Format the main section of the page according to loaded data
-//*******************************************
-function refreshContent(){
-    // Menubar
-    document.querySelector("#menu_methods").style.display=content.methods ? "block" :"none";
-    document.querySelector("#menu_summary").style.display=(content.items||content.impls) ? "block" :"none";
-
-    // Set title
-    let title = document.querySelector("#title .name");
-    title.innerHTML = "";
-    title.appendChild(content.domTitle);
-
-    // Set description
-    let desc = document.querySelector("#description");
-    desc.innerHTML = "";
-    desc.appendChild(content.domDescription);
-    internalLinks(content.domDescription);
-
-    // List module item
-    let itemTable = document.querySelector("#item_table");
-    let itemSection = document.querySelector("#item_section");
-    itemTable.innerHTML = "";
-    if (content.items) {
-        itemSection.style.display = "block";
-        itemTable.innerHTML = "";
-        for (item of content.items) {
-            //icon
-            let itemRow = document.querySelector("#item_row").content.cloneNode(true);
-            itemRow.querySelector(".icon img").src = item.type.icon;
-            //name and link
-            let a = itemRow.querySelector(".shortname a")
-            a.textContent = item.name;
-            a.href = item.href;
-            //description
-            let desc = itemRow.querySelector(".shortdesc");
-            desc.textContent = firstSentence(item.domDescription.textContent); 
-            //push
-            itemTable.appendChild(itemRow);
-        }
-    }
-    else {
-        itemSection.style.display = "none";
-    }
-
-    // Set declaration section
-    let declarationSection = document.querySelector("#declaration_section");
-    declarationSection.innerHTML = "";
-    if (content.domDeclaration) {
-        declarationSection.style.display = "block";
-        declarationSection.appendChild(content.domDeclaration);
-    }
-    else {
-        declarationSection.style.display = "none";
-    }
-
-    // Set implementation section
-    let implementationSection = document.querySelector("#implementation_section");
-    if (content.domDeclaration) {
-        implementationSection.style.display = "block";
-    }
-    else {
-        implementationSection.style.display = "none";
-    }
-
-    // Set method summary section
-    let methodSummarySection = document.querySelector("#method_summary_section");
-    if (content.impls) {
-        methodSummarySection.style.display = "block";
-        let table=document.querySelector("#method_table");
-        table.innerHTML="";
-        for (impl of content.impls) {
-            let implRow = document.querySelector("#impl_row").content.cloneNode(true);
-            implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
-            table.appendChild(implRow);
-            for (fn of impl.fns) {
-                let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
-                //TODO:arrow
-                fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
-                let a = fnRow.querySelector(".shortname a");
-                a.appendChild(document.createTextNode(fn.name));
-                fnRow.querySelector(".shortimpl").style.display="none";
-                fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
-                table.appendChild(fnRow);
-            }
-            table.appendChild(implRow);
-        }
-    }
-    else {
-        methodSummarySection.style.display = "none";
-    }
-    
-    // Set method section
-    let methods = document.querySelector("#methods");
-    if (content.methods) {
-        methods.style.display = "block";
-    }
-    else {
-        methods.style.display = "none";
-    }
-    internalLinks(document.body);
-}
-// Change links to load doc internaly if possible
-function internalLinks(dom){
-    let currentItemPath = pathParent(content.docPage);
-    for (a of dom.querySelectorAll("a")){
-        let originalLink = a.getAttribute("href");
-        let href;
-        // if it is an empty or absolute link keep it unchanged
-        if (originalLink.startsWith("http:")||originalLink.startsWith("https:")){
-            continue;
-        }
-        // if there is only a tag, we keep on the same page 
-        else if (originalLink.startsWith("#")) {
-            let rawPage = content.docPage.replace(/#.*/,"");
-            href = rawPage + originalLink;
-        }
-        // set the new sub-page relative to the current one
-        else {
-            href = pathMerge(currentItemPath, originalLink);
-        }
-        a.href = realPageUrl + "?item=" + href;
-        a.onclick = function(){ goToPage(href); return false; }
-    }
-}
-//*******************************************
-// Generic functions
+// Formating functions
 //*******************************************
 // Remove all <br> and merge multiple &nbsp;
 function oneLine(dom){
@@ -219,9 +176,15 @@ function oneLine(dom){
 function firstSentence(text){
     return text.split(".",2)[0] + ".";
 }
+
+//*******************************************
+// path handling functions
+//*******************************************
+//Get the final item from a path 
 function pathItem(path){
     return path.substring(path.lastIndexOf("/")+1);
 }
+//Remove the final item from a path 
 function pathParent(path){
     //remove trailing slash
     if (path.endsWith("/")){
@@ -230,6 +193,7 @@ function pathParent(path){
     //remove after the last slash
     return path.substring(0,path.lastIndexOf("/")+1);
 }
+//Merge  
 function pathMerge(a, b){
     while (b.startsWith("../")){
         a = pathParent(a);
@@ -237,20 +201,7 @@ function pathMerge(a, b){
     }
     return a+b;
 }
-// get the offset of an item relative to any ancestor
-function offsetTop(a, b){
-    let aTop=0;    
-    for (let current = a; current; current = current.offsetParent) {
-        aTop += current.offsetTop;
-    }
 
-    let bTop=0;    
-    for (let current = b; current; current = current.offsetParent) {
-        bTop += current.offsetTop;
-    }
-
-    return aTop - bTop;
-}
 //*******************************************
 // Handle navigator history
 //*******************************************
