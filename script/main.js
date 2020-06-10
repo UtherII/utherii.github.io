@@ -105,9 +105,12 @@ const DocItems = {
 let content;
 
 //*******************************************
-// Init the environement 
+// Initialize the environement 
 //*******************************************
 async function init(){
+    // Init theme first to avoid visual glitch
+    initTheme();
+
     // get the name of the first page to load from page parameter
     let docPage = defaultPage;
     let realUrl = location.toString();
@@ -123,7 +126,13 @@ async function init(){
     onpopstate = historyMove;
 
     // init scrolling handling
-    handle_scrolling();
+    handleScrolling();
+
+    // init filter buttons
+    initFilterButtons();
+
+    //init tooltip box
+    initInfobox()
 }
 
 //*******************************************
@@ -176,7 +185,12 @@ function oneLine(dom){
 function firstSentence(text){
     return text.split(".",2)[0] + ".";
 }
-
+// Remove all the childs of a node
+function removeChilds(node){
+    while (node.firstChild) {
+        node.removeChild(node.lastChild);
+    }
+}
 //*******************************************
 // path handling functions
 //*******************************************
@@ -221,12 +235,12 @@ function historyInsert(url) {
 //*******************************************
 // Scrolling management (stick + menubar color)
 //*******************************************
-function handle_scrolling(){
+function handleScrolling(){
     domContent = document.querySelector(".content")
-    domContent.addEventListener("scroll",update_on_scrolling);
-    update_on_scrolling();
+    domContent.addEventListener("scroll",updateOnScrolling);
+    updateOnScrolling();
 }        
-function update_on_scrolling(evt){
+function updateOnScrolling(evt){
     manage_color(document.querySelector("#menu_summary"), document.querySelector("#summary"));
     manage_color(document.querySelector("#menu_description"), document.querySelector("#description"));
     manage_color(document.querySelector("#menu_methods"), document.querySelector("#methods"));
@@ -274,3 +288,125 @@ function manage_color(menu_item, item){
     menu_item.style.setProperty("opacity", opacity);
 }
 
+//*******************************************
+// Method filter button
+//*******************************************
+function initFilterButtons(){
+    setFilterButton ("btn_group_mode", "GroupByImpl", true, ["img/arrow/tree.png","img/arrow/flat.png"]);
+    setFilterButton ("btn_operator", "DisplayOperator", false);
+    setFilterButton ("btn_iterator", "DisplayIterator", false);
+    setFilterButton ("btn_blanket", "DisplayBlantey", false);
+    setFilterButton ("btn_auto", "DisplayAuto", true);
+}
+function setFilterButton(btnName, stateName, stateDefaut, iconSet){
+    //Get the value from the localStrore
+    let state;
+    let lsValue = localStorage.getItem(stateName);
+    if (lsValue == null) {
+        state = stateDefaut;
+    }
+    state = lsValue == "true" 
+
+    //Set the image
+    let img = document.getElementById(btnName);
+    function updateIcon(){
+        img.style.border = state ? "2px outset var(--table-header-bg)" : "2px inset var(--table-header-bg)";
+        if (iconSet){
+            img.src = state ? iconSet[0] : iconSet[1];
+        }
+        else {
+            img.style.opacity = state ? 1.0 : 0.5;
+        }  
+    }
+    updateIcon();
+
+    //Action on button clic
+    img.onclick = function(){
+        state = !state;
+        localStorage.setItem(stateName, state);
+        updateIcon();
+        refreshContent();
+    }
+
+}
+
+//*******************************************
+// Popup info box management
+//*******************************************
+// Description popup        
+let display_popup_timeout;
+let hide_popup_timeout;
+let infobox;
+function setPopup(elt, content) {           
+    elt.addEventListener("mouseenter", function (evt) {
+        display_popup_timeout = setTimeout(function(){
+            let x = window.scrollX + evt.target.getBoundingClientRect().left
+            let y = window.scrollY + evt.target.getBoundingClientRect().top // Y
+
+            infobox.innerHTML=content.innerHTML;
+            infobox.style.display="block";
+            if (x + infobox.offsetWidth < document.body.clientWidth){
+                infobox.style.left="calc("+x+"px + 2.5em)";
+                infobox.style.top="calc("+y+"px + 1.25em)";    
+            }
+            else {
+                infobox.style.left="calc("+(x-infobox.offsetWidth) +"px - 0.5em)";
+                infobox.style.top="calc("+y+"px + 1.25em)";    
+
+            }
+        },600);
+    }, false);
+    
+    elt.addEventListener("mouseleave", function (evt) {
+        clearTimeout(display_popup_timeout);
+        hide_popup_timeout = setTimeout(function(){
+            infobox.style.display="none";
+        },200);                
+    }, false);
+}
+function initInfobox(){
+    infobox = document.getElementById("infobox");
+
+    infobox.addEventListener("mouseenter", function (evt) {
+        clearTimeout(hide_popup_timeout);
+        }, false);
+
+    infobox.addEventListener("mouseleave", function (evt) {
+        infobox.style.display="none";
+    }, false);
+
+    window.addEventListener("keydown", function (evt) {
+        if (evt.code=="BracketRight"){
+            infobox.style.display="block";
+            infobox.remo
+        }
+        if (evt.code=="Backslash"){
+            infobox.style.display="none"
+        }
+    })
+}
+
+//*****************************************
+// Theme management
+//*****************************************
+// get the theme from the localStorage before loading the body
+let theme = localStorage.getItem("Theme");
+if (theme == null) { theme = "rust" }
+setTheme(theme);
+
+function initTheme(){
+    // Set links to switch between themes
+    let panel = document.querySelector("#theme_selector");
+    for (li of panel.querySelectorAll("li")){
+        li.onclick = function(){setTheme(li.id.substring(6));}
+    }
+
+    // Set the theme panel to pop up
+    let button = document.querySelector("#theme_btn");
+    setPopup(button,panel);   
+}
+
+function setTheme(id){
+    localStorage.setItem("Theme",id);
+    document.documentElement.className=id;
+}

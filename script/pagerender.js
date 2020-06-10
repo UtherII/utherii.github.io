@@ -45,10 +45,11 @@ function refreshContent(){
 
     // Set declaration section
     let declarationSection = document.querySelector("#declaration_section");
-    declarationSection.innerHTML = "";
     if (content.domDeclaration) {
+        let declaration = document.querySelector("#declaration");
+        declaration.innerHTML = "";
+        declaration.appendChild(content.domDeclaration);
         declarationSection.style.display = "block";
-        declarationSection.appendChild(content.domDeclaration);
     }
     else {
         declarationSection.style.display = "none";
@@ -69,22 +70,70 @@ function refreshContent(){
         methodSummarySection.style.display = "block";
         let table=document.querySelector("#method_table");
         table.innerHTML="";
-        for (impl of content.impls) {
-            let implRow = document.querySelector("#impl_row").content.cloneNode(true);
-            implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
-            table.appendChild(implRow);
-            for (fn of impl.fns) {
-                let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
-                //TODO:arrow
-                fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
-                let a = fnRow.querySelector(".shortname a");
-                a.appendChild(document.createTextNode(fn.name));
-                fnRow.querySelector(".shortimpl").style.display="none";
-                fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
-                table.appendChild(fnRow);
-            }
-            table.appendChild(implRow);
+        // Display grouped by impl
+        if (localStorage.getItem("GroupByImpl")=="true"){
+            for (impl of content.impls) {
+                if (isHiddenImpl(impl)) continue;
+                let implRow = document.querySelector("#impl_row").content.cloneNode(true);
+                implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
+                table.appendChild(implRow);
+                for (fn of impl.fns) {
+                    let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
+                    //TODO:arrow
+                    fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
+                    let a = fnRow.querySelector(".shortname a");
+                    a.appendChild(document.createTextNode(fn.name));
+                    fnRow.querySelector(".shortimpl").style.display="none";
+                    fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
+                    table.appendChild(fnRow);
+                }
+                table.appendChild(implRow);
+            }    
         }
+        // Display grouped by function name
+        else {
+            for (fnName in content.fns) {
+                let fnList = content.fns[fnName];
+                let count = 0;
+                let header;
+                let headerDesc;
+                for (fn of fnList){
+                    if (isHiddenImpl(fn.impl)) continue;
+                    count++;
+                    // create a normal row for the first function of the group 
+                    if (count==1){
+                        let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
+                        let a = fnRow.querySelector(".shortname a");
+                        a.appendChild(document.createTextNode(fn.name));
+                        fnRow.querySelector(".shortimpl").appendChild(makeSortImpl(fn.impl));
+                        headerDesc = fnRow.querySelector(".shortdesc")
+                        headerDesc.appendChild(document.createTextNode(fn.shortDescription));
+                        table.appendChild(fnRow); 
+                        header = table.lastElementChild;   
+                    }
+                    // create a subrow for every function of the group
+                    let fnSubRow = document.querySelector("#fn_subrow").content.cloneNode(true);
+                    let a = fnSubRow.querySelector(".shortname a");
+                    a.appendChild(document.createTextNode(fn.name));
+                    fnSubRow.querySelector(".fullimpl").appendChild(oneLine(fn.impl.domDeclaration));                    
+                    if (headerDesc.textContent != fn.shortDescription) {
+                        headerDesc.innerHTML="";
+                        headerDesc.appendChild(document.createTextNode("…"));
+                    }
+                    table.appendChild(fnSubRow);                                       
+                }
+                // make the first row expandable if there is multiple visible implementations
+                if (count > 1) {
+                    let shortImpl = header.querySelector(".shortimpl");
+                    removeChilds(shortImpl);
+                    shortImpl.appendChild(document.createTextNode("…"));
+                }
+                // remove useless first subrow if there is only one visible implementation
+                else {
+                    header.nextElementSibling.remove();
+                }
+            }
+        }       
     }
     else {
         methodSummarySection.style.display = "none";
@@ -101,6 +150,14 @@ function refreshContent(){
     internalLinks(document.body);
 }
 
+// return if an implementation should be hidden in the summary
+function isHiddenImpl(impl){
+    return false; //TODO
+}
+
+function makeSortImpl(impl){
+    return document.createTextNode("Todo<…>🛈")
+}
 //*******************************************
 // Change links to load doc internaly if possible
 //*******************************************
@@ -110,7 +167,11 @@ function internalLinks(dom){
         let originalLink = a.getAttribute("href");
         let href;
         // if it is an empty or an absolute link keep it unchanged
-        if (originalLink.startsWith("http:")||originalLink.startsWith("https:")){
+        if (originalLink==null
+            ||originalLink.startsWith("http:")
+            ||originalLink.startsWith("https:")
+            ||originalLink.startsWith("javascript:"))
+        {
             continue;
         }
         // if there is only a tag, we stay on the same page 
@@ -126,3 +187,4 @@ function internalLinks(dom){
         a.onclick = function(){ goToPage(href); return false; }
     }
 }
+

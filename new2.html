@@ -5,6 +5,8 @@
         <link rel="stylesheet" href="css/variables.css" />
         <link rel="stylesheet" href="css/general.css" />
         <link rel="stylesheet" href="css/chrome.css" />
+        <link rel="stylesheet" href="css/font/font.css" />
+        <link rel="stylesheet" href="css/light.css" id="theme_css" />
         <script type="text/javascript" src="script/pageload.js"></script>
         <script type="text/javascript" src="script/pagerender.js"></script>
         <script type="text/javascript" src="script/main.js"></script>
@@ -16,6 +18,17 @@
         <nav id="infobox" class="infobox">
             Tooltip text.
         </nav>
+
+        <!-- The theme selection popup -->
+        <div id="theme_selector">
+            <ul class="theme_selector">
+                <a href="javascript:setTheme('rust')"><li>Rust</li></a>
+                <a href="javascript:setTheme('light')"><li>Light</li></a>
+                <a href="javascript:setTheme('ayu')"><li>Ayu</li></a>
+                <a href="javascript:setTheme('navy')"><li>Navy</li></a>
+                <a href="javascript:setTheme('coal')"><li>Coal</li></a>
+            </ul>
+        </div>
 
         <!-- The resizable sidebar -->
         <nav class="sidebar" id="sidebar">
@@ -61,7 +74,7 @@
                     <nav class="descr_index" id="descr_index">
 
                     </nav>
-                    <a href="#source">
+                    <a id="theme_btn">
                         <div class="button">🎨</div>
                     </a>
                 </nav>
@@ -105,12 +118,13 @@
 
                     <!-- The method list subsection (for types and traits) -->
                     <section id="method_summary_section" style="display: none;">
-                        <h4>Methods: 
-                            <template id="method_filter_button">
-                                <a class="method_filter_button" onclick="" >
-                                    <img src="img/arrow/empty.png" title="filter button" />
-                                </a>
-                            </template>
+                        <h4>
+                            Methods: 
+                            <img id="btn_group_mode" class="method_filter_button" src="img/arrow/flat.png" title="Group either by implementation or by function name" />
+                            <img id="btn_operator" class="method_filter_button" src="img/arrow/operator.png" title="Toggle operator implementation display" />
+                            <img id="btn_iterator" class="method_filter_button" src="img/arrow/iter.png" title="Toggle iterator functions display" />
+                            <img id="btn_blanket" class="method_filter_button" src="img/arrow/blanket.png" title="Toggle blanket implementation display" />
+                            <img id="btn_auto" class="method_filter_button" src="img/arrow/auto.png" title="Toggle automatic implementation display" />
                         </h4>
                         <table id="method_table">
                         </table>
@@ -132,11 +146,9 @@
                         <template id="fn_subrow">
                             <tr class="fn_subrow">
                                 <td class="folder"><img src="img/arrow/empty.png" /></td>
-                                <td class="icon"><img src="img/item/fn.png" /></td>
+                                <td class="icon"><img src="img/item/empty.png" style="display:none;" /></td>
                                 <td class="shortname"><a href="#"></a></td>
-                                <td class="shortimpl" colspan="2"></td>
-                                <td class="fullname"></td>
-                                <td class="fullimpl"></td>
+                                <td class="fullimpl" colspan="2"></td>
                             </tr>                      
                         </template>                  
 

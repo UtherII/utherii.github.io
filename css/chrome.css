@@ -92,3 +92,35 @@ header {
 .menubar .empty:hover {
     background-color: inherit;    
 }
+
+/************************
+    Method filter
+************************/
+.method_filter_button{
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    top: 0.5em;
+    padding: 1px;
+    border: 2px outset var(--table-header-bg);
+    border-radius: 3px;
+    margin-left: 1px;
+    filter: var(--icon-filter);
+}
+
+/************************
+   Theme selector
+************************/
+#theme_selector{
+    display: none;
+}
+ul.theme_selector{
+    padding: 0.8em;
+    margin: 0.1em;
+}
+.theme_selector li{
+    list-style: none outside;    
+    text-decoration: underline;
+    padding-left: 0em;
+}
