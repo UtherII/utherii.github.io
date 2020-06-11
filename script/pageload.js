@@ -9,6 +9,7 @@ async function loadDocPage(docPage){
 
     // Load informations for a rustdoc page
     if (dom.querySelector("meta[name=generator]").content == "rustdoc") {
+        internalLinks(dom);
         loadRustdocContent(dom, content);
     }
     // Load informations from a mdBook page
@@ -160,6 +161,36 @@ function orderObject(obj){
 //*******************************************
 function loadBookContent(dom, content){
     alert("Book page not implemented yet");
+}
+
+//*******************************************
+// Change links to load doc internaly if possible
+//*******************************************
+function internalLinks(dom){
+    let currentItemPath = pathParent(content.docPage);
+    for (a of dom.querySelectorAll("a")){
+        let originalLink = a.getAttribute("href");
+        let href;
+        // if it is an empty or an absolute link keep it unchanged
+        if (originalLink==null
+            ||originalLink.startsWith("http:")
+            ||originalLink.startsWith("https:")
+            ||originalLink.startsWith("javascript:"))
+        {
+            continue;
+        }
+        // if there is only a tag, we stay on the same page 
+        else if (originalLink.startsWith("#")) {
+            let rawPage = content.docPage.replace(/#.*/,"");
+            href = rawPage + originalLink;
+        }
+        // set the new sub-page relative to the current one
+        else {
+            href = pathMerge(currentItemPath, originalLink);
+        }
+        a.href = realPageUrl + "?item=" + href;
+        a.onclick = function(){ goToPage(href); return false; }
+    }
 }
 
 const operators = [
