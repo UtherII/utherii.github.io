@@ -190,6 +190,7 @@ function oneLine(dom){
     dom.innerHTML = label;
     return dom;
 }
+
 // Keep only the first sentence
 function firstSentence(text){
     return text.split(".",2)[0] + ".";

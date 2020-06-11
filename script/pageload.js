@@ -76,7 +76,7 @@ function loadRustdocContent(dom, content) {
         if (item.tagName!="H4"){
             let impl = {};
             impl.text = item.firstChild.textContent;
-            impl.domDeclaration = item.firstChild.cloneNode(true); 
+            impl.domDeclaration = item.firstChild.cloneNode(true);
             if (item.parentNode && item.parentNode.id=="blanket-implementations-list"){
                 impl.blanket=true;
             }
@@ -138,7 +138,6 @@ function loadRustdocContent(dom, content) {
     }
 } 
 
-// sort alphabetically the fields of an object
 function orderObject(obj){
     let arr = [];
     for (fld in obj) {

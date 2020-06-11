@@ -49,7 +49,7 @@
     --searchresults-li-bg: #252932;
     --search-mark-bg: #e3b171;
 
-    --icon-filter: invert(0.3);
+    --icon-filter: invert(1);
 }
 
 .coal {
@@ -90,6 +90,8 @@
     --searchresults-border-color: #98a3ad;
     --searchresults-li-bg: #2b2b2f;
     --search-mark-bg: #355c7d;
+
+    --icon-filter: invert(1);
 }
 
 .light {
@@ -174,7 +176,7 @@
     --searchresults-li-bg: #242430;
     --search-mark-bg: #a2cff5;
 
-    --icon-filter: invert(0.3);
+    --icon-filter: invert(1);
 }
 
 .rust {
@@ -216,7 +218,7 @@
     --searchresults-li-bg: #dec2a2;
     --search-mark-bg: #e69f67;
 
-    --icon-filter: invert(0.3);
+    --icon-filter: invert(0);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -259,6 +261,6 @@
         --searchresults-li-bg: #2b2b2f;
         --search-mark-bg: #355c7d;
 
-        --icon-filter: invert(0.3);
+        --icon-filter: invert(1);
     }
 }
