@@ -73,13 +73,15 @@ function refreshContent(){
         // Display grouped by impl
         if (localStorage.getItem("GroupByImpl")=="true"){
             for (impl of content.impls) {
+                //Fill the impl header
                 if (isHiddenImpl(impl)) continue;
                 let implRow = document.querySelector("#impl_row").content.cloneNode(true);
                 implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
+                implRow.querySelector(".folder img").onclick=foldImpl;
                 table.appendChild(implRow);
+                //Fill the methods
                 for (fn of impl.fns) {
                     let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
-                    //TODO:arrow
                     fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
                     let a = fnRow.querySelector(".shortname a");
                     a.appendChild(document.createTextNode(fn.name));
@@ -105,7 +107,7 @@ function refreshContent(){
                         let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                         let a = fnRow.querySelector(".shortname a");
                         a.appendChild(document.createTextNode(fn.name));
-                        fnRow.querySelector(".shortimpl").appendChild(makeSortImpl(fn.impl));
+                        fnRow.querySelector(".shortimpl").appendChild(makeShortDeclaration(fn.impl));
                         headerDesc = fnRow.querySelector(".shortdesc")
                         headerDesc.appendChild(document.createTextNode(fn.shortDescription));
                         table.appendChild(fnRow); 
@@ -113,22 +115,27 @@ function refreshContent(){
                     }
                     // create a subrow for every function of the group
                     let fnSubRow = document.querySelector("#fn_subrow").content.cloneNode(true);
-                    let a = fnSubRow.querySelector(".shortname a");
-                    a.appendChild(document.createTextNode(fn.name));
-                    fnSubRow.querySelector(".fullimpl").appendChild(oneLine(fn.impl.domDeclaration));                    
+                    //let a = fnSubRow.querySelector(".shortname a");
+                    //a.appendChild(document.createTextNode(fn.name));
+                    fnSubRow.querySelector(".fullimpl").appendChild(oneLine(fn.impl.domDeclaration.cloneNode(true)));                    
                     if (headerDesc.textContent != fn.shortDescription) {
                         headerDesc.innerHTML="";
                         headerDesc.appendChild(document.createTextNode("…"));
                     }
+                    fnSubRow.firstElementChild.style.display="none";
                     table.appendChild(fnSubRow);                                       
                 }
                 // make the first row expandable if there is multiple visible implementations
                 if (count > 1) {
+                    imgFolder = header.querySelector(".folder img");
+                    imgFolder.src="img/arrow/fold.png";
+                    imgFolder.onclick=foldMethod;
+                    imgFolder.setAttribute("data-status","fold");
                     let shortImpl = header.querySelector(".shortimpl");
                     removeChilds(shortImpl);
                     shortImpl.appendChild(document.createTextNode("…"));
                 }
-                // remove useless first subrow if there is only one visible implementation
+                // remove the useless first subrow if there is only one visible implementation
                 else {
                     header.nextElementSibling.remove();
                 }
@@ -150,13 +157,149 @@ function refreshContent(){
     //internalLinks(document.body);
 }
 
+// fold/unfold function
+function foldImpl(evt){
+    fold(evt, "fn_row");
+}
+function foldMethod(evt){
+    fold(evt, "fn_subrow");
+}
+function fold(evt, className){
+    let img = evt.target;
+    // invert the state
+    let fold = img.getAttribute("data-status")!="fold"
+    
+    // Update the icon and the general status
+    if (fold){
+        img.setAttribute("data-status","fold");
+        img.src="img/arrow/fold.png";
+    }else{
+        img.setAttribute("data-status","unfold");
+        img.src="img/arrow/open.png";
+    }
+    // Update visibility of the folded lines
+    let next=img.parentElement.parentElement.nextElementSibling;
+    while(next.classList.contains(className)){
+        next.style.display = fold?"none":"table-row";
+        next=next.nextElementSibling;
+    };
+} 
+
 // return if an implementation should be hidden in the summary
 function isHiddenImpl(impl){
     return false; //TODO
 }
 
-function makeSortImpl(impl){
-    return document.createTextNode("Todo<…>🛈")
+// Produce a short version of a method declaration notably 
+// by eliding generics and where clause
+function makeShortDeclaration(impl) {
+    let out = document.createElement("span");
+    let prefix = "";
+    let text = "";
+    let info = false;
+
+    //methods from deref ("...Deref<Target=Type>" => "from Type") 
+    if (impl.deref) {
+        prefix = "from";
+        //extract type between "=" and ">"
+        text = impl.domDeclaration.textContent.trim();
+        text = text.replace(/.*?=(.*).*>/,"$1");
+    }
+    //method from implementation
+    else{
+        let elt = impl.domDeclaration;
+        let a = content.domTitle.querySelectorAll("a")
+        let main_type=a[a.length-1].textContent;
+
+        //normalize whitespace
+        text = elt.textContent.trim();
+        text = text.replace(/\s/g," ");
+
+        //strip "impl<...>""
+        let pos = 4;
+        var impl_args="";
+        if (text.startsWith("impl<")){
+            pos = get_block(text,4,"<",">");
+            impl_args = text.substring(4,pos);
+            //if the elided arguments carry a bound, send a notice
+            if (impl_args.includes(":")) info=true;
+        }
+        text=text.substring(pos).trim();
+        
+        //strip where clause 
+        var pos_where = text.indexOf(" where ");
+        var where_clause
+        if (pos_where > 0){
+            where_clause = text.substring(pos_where+7);
+            text = text.substring(0,pos_where);
+            //send a notice if where clause present
+            info=true;
+        } 
+
+        //strip for clause and prepare a shortened one
+        let pos_for = text.indexOf(" for ");
+        var for_clause;
+        var short_for_clause;
+        if (pos_for > 0) {
+            for_clause = text.substring(pos_for+5).trim();
+            text = text.substring(0,pos_for);
+            //if the clause is not exactly on the current type send a notice 
+            if (for_clause!=main_type+impl_args) info=true;
+            short_for_clause = for_clause.replace(/<.*/,"<…>");
+        }
+
+        //read the implemented trait and prepared shortened one
+        var impl_trait=text.trim();
+        var short_impl_trait=impl_trait.replace(/<.*/,"<…>");
+        if (impl_trait.startsWith(main_type) && impl_trait!=main_type+impl_args){
+            info=true
+        }
+
+        //select the final case
+        if (impl_trait.startsWith(main_type)){
+            //case "impl DocumentedTye for Type" => "for Type"
+            if (for_clause && !for_clause.includes(main_type)){
+                prefix="for";
+                text=short_for_clause;
+            }
+            //case "impl DocumentedType" => ""
+            else {
+                text="";
+            }
+        }
+        //case "impl Type for DocumentedType" => "Type"
+        else {
+            text=short_impl_trait;
+            out.setAttribute("data-trait",short_impl_trait.replace(/<.*/,""));
+        }
+    }
+    
+    // construct the final result : prefix + text + infoTag
+    if (prefix!="") {
+        let elt_prefix = document.createElement("span");
+        elt_prefix.className="prefix";
+        elt_prefix.appendChild(document.createTextNode(prefix+" "));
+        out.appendChild(elt_prefix);
+    }
+    
+    out.appendChild(document.createTextNode(text));
+    if (info) {
+        out.appendChild(document.createTextNode("\xA0"))
+        let sup = document.createElement("sup");
+        sup.appendChild(document.createTextNode("🛈"));
+        out.appendChild(sup);
+    }
+    return out;
 }
-
-
+//
+function get_block(str, start, open, close){
+    if (str[start]!=open) return -1;
+    let count =1;
+    var pos;
+    for (pos=start+1; count>0; pos++){
+        if (pos>=str.length) return -1;
+        if (str[pos]==open) count++;
+        if (str[pos]==close) count--;
+    }
+    return pos;
+}

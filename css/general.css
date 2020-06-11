@@ -144,15 +144,22 @@ body {
 /****************************************
  * Format the method summary            *
  ****************************************/
- .impl_row{
+ #method_table .impl_row{
     background-color: var(--quote-bg);
     font-weight: bold;
 }
-.fn_row .shortname{
+#method_table .fn_row .shortname{
     font-weight: bold;
 }
-.in-band{
+#method_table .in-band .fullimpl{
     background-color: initial;
+}
+#method_table .fullimpl{
+    padding-left: 2em;
+    font-size: 90%;
+}
+#method_table td{
+    padding-right: 0.5em;    
 }
 
 
