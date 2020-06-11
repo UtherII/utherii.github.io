@@ -162,7 +162,7 @@ body {
 .description pre {
     overflow-x: auto;
 }
-a.test-arrow {
+/*a.test-arrow {
     display: inline-block;
     position: absolute;
     padding: 5px 10px 5px 10px;
@@ -171,4 +171,4 @@ a.test-arrow {
     top: 5px;
     right: 5px;
     z-index: 1;
-}
+}*/
