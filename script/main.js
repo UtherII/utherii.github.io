@@ -103,6 +103,16 @@ const DocItems = {
     }
 };
 let content;
+let config = {
+    theme: 'rust',
+    GroupByImpl: "last",
+    DisplayOperator: "last",
+    DisplayIterator: "last",
+    DisplayBlanket: "last",
+    DisplayAuto: "last",
+    PopupDisplayDelay: 600,
+    PopupCloseDelay: 200
+}
 
 //*******************************************
 // Initialize the environement 
@@ -241,12 +251,13 @@ function handleScrolling(){
     updateOnScrolling();
 }        
 function updateOnScrolling(evt){
-    manage_color(document.querySelector("#menu_summary"), document.querySelector("#summary"));
-    manage_color(document.querySelector("#menu_description"), document.querySelector("#description"));
-    manage_color(document.querySelector("#menu_methods"), document.querySelector("#methods"));
+    menubarItemColor(document.querySelector("#menu_summary"), document.querySelector("#summary"));
+    menubarItemColor(document.querySelector("#menu_description"), document.querySelector("#description"));
+    menubarItemColor(document.querySelector("#menu_methods"), document.querySelector("#methods"));
     //manage_stick();    
 }
-function manage_color(menu_item, item){
+// Set the opacity of the mebu
+function menubarItemColor(menu_item, item){
     domContent = document.querySelector(".content")
     let view_begin = domContent.scrollTop;
     let view_end = view_begin + domContent.clientHeight;
@@ -295,26 +306,32 @@ function initFilterButtons(){
     setFilterButton ("btn_group_mode", "GroupByImpl", true, ["img/arrow/tree.png","img/arrow/flat.png"]);
     setFilterButton ("btn_operator", "DisplayOperator", false);
     setFilterButton ("btn_iterator", "DisplayIterator", false);
-    setFilterButton ("btn_blanket", "DisplayBlantey", false);
+    setFilterButton ("btn_blanket", "DisplayBlanket", false);
     setFilterButton ("btn_auto", "DisplayAuto", true);
 }
 function setFilterButton(btnName, stateName, stateDefaut, iconSet){
-    //Get the value from the localStrore
+    //Get the initial value
     let state;
-    let lsValue = localStorage.getItem(stateName);
-    if (lsValue == null) {
-        state = stateDefaut;
+    if (config[stateName]=="last"){
+        let lsValue = localStorage.getItem(stateName);
+        if (lsValue == null) {
+            state = stateDefaut;
+        }
+        state = lsValue == "true" 
     }
-    state = lsValue == "true" 
+    else{
+        state = config[stateName] == "true";
+    }
 
     //Set the image
     let img = document.getElementById(btnName);
     function updateIcon(){
-        img.style.border = state ? "2px outset var(--table-header-bg)" : "2px inset var(--table-header-bg)";
         if (iconSet){
+            img.style.border = "2px outset var(--table-header-bg)";
             img.src = state ? iconSet[0] : iconSet[1];
         }
         else {
+            img.style.border = state ? "2px outset var(--table-header-bg)" : "2px inset var(--table-header-bg)";
             img.style.opacity = state ? 1.0 : 0.5;
         }  
     }
