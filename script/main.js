@@ -104,7 +104,6 @@ const DocItems = {
 };
 let content;
 let config = {
-    theme: 'rust',
     GroupByImpl: "last",
     DisplayOperator: "last",
     DisplayIterator: "last",
@@ -371,14 +370,14 @@ function setPopup(elt, content) {
                 infobox.style.top="calc("+y+"px + 1.25em)";    
 
             }
-        },600);
+        },config.PopupDisplayDelay);
     }, false);
     
     elt.addEventListener("mouseleave", function (evt) {
         clearTimeout(display_popup_timeout);
         hide_popup_timeout = setTimeout(function(){
             infobox.style.display="none";
-        },200);                
+        },config.PopupCloseDelay);                
     }, false);
 }
 function initInfobox(){
