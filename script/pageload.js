@@ -71,19 +71,27 @@ function loadRustdocContent(dom, content) {
     let impls = [];
     let fns = {};
     let cur_impl = null;
-    for (item of dom.querySelectorAll("h3.impl, h4.method, h2#deref-methods")){
+    let section="inherent";
+    for (item of dom.querySelectorAll("h3.impl, h4.method, h2")){
+        //section of method type
+        if (item.tagName=="H2"){
+            section=item.id;
+        }
         //implementation
-        if (item.tagName!="H4"){
+        if (item.tagName=="H3" || item.id=="deref-methods") {
             let impl = {};
             impl.text = item.firstChild.textContent;
             impl.domDeclaration = item.firstChild.cloneNode(true);
-            if (item.parentNode && item.parentNode.id=="blanket-implementations-list"){
-                impl.blanket=true;
-            }
-            if (item.tagName=="H2") {
+            if (section=="deref-methods") {
                 impl.deref=true;
                 impl.domDeclaration=document.createElement("code");
                 impl.domDeclaration.innerHTML=item.innerHTML;
+            }
+            if (section=="synthetic-implementations") {
+                impl.synthetic=true;
+            }
+            if (section=="blanket-implementations") {
+                impl.blanket=true;
             }
             let domSince = item.querySelector("span.since");
             if (domSince) {
@@ -94,12 +102,13 @@ function loadRustdocContent(dom, content) {
                 impl.src = domSrc.getAttribute("href");
             }
             parseImplDeclaration(impl);
+            getSpecialImpl(impl);
             impl.fns = [];
             cur_impl = impl;
             impls.push(impl);
         }
         //method
-        else {
+        if (item.tagName=="H4") {
             let fn = {};
             let nameItem = item.querySelector(".fnname");
             fn.name = nameItem.firstChild.textContent;
@@ -223,7 +232,7 @@ function parseImplDeclaration(impl) {
             //case "impl DocumentedTye for Type" => "for Type"
             if (impl.forClause && !impl.forClause.includes(mainType)){
                 prefix="for";
-                text=shortForClause;
+                text=impl.shortForClause;
             }
             //case "impl DocumentedType" => ""
             else {
@@ -251,6 +260,19 @@ function parseImplDeclaration(impl) {
         sup.appendChild(document.createTextNode("🛈"));
         impl.domShortDeclaration.appendChild(sup);
     }
+}
+
+//get the special implementations 
+function getSpecialImpl(impl) {
+    if (!impl.trait || !impl.forClause) return;
+
+    let bareTrait=impl.trait.replace(/<.*/,"");
+    let op = operatorTraits.filter(function (op){
+        if (op.trait.endsWith("::"+bareTrait)) return true;
+        if (op.hide && op.hide.endsWith("::"+bareTrait)) return true;
+        return false;
+    });    
+    if (op.length > 0) { impl.operators = op }
 }
 
 //Given a position on a string, return the position of the matching closing bracket
@@ -303,7 +325,7 @@ function internalLinks(dom){
     }
 }
 
-const operators = [
+const operatorTraits = [
     {symbol: "..", trait: "std::ops::Range"},
     {symbol: "..", trait: "std::ops::RangeFrom"},
     {symbol: "..", trait: "std::ops::RangeFull"},
@@ -338,6 +360,6 @@ const operators = [
     {symbol: "<=", trait: "std::cmp::PartialOrd", hide:"std::cmp::Ord"},
     {symbol: ">", trait: "std::cmp::PartialOrd", hide:"std::cmp::Ord"},
     {symbol: ">=", trait: "std::cmp::PartialOrd", hide:"std::cmp::Ord"},
-    {symbol: "==", trait: "std::cmp::PartialCmp", hide:"std::cmp::Cmp"},
-    {symbol: "!=", trait: "std::cmp::PartialCmp", hide:"std::cmp::Cmp"}
+    {symbol: "==", trait: "std::cmp::PartialEq", hide:"std::cmp::Eq"},
+    {symbol: "!=", trait: "std::cmp::PartialEq", hide:"std::cmp::Eq"}
 ];

@@ -136,7 +136,7 @@ function refreshContent(){
                     shortImpl.appendChild(document.createTextNode("…"));
                 }
                 // remove the useless first subrow if there is only one visible implementation
-                else {
+                if (count == 1) {
                     header.nextElementSibling.remove();
                 }
             }
@@ -154,7 +154,6 @@ function refreshContent(){
     else {
         methods.style.display = "none";
     }
-    //internalLinks(document.body);
 }
 
 // fold/unfold function
@@ -187,7 +186,11 @@ function fold(evt, className){
 
 // return if an implementation should be hidden in the summary
 function isHiddenImpl(impl){
-    return false; //TODO
+    if (localStorage.getItem("DisplayOperator")=="false" && impl.operators) return true;
+    if (localStorage.getItem("DisplayIterator")=="false" && impl.iterator) return true;
+    if (localStorage.getItem("DisplayBlanket")=="false" && impl.blanket) return true;
+    if (localStorage.getItem("DisplayAuto")=="false" && impl.synthetic) return true;
+    return false; 
 }
 
 // Produce a short version of a method declaration notably 
