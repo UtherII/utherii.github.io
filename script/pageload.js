@@ -93,6 +93,7 @@ function loadRustdocContent(dom, content) {
             if (domSrc) {
                 impl.src = domSrc.getAttribute("href");
             }
+            parseImplDeclaration(impl);
             impl.fns = [];
             cur_impl = impl;
             impls.push(impl);
@@ -131,7 +132,7 @@ function loadRustdocContent(dom, content) {
             fns[fn.name].push(fn);
         }            
     }
-    orderObject(fns);
+    fns=orderObject(fns);
     if (impls.length>0) { 
         content.impls=impls;
         content.fns=fns;
@@ -153,6 +154,116 @@ function orderObject(obj){
         objSorted[fld.name]=fld.content;
     }
     return objSorted;
+}
+
+//****************************************************
+// Parse the implementation declaration to extract the main parts
+//****************************************************
+function parseImplDeclaration(impl) {
+    let prefix = "";
+    let text = "";
+    let info = false;
+    let elt = impl.domDeclaration;
+
+    //get the name of the type documented on this page
+    let a = content.domTitle.querySelectorAll("a")
+    let mainType=a[a.length-1].textContent;
+
+    //normalize whitespace
+    text = elt.textContent.trim();
+    text = text.replace(/\s/g," ");
+
+    //methods from deref ("...Deref<Target=Type>" => "from Type") 
+    if (impl.deref) {
+        prefix = "from";
+        //extract type between "=" and ">"
+        text = impl.domDeclaration.textContent.trim();
+        text = text.replace(/.*?=(.*).*>/,"$1");
+    }
+    //method from implementation
+    else{
+        //extract the generic impl parameters
+        let pos = 4;
+        if (text.startsWith("impl<")){
+            pos = getBlock(text,4,"<",">");
+            impl.generics = text.substring(4,pos);
+            //if the elided arguments carry a bound, send a notice
+            if (impl.generics.includes(":")) info=true;
+        }
+        text=text.substring(pos).trim();
+        
+        //extract the where clause 
+        var posWhere = text.indexOf(" where ");
+        if (posWhere > 0){
+            impl.whereClause = text.substring(posWhere+7);
+            text = text.substring(0,posWhere);
+            //send a notice if where clause present
+            info=true;
+        } 
+
+        //extract for clause and prepare a shortened one
+        let posFor = text.indexOf(" for ");
+        if (posFor > 0) {
+            impl.forClause = text.substring(posFor+5).trim();
+            text = text.substring(0,posFor);
+            //if the clause is not exactly on the current type send a notice 
+            if (impl.forClause!=mainType+impl.generics) info=true;
+            impl.shortForClause = impl.forClause.replace(/<.*/,"<…>");
+        }
+
+        //extract the implemented trait and prepared shortened one
+        impl.trait=text.trim();
+        impl.shortTrait=impl.trait.replace(/<.*/,"<…>");
+        if (impl.trait.startsWith(mainType) && impl.trait!=mainType+impl.generics){
+            info=true
+        }
+
+        //select the final case
+        if (impl.trait.startsWith(mainType)){
+            //case "impl DocumentedTye for Type" => "for Type"
+            if (impl.forClause && !impl.forClause.includes(mainType)){
+                prefix="for";
+                text=shortForClause;
+            }
+            //case "impl DocumentedType" => ""
+            else {
+                text="";
+            }
+        }
+        //case "impl Type for DocumentedType" => "Type"
+        else {
+            text=impl.shortTrait;
+        }
+    }
+    
+    // construct the short declaration : prefix + text + infoTag
+    impl.domShortDeclaration = document.createElement("span");
+    if (prefix!="") {
+        let eltPrefix = document.createElement("span");
+        eltPrefix.className="prefix";
+        eltPrefix.appendChild(document.createTextNode(prefix+" "));
+        impl.domShortDeclaration.appendChild(eltPrefix);
+    }    
+    impl.domShortDeclaration.appendChild(document.createTextNode(text));    
+    if (info) {
+        impl.domShortDeclaration.appendChild(document.createTextNode("\xA0"))
+        let sup = document.createElement("sup");
+        sup.appendChild(document.createTextNode("🛈"));
+        impl.domShortDeclaration.appendChild(sup);
+    }
+}
+
+//Given a position on a string, return the position of the matching closing bracket
+function getBlock(str, start, open, close){
+    if (str[start]!=open) return -1;
+    let count =1;
+    var pos;
+    for (pos=start+1; count>0; pos++){
+        if (pos>=str.length) return -1;
+        if (str[pos]==open) count++;
+        if (str[pos]==close) count--;
+    }
+    return pos;
 }
 
 //*******************************************

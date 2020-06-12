@@ -107,7 +107,7 @@ function refreshContent(){
                         let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                         let a = fnRow.querySelector(".shortname a");
                         a.appendChild(document.createTextNode(fn.name));
-                        fnRow.querySelector(".shortimpl").appendChild(makeShortDeclaration(fn.impl));
+                        fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
                         headerDesc = fnRow.querySelector(".shortdesc")
                         headerDesc.appendChild(document.createTextNode(fn.shortDescription));
                         table.appendChild(fnRow); 
