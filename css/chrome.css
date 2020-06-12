@@ -25,7 +25,7 @@
     filter: drop-shadow(0 0 5px #fff);    
     padding-bottom: 6px;
 } 
-.sidebar .searchbox input {
+.sidebar #searchbox input {
     width: 100%;
 }
 /************************
@@ -108,7 +108,9 @@ header {
     margin-left: 1px;
     filter: var(--icon-filter);
 }
-
+#btn_group_mode{
+    filter: none;
+}
 /************************
    Theme selector
 ************************/
@@ -116,8 +118,8 @@ header {
     display: none;
 }
 ul.theme_selector{
-    padding: 0.8em;
-    margin: 0.1em;
+    padding: 0.2em 0.8em;
+    margin: 0em;
 }
 .theme_selector li{
     list-style: none outside;    
