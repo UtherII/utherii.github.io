@@ -185,6 +185,7 @@ function globalOffsetTop(item){
 // Remove all <br> and merge multiple &nbsp;
 function oneLine(dom){
     let label = dom.innerHTML;
+    if (!label) return dom;
     label = label.replace("<br>","");
     label = label.replace(/(&nbsp;)+/g,"&nbsp;");
     dom.innerHTML = label;

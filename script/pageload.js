@@ -33,6 +33,11 @@ function loadRustdocContent(dom, content) {
     let typeText = sidebarScript.replace(/.*ty: '(.*?)'.*/,"$1");
     content.type = DocItems[typeText];
 
+    //Remove important-trait notification
+    for (node of dom.querySelectorAll(".important-traits")) {
+        node.remove();
+    }
+
     // Get item title as HTML
     content.domTitle = dom.querySelector(".fqn .in-band").cloneNode(true);
     
@@ -68,31 +73,33 @@ function loadRustdocContent(dom, content) {
     }
 
     // Get implementations and methods
-    let impls = [];
     let fns = {};
-    let cur_impl = null;
-    let section="inherent";
-    for (item of dom.querySelectorAll("h3.impl, h4.method, h2")){
+    let cur_impl;
+    let section;
+    for (item of dom.querySelectorAll(".small-section-header, .impl, .method")){
         //section of method type
-        if (item.tagName=="H2"){
-            section=item.id;
+        if (item.classList.contains("small-section-header")){
+            section=sectionsInfo[item.id];
+            if (section.fakeImpl) {
+                item.classList.add("impl");
+            }
         }
-        //implementation
-        if (item.tagName=="H3" || item.id=="deref-methods") {
+        //actual implementation or single fake implementation to contain special
+        //section items (derefed, required method, ...)
+        if (item.classList.contains("impl")) {
             let impl = {};
-            impl.text = item.firstChild.textContent;
-            impl.domDeclaration = item.firstChild.cloneNode(true);
-            if (section=="deref-methods") {
-                impl.deref=true;
+            // mark the implementation with his special type (deref, provided, ...)
+            impl[section.property] = true;
+            
+            // get the generic text repesentation
+            if (section.fakeImpl) {
                 impl.domDeclaration=document.createElement("code");
                 impl.domDeclaration.innerHTML=item.innerHTML;
+            } else {
+                impl.text = item.firstChild.textContent;
             }
-            if (section=="synthetic-implementations") {
-                impl.synthetic=true;
-            }
-            if (section=="blanket-implementations") {
-                impl.blanket=true;
-            }
+            // get the declaration (exctract the since and src info if available) 
+            impl.domDeclaration = item.firstChild.cloneNode(true);
             let domSince = item.querySelector("span.since");
             if (domSince) {
                 impl.since = domSince.textContent;
@@ -101,38 +108,60 @@ function loadRustdocContent(dom, content) {
             if (domSrc) {
                 impl.src = domSrc.getAttribute("href");
             }
+            // parse the declaration to extract type info and produce reduced version
             parseImplDeclaration(impl);
+            // try to get info for special Trait (operators, iterators,...)
             getSpecialImpl(impl);
+
             impl.fns = [];
             cur_impl = impl;
-            impls.push(impl);
+
+            // push the implementation in the corresponding matching array
+            let list = section.list;
+            if (!content[list]) content[list]= []; 
+            content[list].push(impl);
         }
         //method
-        if (item.tagName=="H4") {
+        if (item.classList.contains("method")) {
+            //TODO: handle associated items
+            if (section.property=="associated"){
+                continue;
+            }
             let fn = {};
+            //From the <h4> method header :
+            // get the name of the method
             let nameItem = item.querySelector(".fnname");
             fn.name = nameItem.firstChild.textContent;
             fn.domName= nameItem.cloneNode(true);
-            let descItem = item.nextElementSibling;
-            var next = item.nextElementSibling;
-            if (next.querySelector(".stability .unstable")){
-                fn.unstable=true;
-                next=next.nextElementSibling;
-            }
-            if (next.querySelector(".stability .deprecated")){
-                fn.deprecated=true;
-                next=next.nextElementSibling;
-            }
+            // get release version if availible
             let domSince = item.querySelector("span.since");
             if (domSince) {
                 fn.since = domSince.textContent;
             }
+            // get source if available
             let domSrc = item.querySelector("a.srclink")
             if (domSrc) {
                 fn.src = domSrc.getAttribute("href");
             }
-            fn.shortDescription = next.textContent.split(".",2)[0] + ".";
-            fn.domDescription = next.cloneNode(true); 
+            
+            //From the <div> folowing the method header (if available)
+            // get stability an deprecation info
+            var next = item.nextElementSibling;
+            if (next && next.querySelector(".stability .unstable")){
+                fn.unstable=true;
+                next=next.nextElementSibling;
+            }
+            if (next && next.querySelector(".stability .deprecated")){
+                fn.deprecated=true;
+                next=next.nextElementSibling;
+            }    
+            // get description
+            if (next){
+                fn.shortDescription = next.textContent.split(".",2)[0] + ".";
+                fn.domDescription = next.cloneNode(true); 
+            }
+
+            //Push the extracted informations in the lists
             cur_impl.fns.push(fn);
             fn.impl = cur_impl;
             if (!fns[fn.name]) {
@@ -141,9 +170,8 @@ function loadRustdocContent(dom, content) {
             fns[fn.name].push(fn);
         }            
     }
-    fns=orderObject(fns);
-    if (impls.length>0) { 
-        content.impls=impls;
+    if (Object.keys(fns).length>0) { 
+        fns=orderObject(fns);
         content.fns=fns;
     }
 } 
@@ -264,8 +292,10 @@ function parseImplDeclaration(impl) {
 
 //get the special implementations 
 function getSpecialImpl(impl) {
+    // only for trait implementation
     if (!impl.trait || !impl.forClause) return;
 
+    // detect implemented operators
     let bareTrait=impl.trait.replace(/<.*/,"");
     let op = operatorTraits.filter(function (op){
         if (op.trait.endsWith("::"+bareTrait)) return true;
@@ -273,6 +303,11 @@ function getSpecialImpl(impl) {
         return false;
     });    
     if (op.length > 0) { impl.operators = op }
+
+    //detect iterators
+    if (["Iterator","DoubleEndedIterator","FixedSizeIterator"].includes(bareTrait)){
+        impl.iterator = true;
+    }
 }
 
 //Given a position on a string, return the position of the matching closing bracket
@@ -363,3 +398,16 @@ const operatorTraits = [
     {symbol: "==", trait: "std::cmp::PartialEq", hide:"std::cmp::Eq"},
     {symbol: "!=", trait: "std::cmp::PartialEq", hide:"std::cmp::Eq"}
 ];
+
+const sectionsInfo={
+    "associated-types": {property:"associated", fakeImpl: true, list: "impls"},
+    "required-methods": {property:"required", fakeImpl: true, list: "impls"},
+    "provided-methods": {property:"provided", fakeImpl: true, list: "impls"},
+    "methods": {fakeImpl: false, list: "impls"},
+    "deref-methods": {property:"deref", fakeImpl: true, list: "impls"},
+    "implementations": {fakeImpl: false, list: "impls"},
+    "synthetic-implementations": {property:"synthetic", fakeImpl: false, list: "impls"},
+    "blanket-implementations": {property:"blanket", fakeImpl: false, list: "impls"},
+    "foreign-impls": {fakeImpl: true, list:"foreignImpls"},
+    "implementors": {fakeImpl: true, list: "implementors"}
+};
