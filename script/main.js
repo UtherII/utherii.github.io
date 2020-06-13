@@ -303,14 +303,26 @@ function menubarItemColor(menu_item, item){
 //*******************************************
 // Method filter button
 //*******************************************
+const methodFilters = [
+    {storageKey:"DisplayOperator", buttonId:"btn_operator", implField:"operators", default: false},
+    {storageKey:"DisplayIterator", buttonId:"btn_iterator", implField:"iterator", default: false},
+    {storageKey:"DisplayBlanket", buttonId:"btn_blanket", implField:"blanket", default: false},
+    {storageKey:"DisplayAuto", buttonId:"btn_synthetic", implField:"synthetic", default: true}
+];
 function initFilterButtons(){
     setFilterButton ("btn_group_mode", "GroupByImpl", true, ["img/arrow/tree.png","img/arrow/flat.png"]);
-    setFilterButton ("btn_operator", "DisplayOperator", false);
-    setFilterButton ("btn_iterator", "DisplayIterator", false);
-    setFilterButton ("btn_blanket", "DisplayBlanket", false);
-    setFilterButton ("btn_auto", "DisplayAuto", true);
+    for (filter of methodFilters) {
+        setFilterButton (filter.buttonId, filter.storageKey, filter.default);
+    }
 }
-function setFilterButton(btnName, stateName, stateDefaut, iconSet){
+function updateFilterButtons(){
+    for (filter of methodFilters) {
+        let button = document.getElementById(filter.buttonId);
+        let count = content.impls.filter(impl=>impl[filter.implField]).length;
+        button.style.display = count ? "inline-block" : "none";        
+    }
+}
+function setFilterButton(buttonId, stateName, stateDefaut, iconSet){
     //Get the initial value
     let state;
     if (config[stateName]=="last"){
@@ -325,7 +337,7 @@ function setFilterButton(btnName, stateName, stateDefaut, iconSet){
     }
 
     //Set the image
-    let img = document.getElementById(btnName);
+    let img = document.getElementById(buttonId);
     function updateIcon(){
         if (iconSet){
             img.style.border = "2px outset var(--table-header-bg)";

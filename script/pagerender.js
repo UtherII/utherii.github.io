@@ -70,6 +70,9 @@ function refreshContent(){
         methodSummarySection.style.display = "block";
         let table=document.querySelector("#method_table");
         table.innerHTML="";
+        // Display the method filter buttons
+        updateFilterButtons();
+        
         // Display grouped by impl
         if (localStorage.getItem("GroupByImpl")=="true"){
             for (impl of content.impls) {
@@ -306,3 +309,4 @@ function get_block(str, start, open, close){
     }
     return pos;
 }
+

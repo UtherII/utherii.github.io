@@ -120,6 +120,12 @@ body {
  ****************************************/
  #declaration_section .docblock{
     background-color: var(--quote-bg);
+    font-size: 85%;
+    line-height: 1.3em;
+    max-height: 55vh;
+    overflow: auto;
+    margin: 1em;
+    border: 2px inset --var(--table-border-color);
 }
 
 /****************************************
