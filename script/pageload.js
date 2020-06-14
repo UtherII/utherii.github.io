@@ -76,9 +76,9 @@ function loadRustdocContent(dom, content) {
     let fns = {};
     let cur_impl;
     let section;
-    for (item of dom.querySelectorAll(".small-section-header, .impl, .method")){
-        //section of method type
-        if (item.classList.contains("small-section-header")){
+    for (item of dom.querySelectorAll("h2.small-section-header, .impl, .method")){
+        //sections of documented items 
+        if (item.tagName=="H2"){
             section=sectionsInfo[item.id];
             if (section.fakeImpl) {
                 item.classList.add("impl");
@@ -360,6 +360,31 @@ function internalLinks(dom){
     }
 }
 
+//*******************************************
+// Load sidebar content
+//*******************************************
+function initSidebar() {
+    tree = [
+        {
+            type: DocItems.bookshelf, 
+            text:"Guides", 
+            child : {
+                type: DocItems.book, 
+                text:"The Rust Programming Language", 
+                url:"book"
+            }
+        }, 
+        {
+            type: DocItems.primitive, 
+            text:"Primitives"
+        }, 
+        {
+            type: DocItems.keyword, 
+            text:"Keywords"
+        },
+    ];
+}
+
 const operatorTraits = [
     {symbol: "..", trait: "std::ops::Range"},
     {symbol: "..", trait: "std::ops::RangeFrom"},
@@ -409,5 +434,7 @@ const sectionsInfo={
     "synthetic-implementations": {property:"synthetic", fakeImpl: false, list: "impls"},
     "blanket-implementations": {property:"blanket", fakeImpl: false, list: "impls"},
     "foreign-impls": {fakeImpl: true, list:"foreignImpls"},
-    "implementors": {fakeImpl: true, list: "implementors"}
+    "implementors": {fakeImpl: true, list: "implementors"},
+    "synthetic-implementors": {fakeImpl: false, list: "implementors"},
+    "variants": {property:"variant", fakeImpl:false}
 };

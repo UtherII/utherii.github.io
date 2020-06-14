@@ -6,6 +6,13 @@ const realPageUrl = location.toString().replace(/(.*?)[?#].*/,"$1");
 const realPagePath = pathParent(realPageUrl);
 const realPageName = pathItem(realPageUrl);
 const DocItems = {
+    bookshelf:{
+        order:0,
+        icon:"img/bookshelf.png",
+        expand:true,
+        link:"/$/index.html",
+        to:"book_root"
+    },
     book:{
         order:0, 
         icon:"img/book.png", 
@@ -120,6 +127,9 @@ async function init(){
     // Init theme first to avoid visual glitch
     initTheme();
 
+    // Init sidebar
+    setUnfoldSidebar();
+
     // get the name of the first page to load from page parameter
     let docPage = defaultPage;
     let realUrl = location.toString();
@@ -155,6 +165,8 @@ async function goToPage(url, history = true){
     //load the page
     await loadDocPage(url);
     refreshContent();
+    //update sidebar
+    sidebarCurrent(url.replace(/#.*/,""));
     //déplacement à l'ancre si necessaire
     let domContent =  document.querySelector(".content")
     if (url.indexOf("#") > 0){

@@ -1,7 +1,10 @@
 /************************
     Sidebar 
 ************************/
+/* Gereral */
 .sidebar {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     left: 0;
     top: 0;
@@ -15,6 +18,16 @@
     color: var(--sidebar-fg);  
     padding: 6px;
 }
+.sidebar #searchbox input {
+    width: 100%;
+}
+
+.sidebar hr {
+    width: 95%;
+    margin-bottom: 4px;
+}
+
+/* Crate Informations */
 .sidebar .crateinfo {
     text-align: center;
     font-weight: bold;
@@ -25,9 +38,100 @@
     filter: drop-shadow(0 0 5px #fff);    
     padding-bottom: 6px;
 } 
-.sidebar #searchbox input {
+
+/* Search box */
+.sidebar input {
+    width: 95%;
+}
+
+/* Crate content tree */
+.cratetree{
+    --item-height: 1.20em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    flex: 1;
+    scrollbar-width: thin;
+    overflow: auto;
+}
+.cratetree img, .cratetree .arrow {
+    width: calc(var(--item-height) - 0.2em);
+    height: calc(var(--item-height) - 0.2em);
+}
+.cratetree .arrow {
+    filter: var(--icon-filter);
+}
+.arrow.can_fold.open{
+    background: cover url("img/arrow/open.png");
+}
+.arrow.can_fold:not(.open){
+    background: cover url("img/arrow/fold.png");
+}
+.cratetree ul {
+    margin-top: 0px;
+    list-style: none;
+    font-weight: normal;
+    padding-left: 0em;
+}
+.cratetree ul ul {
+    padding-left: 1em;
+}
+.cratetree li.can_fold + ul {
+    display: none
+}
+.cratetree li.can_fold.open + ul {
+    display: block;
+}
+.cratetree li {
+    position: sticky;
+    background-color: var(--sidebar-bg);
+    height: var(--item-height);
+    white-space: nowrap;
     width: 100%;
 }
+
+.cratetree .l1{
+    top:calc(0 * var(--item-height));
+    z-index: calc(100 - 0);
+}
+.cratetree .l2{
+    top:calc(1 * var(--item-height));
+    z-index: calc(100 - 1);
+}
+.cratetree .l3{
+    top:calc(2 * var(--item-height));
+    z-index: calc(100 - 2);
+}
+.cratetree .l4{
+    top:calc(3 * var(--item-height));
+    z-index: calc(100 - 3);
+}
+.cratetree .l5{
+    top:calc(4 * var(--item-height));
+    z-index: calc(100 - 4);
+}
+.cratetree .l6{
+    top:calc(5 * var(--item-height));
+    z-index: calc(100 - 5);
+}
+.cratetree a {
+    text-decoration: none;
+    color: unset;
+}
+.cratetree .selected {
+    background-color: var(--links);
+}
+
+/****************************************
+ * Slider (between two sides)           *
+ ****************************************/
+ .slider {
+    position: fixed;
+    left: var(--sidebar-width);
+    cursor: col-resize;
+    width: 5px;
+    height: 100vh;
+    margin-left: 5px;
+}
+
 /************************
     Main Panel 
 ************************/
