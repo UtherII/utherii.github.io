@@ -218,7 +218,6 @@
     --searchresults-li-bg: #dec2a2;
     --search-mark-bg: #e69f67;
 
-    --icon-filter: invert(0);
 }
 
 @media (prefers-color-scheme: dark) {
