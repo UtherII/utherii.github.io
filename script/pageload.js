@@ -8,7 +8,10 @@ async function loadDocPage(docPage){
     content = { docPage };
 
     // Load informations for a rustdoc page
-    if (dom.querySelector("meta[name=generator]").content == "rustdoc") {
+    if (dom 
+        && dom.querySelector("meta[name=generator]") 
+        && dom.querySelector("meta[name=generator]").content == "rustdoc")
+    {
         internalLinks(dom);
         loadRustdocContent(dom, content);
     }
@@ -96,10 +99,9 @@ function loadRustdocContent(dom, content) {
                 impl.domDeclaration=document.createElement("code");
                 impl.domDeclaration.innerHTML=item.innerHTML;
             } else {
-                impl.text = item.firstChild.textContent;
+                impl.domDeclaration = item.firstChild.cloneNode(true);
             }
             // get the declaration (exctract the since and src info if available) 
-            impl.domDeclaration = item.firstChild.cloneNode(true);
             let domSince = item.querySelector("span.since");
             if (domSince) {
                 impl.since = domSince.textContent;
@@ -164,10 +166,12 @@ function loadRustdocContent(dom, content) {
             //Push the extracted informations in the lists
             cur_impl.fns.push(fn);
             fn.impl = cur_impl;
-            if (!fns[fn.name]) {
-                fns[fn.name]=[];
+            if (section.list=="impls"){
+                if (!fns[fn.name]) {
+                    fns[fn.name]=[];
+                }
+                fns[fn.name].push(fn);
             }
-            fns[fn.name].push(fn);
         }            
     }
     if (Object.keys(fns).length>0) { 
@@ -214,11 +218,20 @@ function parseImplDeclaration(impl) {
     if (impl.deref) {
         prefix = "from";
         //extract type between "=" and ">"
-        text = impl.domDeclaration.textContent.trim();
         text = text.replace(/.*?=(.*).*>/,"$1");
     }
+    //required method => "required"
+    else if (impl.required) {
+        prefix = "required";
+        text = "";
+    }
+    //
+    else if (impl.provided || impl.associated) {
+        prefix = "";
+        text = "";
+    }
     //method from implementation
-    else{
+    else if (impl.implementation || impl.synthetic || impl.blanket || impl.typeImpl || impl.traitImpl) {
         //extract the generic impl parameters
         let pos = 4;
         if (text.startsWith("impl<")){
@@ -356,7 +369,8 @@ function internalLinks(dom){
             href = pathMerge(currentItemPath, originalLink);
         }
         a.href = realPageUrl + "?item=" + href;
-        a.onclick = function(){ goToPage(href); return false; }
+        //a.onclick = function(){ goToPage(href); return false; }
+        a.setAttribute("onclick", "goToPage('" + href + "'); return false;"); 
     }
 }
 
@@ -428,9 +442,9 @@ const sectionsInfo={
     "associated-types": {property:"associated", fakeImpl: true, list: "impls"},
     "required-methods": {property:"required", fakeImpl: true, list: "impls"},
     "provided-methods": {property:"provided", fakeImpl: true, list: "impls"},
-    "methods": {fakeImpl: false, list: "impls"},
+    "methods": {property:"typeImpl", fakeImpl: false, list: "impls"},
     "deref-methods": {property:"deref", fakeImpl: true, list: "impls"},
-    "implementations": {fakeImpl: false, list: "impls"},
+    "implementations": {property:"traitImpl", fakeImpl: false, list: "impls"},
     "synthetic-implementations": {property:"synthetic", fakeImpl: false, list: "impls"},
     "blanket-implementations": {property:"blanket", fakeImpl: false, list: "impls"},
     "foreign-impls": {fakeImpl: true, list:"foreignImpls"},

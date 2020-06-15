@@ -54,6 +54,9 @@
 .cratetree .img:nth-child(2n+1) {
     filter: var(--icon-filter);
 }
+.rust2 .cratetree img:nth-child(2n+1) {
+    filter: invert(1);
+}
 .arrow.can_fold.open{
     background: cover url("img/arrow/open.png");
 }
@@ -208,9 +211,7 @@ header {
     margin-left: 1px;
     filter: var(--icon-filter);
 }
-#btn_group_mode{
-    filter: none;
-}
+
 /************************
    Theme selector
 ************************/

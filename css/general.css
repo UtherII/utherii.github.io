@@ -156,6 +156,9 @@ body {
     background-color: var(--quote-bg);
     font-weight: bold;
 }
+#method_table .impl_row .folder{
+    filter: var(--icon-filter);
+}
 #method_table .fn_row .shortname{
     font-weight: bold;
 }

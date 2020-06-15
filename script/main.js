@@ -319,7 +319,7 @@ const methodFilters = [
     {storageKey:"DisplayAuto", buttonId:"btn_synthetic", implField:"synthetic", default: true}
 ];
 function initFilterButtons(){
-    setFilterButton ("btn_group_mode", "GroupByImpl", true, ["img/arrow/tree.png","img/arrow/flat.png"]);
+    setFilterButton ("btn_group_mode", "GroupByImpl", true, ["img/arrow/tree1.png","img/arrow/flat1.png"]);
     for (filter of methodFilters) {
         setFilterButton (filter.buttonId, filter.storageKey, filter.default);
     }
