@@ -90,9 +90,10 @@ body {
 .description pre {
     font-family: "Source Code Pro", monospace;
     font-size: 90%;
-    background-color: #F5F5F5;
+    background-color: var(--code-bg);
     margin: 10px;
     padding: 6px;
+    overflow-x: auto;
 }
 .since {
     text-align: right;
@@ -175,9 +176,6 @@ body {
 
 .docblock code{
     background-color: var(--quote-bg);
-}
-.description pre {
-    overflow-x: auto;
 }
 /*a.test-arrow {
     display: inline-block;

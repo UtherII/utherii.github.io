@@ -23,7 +23,7 @@
         <!-- The theme selection popup -->
         <div id="theme_selector">
             <ul class="theme_selector">
-                <a href="javascript:setTheme('rust')"><li>Rust</li></a>
+                <a href="javascript:setTheme('rust2')"><li>Rust</li></a>
                 <a href="javascript:setTheme('light')"><li>Light</li></a>
                 <a href="javascript:setTheme('ayu')"><li>Ayu</li></a>
                 <a href="javascript:setTheme('navy')"><li>Navy</li></a>
@@ -48,42 +48,42 @@
                     <li id="book_root" data-path="book" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/book.png" />
-                        <a href="book/index.png" onclick="set_page('book/index.html');return false">The Book</a>
+                        <a href="book/index.png" onclick="goToPage('book/index.html');return false">The Book</a>
                     </li>
                     <li id="keywords_root" data-path="std" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/primitive.png" />
-                        <a href="std/index.html" onclick="set_page('std/keywords.html');return false">Keywords</a>
+                        <a href="std/index.html" onclick="goToPage('std/keywords.html');return false">Keywords</a>
                     </li>
                     <li id="primitives_root" data-path="std" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/primitive.png" />
-                        <a href="std/index.html" onclick="set_page('std/primitives.html');return false">Primitives</a>
+                        <a href="std/index.html" onclick="goToPage('std/primitives.html');return false">Primitives</a>
                     </li>
                     <li id="alloc_root"  data-path="alloc" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
-                        <a href="alloc/index.html" onclick="set_page('alloc/index.html');return false">alloc</a>
+                        <a href="alloc/index.html" onclick="goToPage('alloc/index.html');return false">alloc</a>
                     </li>
                     <li id="core_root" data-path="core" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
-                        <a href="core/index.html" onclick="set_page('core/index.html');return false">core</a>
+                        <a href="core/index.html" onclick="goToPage('core/index.html');return false">core</a>
                     </li>
                     <li id="proc_macro_root" data-path="proc_macro" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
-                        <a href="proc_macro/index.html" onclick="set_page('proc_macro/index.html');return false">proc_macro</a>
+                        <a href="proc_macro/index.html" onclick="goToPage('proc_macro/index.html');return false">proc_macro</a>
                     </li>
                     <li id="std_root" data-path="std" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
-                        <a href="std/index.html" onclick="set_page('std/index.html');return false">std</a>
+                        <a href="std/index.html" onclick="goToPage('std/index.html');return false">std</a>
                     </li>
                     <li id="test_root" data-path="test" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
-                        <a href="test/index.html" onclick="set_page('test/index.html');return false">test</a>
+                        <a href="test/index.html" onclick="goToPage('test/index.html');return false">test</a>
                     </li>
                 </ul>
             </div>
