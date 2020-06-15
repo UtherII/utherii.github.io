@@ -144,14 +144,11 @@ async function init(){
     history.replaceState({url: docPage, scroll: 0},"");
     onpopstate = historyMove;
 
-    // init scrolling handling
+    // init GUI components
     handleScrolling();
-
-    // init filter buttons
     initFilterButtons();
-
-    //init tooltip box
-    initInfobox()
+    initInfobox();
+    initSlider();
 }
 
 //*******************************************
@@ -433,7 +430,7 @@ function initInfobox(){
 //*****************************************
 // get the theme from the localStorage before loading the body
 let theme = localStorage.getItem("Theme");
-if (theme == null) { theme = "rust" }
+if (theme == null) { theme = "rust2" }
 setTheme(theme);
 
 function initTheme(){
@@ -451,4 +448,34 @@ function initTheme(){
 function setTheme(id){
     localStorage.setItem("Theme",id);
     document.documentElement.className=id;
+}
+
+//***************************************
+// Sidebar resize
+//***************************************
+var dragging = false;
+var cratetree;
+function initSlider(){
+    document.body.addEventListener("mousemove", dragPending);
+    document.body.addEventListener("mouseup", dragEnd);
+    document.getElementById("slider").addEventListener("mousedown", dragStart);
+    cratetree = document.getElementById("cratetree")
+}
+function dragStart(evt) {
+    document.body.style.setProperty("user-select", "none");
+    dragging = true;
+}
+function dragEnd(evt) {
+    if (dragging) {
+        dragging = false;
+        localStorage.setItem("slider", evt.pageX);
+        dragPending(evt);
+        document.body.style.setProperty("user-select", "auto");
+    }
+}
+function dragPending(evt) {
+    if (dragging) {
+        document.body.style.setProperty("--sidebar-width", evt.pageX + "px");
+        cratetree.scrollTo({ left: 0 });
+    }
 }
