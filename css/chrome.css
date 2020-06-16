@@ -10,7 +10,6 @@
     top: 0;
     bottom: 0;
     width: var(--sidebar-width);
-    font-size: 0.875em;
     box-sizing: border-box;
     background-color: var(--sidebar-bg);
     color: var(--sidebar-fg);  
@@ -51,11 +50,11 @@
     width: calc(var(--item-height) - 0.2em);
     height: calc(var(--item-height) - 0.2em);
 }
-.cratetree .img:nth-child(2n+1) {
-    filter: var(--icon-filter);
-}
-.rust2 .cratetree img:nth-child(2n+1) {
+.rust2 .cratetree .can_fold img:nth-child(2n+1){
     filter: invert(1);
+}
+.cratetree .can_fold img:nth-child(2n+1){
+    filter: var(--icon-filter);
 }
 .arrow.can_fold.open{
     background: cover url("img/arrow/open.png");
@@ -82,6 +81,7 @@
     position: sticky;
     background-color: var(--sidebar-bg);
     height: var(--item-height);
+    overflow: hidden;
     white-space: nowrap;
     width: 100%;
 }
