@@ -1,0 +1,69 @@
+{
+    "Learning Rust":[
+        {
+            "type":"mdBook",
+            "title":"The Rust Programming Language",
+            "url": ""
+        },
+        {
+            "type":"mdBook",
+            "title":"Rust by example",
+            "url": "https://doc.rust-lang.org/stable/rust-by-example/"
+        },
+        {
+            "type":"web",
+            "title":"Rustlings exercices",
+            "url": "https://github.com/rust-lang/rustlings/"
+        },
+        {
+            "type":"mdBook",
+            "title":"Embedded Book",
+            "url": "https://doc.rust-lang.org/stable/embedded-book/"
+        },
+        {
+            "type":"mdBook",
+            "title":"Webassembly Book",
+            "url": "https://rustwasm.github.io/docs/book/"
+        },
+        {
+            "type":"mdBook",
+            "title":"Command line Book",
+            "url": "https://rust-cli.github.io/book/index.html"
+        },
+        {
+            "type":"mdBook",
+            "title":"Rustonomicon",
+            "url": "https://doc.rust-lang.org/stable/nomicon/"            
+        }
+    ],
+    "Reference":[
+        {
+            "type":"mdBook",
+            "title":"Language Reference",
+            "url": "https://doc.rust-lang.org/reference/"
+        },
+        {
+            "type":"web",
+            "title":"Compiler Error Codes",
+            "url": "https://doc.rust-lang.org/error-index.html"
+        }
+    ],
+    "Tools":[
+        {
+            "type":"mdBook",
+            "title":"Cargo",
+            "url": "https://doc.rust-lang.org/reference/"
+        },
+        {
+            "type":"mdBook",
+            "title":"Rustdoc",
+            "url": "https://doc.rust-lang.org/reference/"
+        },
+        {
+            "type":"mdBook",
+            "title":"Rustc",
+            "url": "https://doc.rust-lang.org/reference/"
+        }
+
+    ]
+}
