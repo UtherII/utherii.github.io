@@ -314,6 +314,7 @@ function menubarItemColor(menu_item, item){
 //*******************************************
 const methodFilters = [
     {storageKey:"DisplayOperator", buttonId:"btn_operator", implField:"operators", default: false},
+    {storageKey:"DisplayConvert", buttonId:"btn_convert", implField:"convert", default: false},
     {storageKey:"DisplayIterator", buttonId:"btn_iterator", implField:"iterator", default: false},
     {storageKey:"DisplayBlanket", buttonId:"btn_blanket", implField:"blanket", default: false},
     {storageKey:"DisplayAuto", buttonId:"btn_synthetic", implField:"synthetic", default: true}

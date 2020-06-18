@@ -56,7 +56,9 @@ function refreshContent(){
     }
 
     // Set special impl section
-    makeSpecialImpl();
+    if (content.impls){
+        makeSpecialImpl();
+    }
 
     // Set implementation section
     let otherImplSection = document.querySelector("#other_impl_section");

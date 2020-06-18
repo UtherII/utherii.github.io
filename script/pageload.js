@@ -321,6 +321,10 @@ function getSpecialImpl(impl) {
     if (["Iterator","DoubleEndedIterator","FixedSizeIterator"].includes(bareTrait)){
         impl.iterator = true;
     }
+
+    if (["From","TryFrom"].includes(bareTrait) && !impl.synthetic){
+        impl.convert =true;
+    }
 }
 
 //Given a position on a string, return the position of the matching closing bracket
