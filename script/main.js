@@ -195,7 +195,7 @@ function globalOffsetTop(item){
 function oneLine(dom){
     let label = dom.innerHTML;
     if (!label) return dom;
-    label = label.replace("<br>","");
+    label = label.replace(/<br>/g,"");
     label = label.replace(/(&nbsp;)+/g,"&nbsp;");
     dom.innerHTML = label;
     return dom;
