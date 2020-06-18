@@ -322,7 +322,7 @@ function getSpecialImpl(impl) {
         impl.iterator = true;
     }
 
-    if (["From","TryFrom"].includes(bareTrait) && !impl.synthetic){
+    if (["From","TryFrom"].includes(bareTrait) && !impl.blanket){
         impl.convert =true;
     }
 }

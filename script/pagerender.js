@@ -194,11 +194,13 @@ function fold(evt, className){
 
 // return if an implementation should be hidden in the summary
 function isHiddenImpl(impl){
-    if (localStorage.getItem("DisplayOperator")=="false" && impl.operators) return true;
-    if (localStorage.getItem("DisplayIterator")=="false" && impl.iterator) return true;
-    if (localStorage.getItem("DisplayBlanket")=="false" && impl.blanket) return true;
-    if (localStorage.getItem("DisplayAuto")=="false" && impl.synthetic) return true;
-    return false; 
+    let hidden = false;
+    for (flt of methodFilters){
+        if (localStorage.getItem(flt.storageKey)=="false" && impl[flt.implField]) {
+            hidden = true;
+        }
+    } 
+    return hidden; 
 }
 
 // Produce a short version of a method declaration notably 
@@ -319,7 +321,7 @@ function makeSpecialImpl() {
     let specImplList = document.getElementById("special_impl_list");
     specImplList.innerHTML = "";
 
-    //make to operator message lines
+    // Operator information
     let opImpl = [];
     for (impl of content.impls) {
         if (impl.operators){ 
@@ -367,6 +369,15 @@ function makeSpecialImpl() {
             li.appendChild(span);
         }
         specImplList.appendChild(li);
+    }
+    // Iterator information
+    for (impl of content.impls) {
+        if (impl.iterator){ 
+            let li=document.createElement("li");
+            li.appendChild(document.createTextNode("Iterator of "));
+            li.appendChild(document.createTextNode(""));
+            specImplList.appendChild(li);    
+        }
     }
     
     document.getElementById("special_impl_section").style.display = specImplList.childElementCount>0 ? "block" : "none";
