@@ -55,13 +55,16 @@ function refreshContent(){
         declarationSection.style.display = "none";
     }
 
+    // Set special impl section
+    makeSpecialImpl();
+
     // Set implementation section
-    let implementationSection = document.querySelector("#implementation_section");
+    let otherImplSection = document.querySelector("#other_impl_section");
     if (content.domDeclaration) {
-        implementationSection.style.display = "block";
+        otherImplSection.style.display = "block";
     }
     else {
-        implementationSection.style.display = "none";
+        otherImplSection.style.display = "none";
     }
 
     // Set method summary section
@@ -310,3 +313,77 @@ function get_block(str, start, open, close){
     return pos;
 }
 
+function makeSpecialImpl() {
+    let specImplList = document.getElementById("special_impl_list");
+    specImplList.innerHTML = "";
+
+    //make to operator message lines
+    let opImpl = [];
+    for (impl of content.impls) {
+        if (impl.operators){ 
+            for (op of impl.operators){
+                opImpl.push({symbol: op.symbol, impl: impl})
+            }
+        }
+    }
+    
+    let groupFor = opImpl.groupBy(k=>k.impl.shortForClause);
+    let groupOps = {};
+    for (group in groupFor){
+        let g = groupFor[group];
+        let opList = g.map(o=>o.symbol)
+                      .dedup()
+                      .join(",");
+        if (!groupOps[opList]){
+            groupOps[opList]=[];
+        }
+        groupOps[opList].push(...g);
+    }
+    
+    for (groupOp in groupOps){
+        let subGroupFor = groupOps[groupOp].groupBy(k=>k.impl.shortForClause);
+
+        let li=document.createElement("li");
+        li.appendChild(document.createTextNode("Operators "));
+        
+        let first=true;
+        for (op of groupOp.split(",")) {
+            if (first) {first=false} else { li.appendChild(document.createTextNode(", ")); }
+            let span = document.createElement("span");
+            span.classList.add("opInfo");
+            span.appendChild(document.createTextNode(op));
+            li.appendChild(span);
+        }
+        
+        li.appendChild(document.createTextNode(" for "));
+        
+        first=true;
+        for (sf in subGroupFor) {
+            if (first) {first=false} else { li.appendChild(document.createTextNode(", ")); }
+            let span = document.createElement("span");
+            span.appendChild(document.createTextNode(sf));
+            li.appendChild(span);
+        }
+        specImplList.appendChild(li);
+    }
+    
+    document.getElementById("special_impl_section").style.display = specImplList.childElementCount>0 ? "block" : "none";
+}
+// convert an array to an object 
+Array.prototype.groupBy = function(key) {
+    return this.reduce(
+        function(acc, item) {
+            (acc[key(item)] = acc[key(item)] || []).push(item);
+            return acc;
+        }
+        , {}
+    );
+}
+Array.prototype.dedup = function() {
+    return this.reduce(
+        function(unique, item) {
+            return unique.includes(item) ? unique : [...unique, item];
+        }
+        , []
+    );
+}
