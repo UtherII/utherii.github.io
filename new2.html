@@ -53,12 +53,12 @@
                     <li id="keywords_root" data-path="std" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/primitive.png" />
-                        <a href="std/index.html" onclick="goToPage('std/keywords.html');return false">Keywords</a>
+                        <a href="std/index.html" onclick="goToPage('std/index.html');return false">Keywords</a>
                     </li>
                     <li id="primitives_root" data-path="std" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/primitive.png" />
-                        <a href="std/index.html" onclick="goToPage('std/primitives.html');return false">Primitives</a>
+                        <a href="std/index.html" onclick="goToPage('std/index.html');return false">Primitives</a>
                     </li>
                     <li id="alloc_root"  data-path="alloc" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
@@ -93,8 +93,11 @@
         <nav id="slider" class="slider">
         </nav>
 
+        <!-- A iframe for documentation from third party web site -->
+        <iframe id="external"></iframe>
+
         <!-- The right side of the page containing the informations -->
-        <section class="main">
+        <section id="main">
             <header>
                 <!-- The title area-->
                 <section id="title" class="title">

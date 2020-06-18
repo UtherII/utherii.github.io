@@ -190,3 +190,10 @@ body {
     right: 5px;
     z-index: 1;
 }*/
+
+/********************************
+   Format code
+********************************/
+.example-wrap{
+    display: inline-flex;
+}

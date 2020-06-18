@@ -134,7 +134,7 @@
 /************************
     Main Panel 
 ************************/
-.main {
+#main {
     position: fixed;
     top: 0px;
     width: calc(100vw - var(--sidebar-width));
@@ -144,6 +144,10 @@
     color: var(--fg);  
     display: flex;
     flex-direction: column;
+}
+
+body.external #main{
+    display: none;
 }
 
 header {
@@ -156,6 +160,22 @@ header {
     overflow: scroll;
     flex: 1;
 }
+
+/************************
+    External iframe 
+************************/
+#external{
+    display: none;
+}
+body.external #external{
+    display: block;
+    position: fixed;
+    top: 0px;
+    width: calc(100vw - var(--sidebar-width));
+    height: 100vh;
+    margin-left: var(--sidebar-width);  
+}
+
 /************************
     Menu Bar
 ************************/
