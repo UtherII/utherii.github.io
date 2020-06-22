@@ -318,12 +318,23 @@ function getSpecialImpl(impl) {
     if (op.length > 0) { impl.operators = op }
 
     //detect iterators
-    if (["Iterator","DoubleEndedIterator","FixedSizeIterator"].includes(bareTrait)){
-        impl.iterator = true;
+    if (["Iterator"].includes(bareTrait)){
+        let decl = item.nextElementSibling.querySelector("[id^=associatedtype\\.Item] code");
+        let type = document.createElement("span");
+        let afterEq = false;
+        for (node of decl.childNodes) {
+            if (afterEq){type.appendChild(node.cloneNode(true))}
+            let text = node.textContent.trim();
+            if (text.startsWith("=")){
+                type.appendChild(document.createTextNode(text.replace("=","")));
+                afterEq = true;
+            }
+        }
+        impl.iterator = type;
     }
 
     if (["From","TryFrom"].includes(bareTrait) && !impl.blanket){
-        impl.convert =true;
+        impl.convert = true;
     }
 }
 

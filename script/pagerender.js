@@ -375,7 +375,7 @@ function makeSpecialImpl() {
         if (impl.iterator){ 
             let li=document.createElement("li");
             li.appendChild(document.createTextNode("Iterator of "));
-            li.appendChild(document.createTextNode(""));
+            li.appendChild(impl.iterator);
             specImplList.appendChild(li);    
         }
     }
