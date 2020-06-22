@@ -6,6 +6,9 @@ html {
 body {
     margin: 0px;
 }
+a:link {
+    text-decoration: none;
+}
 #infobox {
     display: none;
     z-index: 200;
