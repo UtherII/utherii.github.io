@@ -45,42 +45,42 @@
             <hr>
             <div id="cratetree" class="cratetree">
                 <ul>
-                    <li id="book_root" data-path="book" class="can_fold l1">
+                    <li id="book_root" data-path="book" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/book.png" />
                         <a href="book/index.png" onclick="goToPage('book/index.html');return false">The Book</a>
                     </li>
-                    <li id="keywords_root" data-path="std" class="can_fold l1">
+                    <li id="keywords_root" data-path="std" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/primitive.png" />
                         <a href="std/index.html" onclick="goToPage('std/index.html');return false">Keywords</a>
                     </li>
-                    <li id="primitives_root" data-path="std" class="can_fold l1">
+                    <li id="primitives_root" data-path="std" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/primitive.png" />
                         <a href="std/index.html" onclick="goToPage('std/index.html');return false">Primitives</a>
                     </li>
-                    <li id="alloc_root"  data-path="alloc" class="can_fold l1">
+                    <li id="alloc_root"  data-path="alloc" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
                         <a href="alloc/index.html" onclick="goToPage('alloc/index.html');return false">alloc</a>
                     </li>
-                    <li id="core_root" data-path="core" class="can_fold l1">
+                    <li id="core_root" data-path="core" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
                         <a href="core/index.html" onclick="goToPage('core/index.html');return false">core</a>
                     </li>
-                    <li id="proc_macro_root" data-path="proc_macro" class="can_fold l1">
+                    <li id="proc_macro_root" data-path="proc_macro" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
                         <a href="proc_macro/index.html" onclick="goToPage('proc_macro/index.html');return false">proc_macro</a>
                     </li>
-                    <li id="std_root" data-path="std" class="can_fold l1">
+                    <li id="std_root" data-path="std" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
                         <a href="std/index.html" onclick="goToPage('std/index.html');return false">std</a>
                     </li>
-                    <li id="test_root" data-path="test" class="can_fold l1">
+                    <li id="test_root" data-path="test" data-level="1" class="can_fold l1">
                         <img src="img/arrow/fold.png" />
                         <img src="img/item/crate.png" />
                         <a href="test/index.html" onclick="goToPage('test/index.html');return false">test</a>
@@ -107,13 +107,13 @@
 
                 <!-- The menu bar-->
                 <nav class="menubar">
-                    <a href="#description">
+                    <a href="#description" onclick="goToPage('#description')">
                         <div class="text" id="menu_description">Description</div>
                     </a>
-                    <a href="#summary">
+                    <a href="#summary" onclick="goToPage('#summary')">
                         <div class="text" id="menu_summary">Summary</div>
                     </a>
-                    <a href="#methods">
+                    <a href="#methods" onclick="goToPage('#methods')">
                         <div class="text" id="menu_methods">Methods</div>
                     </a>
                     <div class="text empty"></div>

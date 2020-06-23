@@ -56,10 +56,8 @@ async function loadNode(elt){
         let ul = document.createElement("ul");
 
         var level=1;
-        for (cls of elt.classList){
-            if(cls.startsWith("l")){
-                level=parseInt(cls.substring(1),10)+1;
-            }
+        if (elt.getAttribute("data-level")){
+            level = parseInt(elt.getAttribute("data-level")) + 1;
         }
 
         var types =[];
@@ -73,6 +71,7 @@ async function loadNode(elt){
             for (item of items[item_type]){
                 let li = document.createElement("li");
                 li.className="stick l"+ level;
+                li.setAttribute("data-level",level)
                 li.setAttribute("data-path",path+"/"+item[0])
                 let img1 = document.createElement("img");
                 if (map.expand){
