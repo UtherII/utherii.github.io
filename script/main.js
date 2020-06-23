@@ -138,7 +138,7 @@ async function init(){
     }
 
     // load the page
-    goToPage(docPage, false);
+    await goToPage(docPage, false);
 
     // init history handling
     history.replaceState({url: docPage, scroll: 0},"");

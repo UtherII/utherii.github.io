@@ -1,6 +1,4 @@
 html {
-	font: 16px/1.4 "Source Serif Pro", serif;
-	font-feature-settings: "kern", "liga";    color: var(--fg);
     background-color: var(--bg);
 }
 body {
