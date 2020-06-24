@@ -2,14 +2,18 @@ const img_fold = "img/arrow/fold.png";
 const img_open = "img/arrow/open.png";
 const img_empty = "img/arrow/empty.png";
 
+//********************************************
 // Set the sidebar ready for the current page
+//********************************************
 async function sidebarCurrent(url){
-    let path_elt = url.split("/");
+    let path_elt = url.replace(/#.*/,"").split("/");
     let path = ""
     var elt;
     for (var i=0; i+1<path_elt.length; i++){
+        // build the path (part 1)
         let dir = path_elt[i];
         path += dir;
+        // get the tree item matching the current page.
         if (i==0 && path=="std") {
             if (url.includes("/keyword.")){
                 elt = document.getElementById("keywords_root")
@@ -24,14 +28,17 @@ async function sidebarCurrent(url){
         else {
             elt = document.querySelector("li[data-path='"+path+"']")
         }
+        // unfold the item
         if (elt.classList.contains("can_fold")){
             elt.classList.add("open");
             elt.firstElementChild.src=img_open;
         }
+        // load item elements
         let next = elt.nextElementSibling
         if (next && next.tagName!="UL"){
             await loadNode(elt);
         }
+        // build the path(part 2)
         path += "/";
     }
     let last=path_elt[path_elt.length-1];
@@ -39,11 +46,27 @@ async function sidebarCurrent(url){
         path += last.replace(/.*\.(.+?)\.html/,"$1");
         elt = document.querySelector("li[data-path='"+path+"']")
     }
+    
+    //highlight the item
     old_elt = document.querySelector(".selected");
     if (old_elt) {old_elt.classList.remove("selected")}
     elt.classList.add("selected");
+    
+    //scroll the selected item into view
+    if (!elt.classList.contains("can_fold")){
+        elt = elt.parentElement.previousSibling; 
+    }
+    let tree = document.getElementById("cratetree");
+    tree.style.setProperty("--stick","unset");
+    let eltTreeOffset = globalOffsetTop(elt) - globalOffsetTop(tree);
+    tree.style.setProperty("--stick","sticky");
+    let level = parseInt(elt.getAttribute("data-level")) - 1;
+    tree.scrollTop = eltTreeOffset - level * elt.offsetHeight;
 }
 
+//********************************************
+// Load and insert on the crate tree the sub-items of a element
+//********************************************
 async function loadNode(elt){
     let path = elt.getAttribute("data-path");
     if (path){
@@ -57,7 +80,7 @@ async function loadNode(elt){
 
         var level=1;
         if (elt.getAttribute("data-level")){
-            level = parseInt(elt.getAttribute("data-level")) + 1;
+            level = parseInt(elt.getAttribute("data-level")) + 1; 
         }
 
         var types =[];
@@ -101,7 +124,9 @@ async function loadNode(elt){
     }
 }
 
+//********************************************
 // Support unfolding in the sidebar 
+//********************************************
 function setUnfoldSidebar(elt = null) {
     if (!elt){ 
         elt = document.querySelector("#sidebar"); 
@@ -131,6 +156,10 @@ function liFolding(arrow, switch_state=false) {
         arrow.setAttribute("src", img_fold);
     }
 }
+
+//********************************************
+// Generic sort function 
+//********************************************
 function sort(array, fn){
     array.sort((a,b)=>{
         let x = fn(a);

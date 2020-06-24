@@ -41,6 +41,7 @@
 /* Crate content tree */
 .cratetree{
     --item-height: 1.20em;
+    --stick: sticky;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     flex: 1;
     scrollbar-width: thin;
@@ -78,7 +79,7 @@
     display: block;
 }
 .cratetree li {
-    position: sticky;
+    position: var(--stick);
     background-color: var(--sidebar-bg);
     height: var(--item-height);
     overflow: hidden;

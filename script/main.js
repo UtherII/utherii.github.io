@@ -155,7 +155,7 @@ async function init(){
 // Perform the full operation of opening a documentation page (typicaly when a link is clicked)
 //*******************************************
 async function goToPage(url, history = true){
-    //set page change in history (except for first page, since it is already there)
+    //set page the change in history (unless the history has already been handled)
     if (history) {
         historyInsert(url);
     }
@@ -163,8 +163,8 @@ async function goToPage(url, history = true){
     await loadDocPage(url);
     refreshContent();
     //update sidebar
-    sidebarCurrent(url.replace(/#.*/,""));
-    //déplacement à l'ancre si necessaire
+    sidebarCurrent(url);
+    //move to the anchor if necessary
     let domContent =  document.querySelector(".content")
     if (url.indexOf("#") > 0){
         let anchor = url.replace(/.*?#(.*)/,"$1");
@@ -241,8 +241,7 @@ function pathMerge(a, b){
 //*******************************************
 async function historyMove(event){
     url = event.state.url;
-    await loadDocPage(url);
-    refreshContent();
+    goToPage(url, false);
     document.querySelector(".content").scrollTop = event.state.scroll;
 }
 function historyInsert(url) {
