@@ -158,7 +158,7 @@ header {
 
 .content {
     padding: 7px;
-    overflow: scroll;
+    overflow: auto;
     flex: 1;
 }
 

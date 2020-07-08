@@ -1,8 +1,9 @@
 html {
-    background-color: var(--bg);
 }
 body {
     margin: 0px;
+    color: var(--fg);
+    background-color: var(--bg);
 }
 a:link {
     text-decoration: none;
