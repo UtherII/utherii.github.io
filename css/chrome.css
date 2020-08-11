@@ -28,8 +28,10 @@
 }
 .sidebar .logo {
     max-height: 64px;
-    filter: drop-shadow(0 0 5px #fff); 
-    filter:    
+    filter: drop-shadow(0px -1px 0px #ddd) 
+            drop-shadow(0px 1px 0px #ddd)
+            drop-shadow(-1px 0px 0px #ddd)
+            drop-shadow(1px 0px 0px #ddd); 
     padding-bottom: 6px;
 } 
 
