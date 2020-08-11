@@ -1,0 +1,18 @@
+- Manuals
+  - Learning Rust
+    - The Rust Programing Language
+    - Rust by Example
+    - Rustlings
+  - Specific
+    - Rustonomicon (unsafe book)
+    - Webassembly book
+    - Embedded book
+    - Command line book
+    - Edition guide
+  - Tools
+    - Cargo guide
+    - Rustdoc guide  
+    - Rustc guide
+  - Reference
+    - Language reference
+    - Compiler error index
