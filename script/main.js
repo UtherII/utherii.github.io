@@ -159,11 +159,12 @@ async function goToPage(url, history = true){
     if (history) {
         historyInsert(url);
     }
-    //load the page
-    await loadDocPage(url);
-    refreshContent();
-    //update sidebar
-    sidebarCurrent(url);
+    //load the page if it is a new one
+    if (!url.startsWith("#")){
+        await loadDocPage(url);
+        refreshContent();
+        sidebarCurrent(url);
+    }
     //move to the anchor if necessary
     let domContent =  document.querySelector(".content")
     if (url.indexOf("#") > 0){
