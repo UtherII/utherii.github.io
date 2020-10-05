@@ -107,13 +107,13 @@
 
                 <!-- The menu bar-->
                 <nav class="menubar">
-                    <a href="#description">
+                    <a href="#description" onclick="goToPage('#description')">
                         <div class="text" id="menu_description">Description</div>
                     </a>
-                    <a href="#summary">
+                    <a href="#summary" onclick="goToPage('#summary')">
                         <div class="text" id="menu_summary">Summary</div>
                     </a>
-                    <a href="#methods">
+                    <a href="#methods" onclick="goToPage('#methods')">
                         <div class="text" id="menu_methods">Methods</div>
                     </a>
                     <div class="text empty"></div>
@@ -143,7 +143,7 @@
                         </table>
                         <template id="item_row">
                             <tr class="item_row">
-                                <td class="icon"><img src="img/item/empty.png" /></td>
+                                <td class="icon"><img src="img/arrow/empty.png" /></td>
                                 <td class="shortname"><a href="#"></a></td>
                                 <td class="shortdesc"></td>
                             </tr>                      
@@ -209,7 +209,7 @@
                         <template id="fn_subrow">
                             <tr class="fn_subrow">
                                 <td class="folder"><img src="img/arrow/empty.png" /></td>
-                                <td class="icon"><img src="img/item/empty.png" style="display:none;" /></td>
+                                <td class="icon"><img src="img/arrow/empty.png" style="display:none;" /></td>
                                 <td class="fullimpl" colspan="4"></td>
                             </tr>                      
                         </template>                  

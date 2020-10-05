@@ -7,7 +7,7 @@ const moveMargin = 70;
 // Set the sidebar ready for the current page
 //********************************************
 async function sidebarCurrent(url){
-    let path_elt = url.split("/");
+    let path_elt = url.replace(/#.*/,"").split("/");
     let path = ""
     var elt;
     for (var i=0; i+1<path_elt.length; i++){
@@ -54,12 +54,15 @@ async function sidebarCurrent(url){
     elt.classList.add("selected");
     
     //scroll the selected item into view
+    if (!elt.classList.contains("can_fold")){
+        elt = elt.parentElement.previousSibling; 
+    }
     let tree = document.getElementById("cratetree");
-    let backupDisplay = elt.style.display;
-    elt.style.display="static";
-    let eltOffsetTop=elt.offsetTop;
-    elt.style.display=backupDisplay;
-    
+    tree.style.setProperty("--stick","unset");
+    let eltTreeOffset = globalOffsetTop(elt) - globalOffsetTop(tree);
+    tree.style.setProperty("--stick","sticky");
+    let level = parseInt(elt.getAttribute("data-level")) - 1;
+    tree.scrollTop = eltTreeOffset - level * elt.offsetHeight;
 }
 
 //********************************************
@@ -77,10 +80,8 @@ async function loadNode(elt){
         let ul = document.createElement("ul");
 
         var level=1;
-        for (cls of elt.classList){
-            if(cls.startsWith("l")){
-                level=parseInt(cls.substring(1),10)+1;
-            }
+        if (elt.getAttribute("data-level")){
+            level = parseInt(elt.getAttribute("data-level")) + 1; 
         }
 
         var types =[];
@@ -94,6 +95,7 @@ async function loadNode(elt){
             for (item of items[item_type]){
                 let li = document.createElement("li");
                 li.className="stick l"+ level;
+                li.setAttribute("data-level",level)
                 li.setAttribute("data-path",path+"/"+item[0])
                 let img1 = document.createElement("img");
                 if (map.expand){

@@ -28,8 +28,10 @@
 }
 .sidebar .logo {
     max-height: 64px;
-    filter: drop-shadow(0 0 5px #fff); 
-    filter:    
+    filter: drop-shadow(0px -1px 0px #ddd) 
+            drop-shadow(0px 1px 0px #ddd)
+            drop-shadow(-1px 0px 0px #ddd)
+            drop-shadow(1px 0px 0px #ddd); 
     padding-bottom: 6px;
 } 
 
@@ -41,6 +43,7 @@
 /* Crate content tree */
 .cratetree{
     --item-height: 1.20em;
+    --stick: sticky;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     flex: 1;
     scrollbar-width: thin;
@@ -78,7 +81,7 @@
     display: block;
 }
 .cratetree li {
-    position: sticky;
+    position: var(--stick);
     background-color: var(--sidebar-bg);
     height: var(--item-height);
     overflow: hidden;
@@ -157,7 +160,7 @@ header {
 
 .content {
     padding: 7px;
-    overflow: scroll;
+    overflow: auto;
     flex: 1;
 }
 

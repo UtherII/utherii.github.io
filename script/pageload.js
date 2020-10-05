@@ -465,5 +465,6 @@ const sectionsInfo={
     "foreign-impls": {fakeImpl: true, list:"foreignImpls"},
     "implementors": {fakeImpl: true, list: "implementors"},
     "synthetic-implementors": {fakeImpl: false, list: "implementors"},
-    "variants": {property:"variant", fakeImpl:false}
+    "variants": {property:"variant", fakeImpl:false},
+    "fields": {property:"field", fakeImpl:false}
 };
