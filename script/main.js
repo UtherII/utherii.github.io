@@ -111,7 +111,7 @@ const DocItems = {
 };
 let content;
 let config = {
-    GroupByImpl: "last",
+    GroupBy: "last",
     DisplayOperator: "last",
     DisplayIterator: "last",
     DisplayBlanket: "last",
@@ -149,6 +149,7 @@ async function init(){
     initFilterButtons();
     initInfobox();
     initSlider();
+    refreshContent();
 }
 
 //*******************************************
@@ -320,7 +321,7 @@ const methodFilters = [
     {storageKey:"DisplayAuto", buttonId:"btn_synthetic", implField:"synthetic", default: true}
 ];
 function initFilterButtons(){
-    setFilterButton ("btn_group_mode", "GroupByImpl", true, ["img/arrow/tree1.png","img/arrow/flat1.png"]);
+    setFilterSelect("select_groupby", "GroupBy")
     for (filter of methodFilters) {
         setFilterButton (filter.buttonId, filter.storageKey, filter.default);
     }
@@ -332,15 +333,12 @@ function updateFilterButtons(){
         button.style.display = count ? "inline-block" : "none";        
     }
 }
-function setFilterButton(buttonId, stateName, stateDefaut, iconSet){
+function setFilterButton(buttonId, stateName, stateDefaut){
     //Get the initial value
     let state;
     if (config[stateName]=="last"){
         let lsValue = localStorage.getItem(stateName);
-        if (lsValue == null) {
-            state = stateDefaut;
-        }
-        state = lsValue == "true" 
+        state = lsValue == null ? stateDefaut : lsValue == "true";
     }
     else{
         state = config[stateName] == "true";
@@ -349,14 +347,8 @@ function setFilterButton(buttonId, stateName, stateDefaut, iconSet){
     //Set the image
     let img = document.getElementById(buttonId);
     function updateIcon(){
-        if (iconSet){
-            img.style.border = "2px outset var(--table-header-bg)";
-            img.src = state ? iconSet[0] : iconSet[1];
-        }
-        else {
-            img.style.border = state ? "2px outset var(--table-header-bg)" : "2px inset var(--table-header-bg)";
-            img.style.opacity = state ? 1.0 : 0.5;
-        }  
+        img.style.border = state ? "2px outset var(--table-header-bg)" : "2px inset var(--table-header-bg)";
+        img.style.opacity = state ? 1.0 : 0.5;
     }
     updateIcon();
 
@@ -367,7 +359,26 @@ function setFilterButton(buttonId, stateName, stateDefaut, iconSet){
         updateIcon();
         refreshContent();
     }
+}
+function setFilterSelect(selectId, stateName){
+    //Get the initial value
+    let state;
+    if (config[stateName]=="last"){
+        let lsValue = localStorage.getItem(stateName);
+        state = lsValue == null ? "impl" : lsValue;  
+    }
+    else{
+        state = config[stateName];
+    }
 
+    //Set the list element
+    let select = document.getElementById(selectId);
+    select.value = state;    
+    select.onclick = function(evt){
+        state = evt.target.value;
+        localStorage.setItem(stateName, state);
+        refreshContent();
+    }
 }
 
 //*******************************************

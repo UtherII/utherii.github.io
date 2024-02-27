@@ -79,7 +79,7 @@ function refreshContent(){
         updateFilterButtons();
         
         // Display grouped by impl
-        if (localStorage.getItem("GroupByImpl")=="true"){
+        if (localStorage.getItem("GroupBy")=="impl"){
             for (impl of content.impls) {
                 //Fill the impl header
                 if (isHiddenImpl(impl)) continue;
