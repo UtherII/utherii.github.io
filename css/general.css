@@ -163,11 +163,11 @@ a:link {
 /****************************************
  * Format the method summary            *
  ****************************************/
- #method_table .impl_row{
+ #method_table .group_row{
     background-color: var(--quote-bg);
     font-weight: bold;
 }
-#method_table .impl_row .folder{
+#method_table .group_row .folder{
     filter: var(--icon-filter);
 }
 #method_table .fn_row .shortname{

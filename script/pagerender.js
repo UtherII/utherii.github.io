@@ -79,11 +79,11 @@ function refreshContent(){
         updateFilterButtons();
         
         // Display grouped by impl
-        if (localStorage.getItem("GroupBy")=="impl"){
+        if (localStorage.getItem("GroupBy")=="impl") {
             for (impl of content.impls) {
                 //Fill the impl header
                 if (isHiddenImpl(impl)) continue;
-                let implRow = document.querySelector("#impl_row").content.cloneNode(true);
+                let implRow = document.querySelector("#group_row").content.cloneNode(true);
                 implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
                 implRow.querySelector(".folder img").onclick=foldImpl;
                 table.appendChild(implRow);
@@ -101,7 +101,7 @@ function refreshContent(){
             }    
         }
         // Display grouped by function name
-        else {
+        else if (localStorage.getItem("GroupBy")=="name") {
             for (fnName in content.fns) {
                 let fnList = content.fns[fnName];
                 let count = 0;
@@ -148,7 +148,19 @@ function refreshContent(){
                     header.nextElementSibling.remove();
                 }
             }
-        }       
+        }
+        else if (localStorage.getItem("GroupBy")=="self") {
+            let implRow = document.querySelector("#group_row").content.cloneNode(true);
+            implRow.querySelector(".impldecl").appendChild(document.createTextNode("Not available yet"));
+            implRow.querySelector(".folder img").style.display = "none";
+            table.appendChild(implRow);
+        }
+        else if (localStorage.getItem("GroupBy")=="return") {
+            let implRow = document.querySelector("#group_row").content.cloneNode(true);
+            implRow.querySelector(".impldecl").appendChild(document.createTextNode("Not available yet"));
+            implRow.querySelector(".folder img").style.display = "none";
+            table.appendChild(implRow);
+        }
     }
     else {
         methodSummarySection.style.display = "none";

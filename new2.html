@@ -1,3 +1,4 @@
+<!doctype html>
 <html class="rust">
 
     <head>
@@ -189,16 +190,14 @@
                             <select id="select_groupby">
                                 <option value="name">Group by name</option>
                                 <option value="impl">Group by impl</option>
-                                <!-- TODO
                                 <option value="return">Group by return type</option>
                                 <option value="self">Group by self type</option>
-                                -->
                             </select> 
                         </h4>
                         <table id="method_table">
                         </table>
-                        <template id="impl_row">
-                            <tr class="impl_row">
+                        <template id="group_row">
+                            <tr class="group_row">
                                 <td class="folder"><img src="img/arrow/open.png" /></td>
                                 <td class="impldecl" colspan="5"></td>
                             </tr>
