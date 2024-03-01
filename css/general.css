@@ -216,12 +216,22 @@ a:link {
     background-color: whitesmoke;
     position: sticky;
     top: -0.5em;
+    height: 1em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 110%;
+    font-weight: bold;
 }
 .details .method {
     padding-top: 0.2em;
     width: 100%;
     position: sticky;
-    top: 1.3em;
+    top: 1.4em;
+    height: 1.2em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 } 
 .details .type {
     margin-left: 1.5em; 
@@ -233,6 +243,8 @@ a:link {
     margin-left: 1.5em; 
     display: block;
     width: 100%;
+    font-size: 110%;
+    font-weight: bold;
 }
 .details .docblock {
     margin-left: 3em;

@@ -166,26 +166,27 @@ function refreshContent(){
         methodSummarySection.style.display = "none";
     }
     
-    // Set method section
-    let methods = document.querySelector("#details");
-    for (impl of content.impls) {
-        //Fill the impl header
-        let groupHeader = document.createElement("div");
-        groupHeader.className = "impl"
-        groupHeader.appendChild(impl.domDeclaration.cloneNode(true));
-        methods.appendChild(groupHeader);
-        //Fill the methods
-        for (item of impl.fns) {
-            let itemHeader = document.createElement("div");
-            itemHeader.className = "method";
-            let itemCode = document.createElement("code");
-            itemHeader.appendChild(itemCode);
-            itemCode.appendChild(item.domName.cloneNode(true));
-            methods.appendChild(itemHeader);
-            methods.appendChild(item.domDescription.cloneNode(true));
-        }
-    }    
-
+    // Set detail section
+    if (content.impls) {
+        let methods = document.querySelector("#details");
+        for (impl of content.impls) {
+            //Fill the impl header
+            let groupHeader = document.createElement("div");
+            groupHeader.className = "impl"
+            groupHeader.appendChild(oneLine(impl.domDeclaration.cloneNode(true)));
+            methods.appendChild(groupHeader);
+            //Fill the methods
+            for (item of impl.fns) {
+                let itemHeader = document.createElement("div");
+                itemHeader.className = "method";
+                let itemCode = document.createElement("code");
+                itemHeader.appendChild(itemCode);
+                itemCode.appendChild(item.domName.cloneNode(true));
+                methods.appendChild(itemHeader);
+                methods.appendChild(item.domDescription.cloneNode(true));
+            }
+        }    
+    }
 }
 
 // fold/unfold function

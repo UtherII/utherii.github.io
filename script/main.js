@@ -306,7 +306,7 @@ function menubarItemColor(menu_item, item){
         ratio = 0;
     }
     // compute item_displayed_height / item_height
-    let opacity = ratio * 0.5 + 0.5;
+    let opacity = ratio * 0.6 + 0.4;
     menu_item.style.setProperty("opacity", opacity);
 }
 
