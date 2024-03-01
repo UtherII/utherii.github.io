@@ -32,7 +32,7 @@ async function loadDocPage(docPage){
 //*******************************************
 function loadRustdocContent(dom, content) {
     // Prepare regexp
-    let rxSelfType = /^.*\((.*?self.*?),.*$/;
+    let rxSelfType = /^.*\((.*?self.*?)(,|\)).*$/;
     let rxReturnType = /^.*->(.*?)( where .*)?$/;
 
     // Get item type

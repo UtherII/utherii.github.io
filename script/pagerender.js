@@ -150,16 +150,66 @@ function refreshContent(){
             }
         }
         else if (localStorage.getItem("GroupBy")=="self") {
-            let implRow = document.querySelector("#group_row").content.cloneNode(true);
-            implRow.querySelector(".impldecl").appendChild(document.createTextNode("Not available yet"));
-            implRow.querySelector(".folder img").style.display = "none";
-            table.appendChild(implRow);
+            let groups = {}
+            for (impl of content.impls) {
+                for (item of impl.fns){
+                    item.impl = impl;
+                    let groupName = item.selfType ? item.selfType : "No self";
+                    if (!groups[groupName]) { 
+                        groups[groupName] = []; 
+                    }
+                    groups[groupName].push(item);
+                }
+            }            
+            let groupArray = objToArray(groups, ["No self", "self", "&self", "&mut self"]);
+            for (group of groupArray){
+                //Fill the impl header
+                let groupRow = document.querySelector("#group_row").content.cloneNode(true);
+                groupRow.querySelector(".impldecl").appendChild(document.createTextNode(group.key));
+                groupRow.querySelector(".folder img").onclick=foldImpl;
+                table.appendChild(groupRow);
+                //Fill the methods
+                for (fn of group.value) {
+                    let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
+                    fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
+                    let a = fnRow.querySelector(".shortname a");
+                    a.appendChild(document.createTextNode(fn.name));
+                    fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
+                    table.appendChild(fnRow);
+                }
+            }    
         }
         else if (localStorage.getItem("GroupBy")=="return") {
-            let implRow = document.querySelector("#group_row").content.cloneNode(true);
-            implRow.querySelector(".impldecl").appendChild(document.createTextNode("Not available yet"));
-            implRow.querySelector(".folder img").style.display = "none";
-            table.appendChild(implRow);
+            let groups = {}
+            for (impl of content.impls) {
+                for (item of impl.fns){
+                    item.impl = impl;
+                    let groupName = item.returnType ? item.returnType : "()";
+                    if (!groups[groupName]) { 
+                        groups[groupName] = []; 
+                    }
+                    groups[groupName].push(item);
+                }
+            }            
+            let groupArray = objToArray(groups, ["()", "Self"]);
+            for (group of groupArray){
+                //Fill the impl header
+                let groupRow = document.querySelector("#group_row").content.cloneNode(true);
+                groupRow.querySelector(".impldecl").appendChild(document.createTextNode(group.key));
+                groupRow.querySelector(".folder img").onclick=foldImpl;
+                table.appendChild(groupRow);
+                //Fill the methods
+                for (fn of group.value) {
+                    let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
+                    fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
+                    let a = fnRow.querySelector(".shortname a");
+                    a.appendChild(document.createTextNode(fn.name));
+                    fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
+                    table.appendChild(fnRow);
+                }
+            } 
         }
     }
     else {
@@ -188,7 +238,21 @@ function refreshContent(){
         }    
     }
 }
-
+function objToArray(obj, priorityList){
+    let array = [];
+    for (key of priorityList){
+        let value = obj[key];
+        if (value !== undefined){
+            array.push({key: key, value: value});
+        }
+    }
+    for (key in obj) {
+        if (!priorityList.includes(key)){
+            array.push({key: key, value: obj[key]})
+        }
+    }
+    return array;
+}
 // fold/unfold function
 function foldImpl(evt){
     fold(evt, "fn_row");
