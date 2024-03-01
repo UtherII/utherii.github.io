@@ -264,7 +264,7 @@ function handleScrolling(){
 function updateOnScrolling(evt){
     menubarItemColor(document.querySelector("#menu_summary"), document.querySelector("#summary"));
     menubarItemColor(document.querySelector("#menu_description"), document.querySelector("#description"));
-    menubarItemColor(document.querySelector("#menu_methods"), document.querySelector("#methods"));
+    menubarItemColor(document.querySelector("#menu_details"), document.querySelector("#details"));
     //manage_stick();    
 }
 // Set the opacity of the mebu

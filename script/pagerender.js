@@ -3,7 +3,7 @@
 //*******************************************
 function refreshContent(){
     // Menubar
-    document.querySelector("#menu_methods").style.display=content.methods ? "block" :"none";
+    document.querySelector("#menu_details").style.display=content.fns ? "block" :"none";
     document.querySelector("#menu_summary").style.display=(content.items||content.impls) ? "block" :"none";
 
     // Set title
@@ -167,13 +167,25 @@ function refreshContent(){
     }
     
     // Set method section
-    let methods = document.querySelector("#methods");
-    if (content.methods) {
-        methods.style.display = "block";
-    }
-    else {
-        methods.style.display = "none";
-    }
+    let methods = document.querySelector("#details");
+    for (impl of content.impls) {
+        //Fill the impl header
+        let groupHeader = document.createElement("div");
+        groupHeader.className = "impl"
+        groupHeader.appendChild(impl.domDeclaration.cloneNode(true));
+        methods.appendChild(groupHeader);
+        //Fill the methods
+        for (item of impl.fns) {
+            let itemHeader = document.createElement("div");
+            itemHeader.className = "method";
+            let itemCode = document.createElement("code");
+            itemHeader.appendChild(itemCode);
+            itemCode.appendChild(item.domName.cloneNode(true));
+            methods.appendChild(itemHeader);
+            methods.appendChild(item.domDescription.cloneNode(true));
+        }
+    }    
+
 }
 
 // fold/unfold function

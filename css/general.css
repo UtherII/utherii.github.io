@@ -208,3 +208,65 @@ a:link {
 .example-wrap{
     display: inline-flex;
 }
+
+.details .impl {
+    padding-top: 0.2em;
+    min-height: 1.7em;   
+    border-bottom: 1px gray solid; 
+    background-color: whitesmoke;
+    position: sticky;
+    top: -0.5em;
+}
+.details .method {
+    padding-top: 0.2em;
+    width: 100%;
+    position: sticky;
+    top: 1.3em;
+} 
+.details .type {
+    margin-left: 1.5em; 
+
+}
+.details .method code {    
+    border-bottom: 1px gray solid;
+    background-color: whitesmoke;
+    margin-left: 1.5em; 
+    display: block;
+    width: 100%;
+}
+.details .docblock {
+    margin-left: 3em;
+}
+.details .stability {
+    margin-left: 4em;
+}
+.details .important-traits {
+    display: none;
+}
+.details .sticky {
+    position: sticky;
+    top: 0px;    
+    z-index: 200;
+}
+.details .stuck {
+    position: sticky;
+    top: 0px;
+    z-index: 200;
+    height: 1.7em;   
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;    
+}
+.details .stuck:hover {
+    height: unset;   
+    white-space: normal;
+    overflow: unset;
+    text-overflow: unset;    
+    z-index: 202;
+}
+.details .stuck br {
+    display: none;
+}
+.details .stuck:hover br {
+    display: unset;
+}
