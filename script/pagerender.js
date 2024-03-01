@@ -229,9 +229,7 @@ function refreshContent(){
             for (item of impl.fns) {
                 let itemHeader = document.createElement("div");
                 itemHeader.className = "method";
-                let itemCode = document.createElement("code");
-                itemHeader.appendChild(itemCode);
-                itemCode.appendChild(item.domName.cloneNode(true));
+                itemHeader.appendChild(oneLine(item.domName.cloneNode(true)));
                 methods.appendChild(itemHeader);
                 methods.appendChild(item.domDescription.cloneNode(true));
             }

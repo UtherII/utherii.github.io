@@ -138,7 +138,7 @@ function loadRustdocContent(dom, content) {
             // get the name of the method
             let nameItem = item.querySelector(".fnname");
             fn.name = nameItem.firstChild.textContent;
-            fn.domName= nameItem.cloneNode(true);
+            fn.domName= item.querySelector("code").cloneNode(true);
             // get release version if availible
             let domSince = item.querySelector("span.since");
             if (domSince) {
