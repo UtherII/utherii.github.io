@@ -158,7 +158,13 @@ async function init(){
 async function goToPage(url, history = true){
     //set page the change in history (unless the history has already been handled)
     if (history) {
-        historyInsert(url);
+        if (url.startsWith("#")) {
+            let docPage = location.search.replace("?item=","")
+            historyInsert(docPage + url);
+        }
+        else {
+            historyInsert(url);
+        }
     }
     //load the page if it is a new one
     if (!url.startsWith("#")){
@@ -229,7 +235,7 @@ function pathParent(path){
     //remove after the last slash
     return path.substring(0,path.lastIndexOf("/")+1);
 }
-//Merge  
+//Merge two path treating ".." on the second argument 
 function pathMerge(a, b){
     while (b.startsWith("../")){
         a = pathParent(a);
@@ -248,7 +254,7 @@ async function historyMove(event){
 }
 function historyInsert(url) {
     let eltContent = document.querySelector(".content");
-    let oldState = { url: history.state.url, scroll: eltContent.scrollTop };
+    let oldState = { url: window.location.href, scroll: eltContent.scrollTop };
     history.replaceState(oldState,"")
     let newState = { url, scroll: 0};
     history.pushState(newState, "", realPageName + "?item=" + encodeURI(url));

@@ -152,10 +152,10 @@ function loadRustdocContent(dom, content) {
             // get self an return type
             let fnCode = item.querySelector("code").textContent;
             fn.selfType = fnCode.match(rxSelfType)
-                ? fnCode.replace(rxSelfType, "$1")
+                ? fnCode.replace(rxSelfType, "$1").trim()
                 : "No self";
             fn.returnType = fnCode.match(rxReturnType)
-                ? fnCode.replace(rxReturnType, "$1")
+                ? fnCode.replace(rxReturnType, "$1").trim()
                 : "()";
             
             //From the <div> folowing the method header (if available)
@@ -181,6 +181,10 @@ function loadRustdocContent(dom, content) {
             if (section.list=="impls"){
                 if (!fns[fn.name]) {
                     fns[fn.name]=[];
+                    fn.hash=fn.name;
+                }
+                else {
+                    fn.hash = fn.name + "-" + fns[fn.name].length;
                 }
                 fns[fn.name].push(fn);
             }

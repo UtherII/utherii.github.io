@@ -92,6 +92,7 @@ function refreshContent(){
                     let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                     fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
                     let a = fnRow.querySelector(".shortname a");
+                    a.href = "#" + fn.hash;                    
                     a.appendChild(document.createTextNode(fn.name));
                     fnRow.querySelector(".shortimpl").style.display="none";
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
@@ -114,6 +115,7 @@ function refreshContent(){
                     if (count==1){
                         let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                         let a = fnRow.querySelector(".shortname a");
+                        a.href = "#" + fn.hash;
                         a.appendChild(document.createTextNode(fn.name));
                         fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
                         headerDesc = fnRow.querySelector(".shortdesc")
@@ -123,9 +125,10 @@ function refreshContent(){
                     }
                     // create a subrow for every function of the group
                     let fnSubRow = document.querySelector("#fn_subrow").content.cloneNode(true);
-                    //let a = fnSubRow.querySelector(".shortname a");
-                    //a.appendChild(document.createTextNode(fn.name));
-                    fnSubRow.querySelector(".fullimpl").appendChild(oneLine(fn.impl.domDeclaration.cloneNode(true)));                    
+                    let a = document.createElement("a");
+                    a.href = "#" + fn.hash;
+                    a.appendChild(oneLine(fn.impl.domDeclaration.cloneNode(true)));
+                    fnSubRow.querySelector(".fullimpl").appendChild(a);                    
                     if (headerDesc.textContent != fn.shortDescription) {
                         headerDesc.innerHTML="";
                         headerDesc.appendChild(document.createTextNode("…"));
@@ -170,10 +173,12 @@ function refreshContent(){
                 table.appendChild(groupRow);
                 //Fill the methods
                 for (fn of group.value) {
+                    if (isHiddenImpl(fn.impl)) continue;
                     let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                     fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
                     let a = fnRow.querySelector(".shortname a");
                     a.appendChild(document.createTextNode(fn.name));
+                    a.href = "#" + fn.hash;
                     fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
                     table.appendChild(fnRow);
@@ -201,9 +206,11 @@ function refreshContent(){
                 table.appendChild(groupRow);
                 //Fill the methods
                 for (fn of group.value) {
+                    if (isHiddenImpl(fn.impl)) continue;
                     let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                     fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
                     let a = fnRow.querySelector(".shortname a");
+                    a.href = "#" + fn.hash;
                     a.appendChild(document.createTextNode(fn.name));
                     fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
@@ -228,6 +235,7 @@ function refreshContent(){
             //Fill the methods
             for (item of impl.fns) {
                 let itemHeader = document.createElement("div");
+                itemHeader.id = item.hash;
                 itemHeader.className = "method";
                 itemHeader.appendChild(oneLine(item.domName.cloneNode(true)));
                 methods.appendChild(itemHeader);
