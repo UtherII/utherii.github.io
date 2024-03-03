@@ -11,7 +11,7 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - Add a new theme inspired by the "Rust" theme from mdBook
 ### Why: 
  - Because I like it
- - It is a light theme but still pretty different from the existing one. 
+ - It is a (mostly) light theme but still pretty different from the existing one. 
 ### Detail
  - I would like to name it Rusty instead of Rust in mdBook to avoid confusion with the language name. It may seem it is some kind of official theme.   
 ### Questions: 
@@ -19,15 +19,15 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - Since the number of themes increase, should we switch to a dropdown instead of many radio buttons to select the theme ? 
  - Do we need an authorization from mdbook author(s) ?
 ### What's in the prototype:
- - The prototype is based on the mdbook themes. It use the rust style by default
+ - The prototype is based on the mdbook theme system. It use the rust style by default
 
-## Searchbar to the sidebar
+## SearchbSar on the sidebar
 ### What
  - Move the searchbar, the gear button and the help button to the sidebar
 ### Why:
- - The search bar does not need to be that large
- - Always accessible
- - Move all the features with a whole documentation scope in the sidebar.
+ - Keep all the features with a whole documentation scope in the sidebar.
+ - Make them easier to reach, even without keyboard shortcut
+ - The search bar does not need to be large
 ### Question:
  - How to handle mobile mode
 ### Issues to solve:
@@ -44,7 +44,6 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - A tree seem natural too represent the crate/module hierarchy and the related items.
  - Allow to navigate quickly in the tree without charging a new the page every level.
  - The items that do not belong to the crate (Keyword, Primitives, ...) are clearly displayed outside of the crate at the top level.
- - Move all the features with a whole documentation scope in the sidebar.
 ### Details:
  - A first, the elements in the path to the currently displayed item are unfold, but you should be able to unfold the nodes manually. 
  - Stick elements at the top during scrolling

@@ -94,6 +94,9 @@ function refreshContent(){
                     let a = fnRow.querySelector(".shortname a");
                     a.href = "#" + fn.hash;                    
                     a.appendChild(document.createTextNode(fn.name));
+                    let fullname = fnRow.querySelector(".fullname");
+                    fullname.appendChild(fn.domDeclaration).cloneNode(true);
+                    setPopup(a,fullname)
                     fnRow.querySelector(".shortimpl").style.display="none";
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
                     table.appendChild(fnRow);
@@ -117,8 +120,15 @@ function refreshContent(){
                         let a = fnRow.querySelector(".shortname a");
                         a.href = "#" + fn.hash;
                         a.appendChild(document.createTextNode(fn.name));
-                        fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
-                        headerDesc = fnRow.querySelector(".shortdesc")
+                        let fullname = fnRow.querySelector(".fullname");
+                        fullname.appendChild(fn.domDeclaration).cloneNode(true);
+                        setPopup(a,fullname)
+                        let shortImpl = fnRow.querySelector(".shortimpl");
+                        shortImpl.appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                        let fullimp = fnRow.querySelector(".fullimpl");
+                        fullimp.appendChild(fn.impl.domDeclaration.cloneNode(true));
+                        setPopup(shortImpl,fullimp);
+                            headerDesc = fnRow.querySelector(".shortdesc")
                         headerDesc.appendChild(document.createTextNode(fn.shortDescription));
                         table.appendChild(fnRow); 
                         header = table.lastElementChild;   
@@ -179,7 +189,15 @@ function refreshContent(){
                     let a = fnRow.querySelector(".shortname a");
                     a.appendChild(document.createTextNode(fn.name));
                     a.href = "#" + fn.hash;
-                    fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    let fullname = fnRow.querySelector(".fullname");
+                    fullname.appendChild(fn.domDeclaration).cloneNode(true);
+                    setPopup(a,fullname)
+                    let shortImpl = fnRow.querySelector(".shortimpl");
+                    shortImpl.appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    let fullimp = fnRow.querySelector(".fullimpl");
+                    fullimp.appendChild(fn.impl.domDeclaration.cloneNode(true));
+                    setPopup(shortImpl,fullimp);
+
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
                     table.appendChild(fnRow);
                 }
@@ -212,7 +230,14 @@ function refreshContent(){
                     let a = fnRow.querySelector(".shortname a");
                     a.href = "#" + fn.hash;
                     a.appendChild(document.createTextNode(fn.name));
-                    fnRow.querySelector(".shortimpl").appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    let fullname = fnRow.querySelector(".fullname");
+                    fullname.appendChild(fn.domDeclaration).cloneNode(true);
+                    setPopup(a,fullname)
+                    let shortImpl = fnRow.querySelector(".shortimpl");
+                    shortImpl.appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    let fullimp = fnRow.querySelector(".fullimpl");
+                    fullimp.appendChild(fn.impl.domDeclaration.cloneNode(true));
+                    setPopup(shortImpl,fullimp);
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
                     table.appendChild(fnRow);
                 }

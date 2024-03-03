@@ -1,3 +1,10 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "cSpell.words": [
+        "mdbook",
+        "rustdoc",
+        "sandboxed",
+        "searchbar",
+        "stdlib"
+    ]
 }
