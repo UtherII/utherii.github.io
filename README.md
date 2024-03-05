@@ -17,11 +17,12 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ### Questions: 
  - Is there a limit to the number of themes we want to support ?
  - Since the number of themes increase, should we use to a dropdown instead of many radio buttons to select the theme ? 
+ - Should we support other themes from mdbook too ? They seem less interesting to me since there are already two dark themes.
  - Do we need an authorization from mdbook author(s) ?
 ### What's in the prototype:
- - The prototype is based on the mdbook theme system. It use the rust style by default
+ - The prototype support all themes from mdbook. The Rust theme is used by default.
 
-## SearchbSar on the sidebar
+## Searchbar on the sidebar
 ### What:
  - Move the searchbar, the gear button and the help button to the sidebar
 ### Why:
@@ -48,7 +49,7 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - A first, the elements in the path to the currently displayed item are unfold, but you should be able to unfold the nodes manually. 
  - Stick elements at the top when scrolling.
 ### Questions:
- - Does we include the implemented items in the tree too (as the current doc do), since it would be redundant with the summary (see below)
+ - Does we include the implemented items in the tree too (as the current doc do), since it would be redundant with the summary (see `Summary: Table`)
  - Do we preload the whole tree. 
  - Witch icons set use for the tree elements? The icon with initials where supposed to be placeholders but they seem to work pretty well. I'm open to suggestions.
 ### What's in the prototype:
@@ -88,32 +89,19 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ### What's in the prototype:
  - Mostly working as intended except for the Source section that is not implemented. 
 
-## Summary : ImplementationSpecial (and normal) implementations
-### What:
- - On items that can get an implementation, define a Summary section that  the description that would include :
-   -  
-### Why: 
- - It is especially useful to know that some traits (Send, Copy, Iterators, PartialEq, Add, ...) are implemented on a type since it has a important impact on what you can do with those types.
- - Paradoxically you often don't need the details of the functions a trait bring to the type, because you don't use them directly (From, Add, PartialEq, ...), you already know them (Iterator), or for markers trait. 
-### Questions:
-  - Witch implementation should be considered special? Current ideas :
-    - Trait related to operators (PatialEq, Ord, Index, Add, ...)
-    - Iterator (maybe IntoIterator)
-    - Copy
-    - Send / Sync
-### What's in the prototype:
- - The prototype inform about special implementation about operators and iterators
- - The prototype currently don't list regular implementations.
-
 ## Summary : Special (and normal) implementations
- - Display informations about special behavior caused by special Trait implementation 
- - Display a simplified list (see below) of all the regular traits implementation.
+ - Display informations about special behavior caused by special Trait implementation at the top of the summary. For example :
+   - Operators ==, !=, [], <, <=, >, >=  available for Vec<…>
+   - Can be iterated providing `&'a T` items (IntoIterator<sup>🛈</sup))
+   - Automatically copied (Copy)
+   - Can be Sent to other thread (Send)
+ - Display a comma separated list of all the regular traits implementations with shortened notation(see `shortened definition`).
 ### Why: 
  - It is especially useful to know that some traits (Send, Copy, Iterators, PartialEq, Add, ...) are implemented on a type since it has a important impact on what you can do with those types.
  - Paradoxically you often don't need the details of the functions a trait bring to the type, because you don't use them directly (From, Add, PartialEq, ...), you already know them (Iterator), or for markers trait. 
 ### Questions:
   - Witch implementation should be considered special? Current ideas :
-    - Trait related to operators (PatialEq, Ord, Index, Add, ...)
+    - Trait related to operators (PartialEq, Ord, Index, Add, ...)
     - Iterator (maybe IntoIterator)
     - Copy
     - Send / Sync
@@ -121,16 +109,45 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - The prototype inform about special implementation about operators and iterators
  - The prototype currently don't list regular implementations.
 
-## Simplified types
+## Summary : Table
 ### What:
- - At some places item definitions are shortened. The generic parameters are elided with `<...>` and the where clause is not displayed. 
- - The modified definitions are followed with a <sup>🛈</sup> 
- - The full definition is available in a hover popup.
+ - Display a compact table listing all the functions, constants, variants, fields, ... that belong to the item or are implemented for it.
+ - Each sub-item is displayed with 3 or 4 columns :
+   - an icon indicating the kind of sub-item.
+   - only the name of the sub-item (full declaration on tooltip).
+   - if not grouped by impl, the origin(see detail) of the sub-item (full declaration on tooltip).
+   - the first sentence of the doc comment.
+ - Elements can be grouped by raw name, impl, return type or self type.
+ - Elements from special impl, blanket imp, or auto impl can be hidden.
+ ### Why
+  - Allows to get a quick overview of all the elements of the type.
+  - Remove most of the useless boilerplate.
+  - Grouping by name can be useful on types with a lot of overridden method or if you have a idea of the name of the function you are looking for.
+### Details
+  - When grouping by implementation, sub-item that don't come from implementation (variants, fields, provided/required methods,...) will be displayed in groups, named after their kind, that will be displayed before actual impl groups.
+  - When grouping by self or return type, sub-item that are not functions (variants, fields, constants,...) will be displayed in groups, named after their kind, that will be displayed before self/return type groups.
+  - The "origin" column of the sub-item contains :
+    - The simplified definition (see `shortened definition`) of the trait providing the item, if applicable .
+    - "<i>required</i>" or "<i>provided</i>" for functions defined inside a trait.
+    - "<i>from</i> T" if the method is accessible through and `Deref<Target = T>` implementation.
+### What's in the prototype:
+  - The feature is mostly working but only for functions
+  - Sometimes filtering does not work on page load
+
+## Shortened implementation
+### What:
+ - At some places implementations are shortened to display only the implemented trait (when the documented item is in the impl clause), or the implementing type prefixed by <i>for</i>(when the documented item is on the for clause): 
+ - The full trait definition is available in a hover popup.
 ### Why:
  - Many definitions are to complex to be displayed completely in a clean list.
+### Details:
+ - If the type in the hidden impl/for clause is not exactly the type being documented(like a reference to the type), there will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip.
+ - If there was a where clause, there will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip. 
+ - The generic parameters are elided with `<...>`, unless there are only one character generic parameters from the current item.
 ### Question
- - Should we use another marker than <sup>🛈</sup>
+ - Is there a better marker than <sup>🛈</sup>
 ### What's in the prototype:
- - Types are shortened in the implementation column in the summary (visible if you don't already group items by implementations) 
+ - Types are shortened in the "origin"" column in the summary (visible if you don't already group items by implementations) 
+ - Generic are always elided with <...> even if they are only one character generic parameters from the current item.
 
 
