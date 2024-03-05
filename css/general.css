@@ -216,7 +216,7 @@ a:link {
     padding-top: 0.2em;
     height: 25px;   
     border-bottom: 1px gray solid; 
-    background-color: whitesmoke;
+    background-color: color-mix(in srgb, var(--table-header-bg) 35%, var(--bg)) ;
     position: sticky;
     top: -10px;
     text-overflow: ellipsis;
@@ -241,7 +241,7 @@ a:link {
 }
 .details .method code {    
     border-bottom: 1px gray solid;
-    background-color: whitesmoke;
+    background-color: color-mix(in srgb, var(--table-header-bg) 35%, var(--bg));
     margin-left: 1.5em; 
     display: block;
     width: 100%;
