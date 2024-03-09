@@ -12,7 +12,7 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ### Why: 
  - Because I like it
  - It is a (mostly) light theme but still pretty different from the existing one. 
-### Detail:
+### Details:
  - I would like to name it Rusty instead of Rust in mdBook to avoid confusion with the language name. It may seem it is some kind of official theme.   
 ### Questions: 
  - Is there a limit to the number of themes we want to support ?
@@ -24,29 +24,30 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 
 ## Searchbar on the sidebar
 ### What:
- - Move the searchbar, the gear button and the help button to the sidebar
+ - Move the searchbar, the gear button and the help button to the sidebar.
 ### Why:
- - Make them easier to reach, even without keyboard shortcut
- - The search bar does not need to be large
- - Keep all the features with a whole general scope in the sidebar.
+ - Make them easier to reach, since most people don't learn keyboard shortcut.
+ - The search bar does not need to be so large.
+ - Keep all the features with a general scope in the sidebar.
 ### Question:
- - How to handle mobile mode
+ - How to handle mobile mode?
 ### Issues to solve:
- - The placeholder text should be shortened
- - The popups should be modified to not restrained in the sidebar   
+ - The placeholder text should be shortened.
+ - The popups should be modified to go across the sidebar slider.   
 ### What's in the prototype:
- - The prototype has a text field in the sidebar but it is absolutely not working
+ - The prototype has a text field in the sidebar but it is absolutely not working.
  - The prototype has only theme selection in the options and no help button .
 
 ## Tree in the sidebar
 ### What:
  - Introduce a tree view of the documentation entries in the sidebar
 ### Why:
- - A tree seem natural too represent the crate/module hierarchy and the related items.
+ - The sidebar content is currently disturbing. It is sometimes related to the current level, while it is sometimes related to the higher level.
+  - A tree seem natural to represent the crate/module hierarchy and the related items.
  - Allow to navigate quickly in the tree without charging a new the page every level.
  - The items that do not belong to the crate (Keyword, Primitives, ...) are clearly displayed outside of the crate at the top level.
 ### Details:
- - A first, the elements in the path to the currently displayed item are unfold, but you should be able to unfold the nodes manually. 
+ - At page load, the path to the currently displayed item is unfold, but you should be able to unfold the nodes manually. 
  - Stick elements at the top when scrolling.
 ### Questions:
  - Does we include the implemented items in the tree too (as the current doc do), since it would be redundant with the summary (see `Summary: Table`)
@@ -57,22 +58,23 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 
 ## Integrate other kind of documentations
 ### What:
- - Allow in the sidebar entries not directly related to a specific element in the code. It might be used to add documentation, like the "Rust Book" for std, a Guide for a framework, ...
+ - Allow in the sidebar entries not directly related to a specific element in the code. It might be used to add documentation, like the "Rust Book" for std, a guide for a framework, ...
  - When you click on the item on the sidebar, the documentation is opened at the right side as a regular documentation page.
  - Links in doc-comments to files related to theses items would open on the right side too, as if they had been selected from the sidebar.
+ - Searches would be able to return entries from the related documents, along with doc-commented items 
 ### Why:
  - For some crates the most interesting pieces of information are not directly in the Rustdoc. It would be interesting to directly access them from the sidebar as a regular item.
  - The documentation not directly related to code would really feel first party. 
 ### Details: 
- - An attribute in the crate would point to the document to integrate, for example `[!doc(mdbook = "../book", entry="The Book")]` exact syntax TBD.
+ - Attributes in the crate would define documents to integrate and it's name and location on the documentation tree, for example `[!doc(mdbook = "../book", entry="Learning/The Book")]`. Exact syntax TBD.
 ### Questions:
- - Should we open in the right side, in a new browser window or offer both options.
  - What kind of doc do we want to support ?
    - Markdown files seems obvious since there is already markdown support in rustdoc
    - Link to documentation page of websites might be opened in a iframe (maybe sandboxed ?) 
    - Handling mdBooks might be more complex, but it seems interesting since it a pretty common format to write guides in the Rust community. The Rust source already include multiple mdbook and some of them are referenced in the stdlib doc-comments. 
+ - Should we fully integrate, open in a new browser window or offer both options.
 ### What's in the prototype:
- - The prototype has a "The Book" entry, but nothing happens when you click on it
+ - The prototype has a "The Book" entry, but nothing happens yet when you click on it
 
 ## Top-bar to scroll directly to the desired section
 ### What:
@@ -127,7 +129,7 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
   - When grouping by implementation, sub-item that don't come from implementation (variants, fields, provided/required methods,...) will be displayed in groups, named after their kind, that will be displayed before actual impl groups.
   - When grouping by self or return type, sub-item that are not functions (variants, fields, constants,...) will be displayed in groups, named after their kind, that will be displayed before self/return type groups.
   - The "origin" column of the sub-item contains :
-    - The simplified definition (see `shortened definition`) of the trait providing the item, if applicable .
+    - The shortened definition (see `shortened definition`) of the trait providing the item, if applicable .
     - "<i>required</i>" or "<i>provided</i>" for functions defined inside a trait.
     - "<i>from</i> T" if the method is accessible through and `Deref<Target = T>` implementation.
 ### What's in the prototype:
@@ -136,18 +138,21 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 
 ## Shortened implementation
 ### What:
- - At some places implementations are shortened to display only the implemented trait (when the documented item is in the impl clause), or the implementing type prefixed by <i>for</i>(when the documented item is on the for clause): 
+ - At some places implementations will be shortened : only the implemented trait appear since the implementer is the item being documented (or a related type).
  - The full trait definition is available in a hover popup.
-### Why:
- - Many definitions are to complex to be displayed completely in a clean list.
+ - There will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip if: 
+   - The type in impl clause is not exactly the type being documented (like a reference to the type)
+   - If there was a where clause. 
+ - The generic parameters are elided with `<...>`, unless there are only one character long.
+ ### Why:
+ - Full impl definitions are too complex to be displayed completely in a short list.
 ### Details:
- - If the type in the hidden impl/for clause is not exactly the type being documented(like a reference to the type), there will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip.
- - If there was a where clause, there will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip. 
- - The generic parameters are elided with `<...>`, unless there are only one character generic parameters from the current item.
+ - In a comma separated list, if different implementations are identical once shortened, they appear once, but all the full implementations appear in the hover popup, separated by an horizontal rule. 
 ### Question
  - Is there a better marker than <sup>🛈</sup>
 ### What's in the prototype:
  - Types are shortened in the "origin"" column in the summary (visible if you don't already group items by implementations) 
- - Generic are always elided with <...> even if they are only one character generic parameters from the current item.
+ - Generic are always elided with <...> even if they are only one character long.
 
+## Source view
 
