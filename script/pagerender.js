@@ -181,7 +181,9 @@ function refreshContent(){
         }
 
         for (group of groupArray){
-            //Sort by name
+            //Sort by name and do not display empty groups 
+            group.value = group.value.filter(fn => !isHiddenImpl(fn.impl));
+            if (group.value.length == 0) continue;
             if (localStorage.getItem("GroupBy") != "impl") {
                 group.value.sort((a, b) => a.name.localeCompare(b.name));
             }
@@ -189,8 +191,6 @@ function refreshContent(){
             for (n in names){
                 names[n] = {size: names[n].length, header: false} 
             } 
-            //Do not display empty groups
-            if (group.value.filter(fn => isHiddenImpl(fn.impl)).size == 0) continue;
             //Fill the impl header
             if (group.key){
                 let groupRow = document.querySelector("#group_row").content.cloneNode(true);
