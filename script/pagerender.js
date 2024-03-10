@@ -78,35 +78,23 @@ function refreshContent(){
         // Display the method filter buttons
         updateFilterButtons();
         
-        // Display grouped by impl
+        let groupArray = [];
         if (localStorage.getItem("GroupBy")=="impl") {
             for (impl of content.impls) {
-                //Fill the impl header
-                if (isHiddenImpl(impl)) continue;
-                let implRow = document.querySelector("#group_row").content.cloneNode(true);
-                implRow.querySelector(".impldecl").appendChild(oneLine(impl.domDeclaration));
-                implRow.querySelector(".folder img").onclick=foldImpl;
-                table.appendChild(implRow);
-                //Fill the methods
-                for (fn of impl.fns) {
-                    let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
-                    fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
-                    let a = fnRow.querySelector(".shortname a");
-                    a.href = "#" + fn.hash;                    
-                    a.appendChild(document.createTextNode(fn.name));
-                    let fullname = fnRow.querySelector(".fullname");
-                    fullname.appendChild(fn.domDeclaration).cloneNode(true);
-                    setPopup(a,fullname)
-                    fnRow.querySelector(".shortimpl").style.display="none";
-                    fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
-                    table.appendChild(fnRow);
-                }
-                table.appendChild(implRow);
-            }    
+                let domDeclaration = oneLine(impl.domDeclaration);
+                groupArray.push({
+                    key: domDeclaration.textContent, 
+                    domKey: domDeclaration, 
+                    value: impl.fns 
+                }); 
+            }
         }
-        // Display grouped by function name
-        else if (localStorage.getItem("GroupBy")=="name") {
-            for (fnName in content.fns) {
+        if (localStorage.getItem("GroupBy")=="name") {
+            let fns = []
+            content.impls.forEach(impl => fns.push(...impl.fns));
+            groupArray[0] = {key: "", value: fns};
+            /*for (fnName in content.fns) {
+                
                 let fnList = content.fns[fnName];
                 let count = 0;
                 let header;
@@ -115,7 +103,7 @@ function refreshContent(){
                     if (isHiddenImpl(fn.impl)) continue;
                     count++;
                     // create a normal row for the first function of the group 
-                    if (count==1){
+                    if (count == 1){
                         let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                         let a = fnRow.querySelector(".shortname a");
                         a.href = "#" + fn.hash;
@@ -161,9 +149,10 @@ function refreshContent(){
                     header.nextElementSibling.remove();
                 }
             }
+            */
         }
         else if (localStorage.getItem("GroupBy")=="self") {
-            let groups = {}
+            let groups = {};
             for (impl of content.impls) {
                 for (item of impl.fns){
                     item.impl = impl;
@@ -174,37 +163,10 @@ function refreshContent(){
                     groups[groupName].push(item);
                 }
             }            
-            let groupArray = objToArray(groups, ["No self", "self", "&self", "&mut self"]);
-            for (group of groupArray){
-                //Fill the impl header
-                let groupRow = document.querySelector("#group_row").content.cloneNode(true);
-                groupRow.querySelector(".impldecl").appendChild(document.createTextNode(group.key));
-                groupRow.querySelector(".folder img").onclick=foldImpl;
-                table.appendChild(groupRow);
-                //Fill the methods
-                for (fn of group.value) {
-                    if (isHiddenImpl(fn.impl)) continue;
-                    let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
-                    fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
-                    let a = fnRow.querySelector(".shortname a");
-                    a.appendChild(document.createTextNode(fn.name));
-                    a.href = "#" + fn.hash;
-                    let fullname = fnRow.querySelector(".fullname");
-                    fullname.appendChild(fn.domDeclaration).cloneNode(true);
-                    setPopup(a,fullname)
-                    let shortImpl = fnRow.querySelector(".shortimpl");
-                    shortImpl.appendChild(fn.impl.domShortDeclaration.cloneNode(true));
-                    let fullimp = fnRow.querySelector(".fullimpl");
-                    fullimp.appendChild(fn.impl.domDeclaration.cloneNode(true));
-                    setPopup(shortImpl,fullimp);
-
-                    fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
-                    table.appendChild(fnRow);
-                }
-            }    
+            groupArray = objToArray(groups, ["No self", "self", "&self", "&mut self"]);
         }
         else if (localStorage.getItem("GroupBy")=="return") {
-            let groups = {}
+            let groups = {};
             for (impl of content.impls) {
                 for (item of impl.fns){
                     item.impl = impl;
@@ -215,16 +177,68 @@ function refreshContent(){
                     groups[groupName].push(item);
                 }
             }            
-            let groupArray = objToArray(groups, ["()", "Self"]);
-            for (group of groupArray){
-                //Fill the impl header
+            groupArray = objToArray(groups, ["()", "Self"]);
+        }
+
+        for (group of groupArray){
+            //Sort by name
+            if (localStorage.getItem("GroupBy") != "impl") {
+                group.value.sort((a, b) => a.name.localeCompare(b.name));
+            }
+            let names = Object.groupBy(group.value, ({name})=>name)
+            for (n in names){
+                names[n] = {size: names[n].length, header: false} 
+            } 
+            //Do not display empty groups
+            if (group.value.filter(fn => isHiddenImpl(fn.impl)).size == 0) continue;
+            //Fill the impl header
+            if (group.key){
                 let groupRow = document.querySelector("#group_row").content.cloneNode(true);
-                groupRow.querySelector(".impldecl").appendChild(document.createTextNode(group.key));
+                groupRow.querySelector(".impldecl").appendChild(group.domKey 
+                    ? group.domKey.cloneNode(true)
+                    : document.createTextNode(group.key)
+                );
                 groupRow.querySelector(".folder img").onclick=foldImpl;
                 table.appendChild(groupRow);
-                //Fill the methods
-                for (fn of group.value) {
-                    if (isHiddenImpl(fn.impl)) continue;
+            }
+            //Fill the methods
+            for (fn of group.value) {
+                //create name group header
+                if (names[fn.name].size > 1 && !names[fn.name].header) {
+                    names[fn.name].header=true;
+                    let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
+                    let imgFolder = fnRow.querySelector(".folder img");
+                    imgFolder.src="img/arrow/fold.png";
+                    imgFolder.setAttribute("data-status","fold");
+                    imgFolder.onclick = foldMethod;
+                    let a = fnRow.querySelector(".shortname a");
+                    a.href = "javascript:void(0);";
+                    a.appendChild(document.createTextNode(fn.name));
+                    a.onclick = foldMethod;
+                    let fullname = fnRow.querySelector(".fullname");
+                    fullname.appendChild(fn.domDeclaration).cloneNode(true);
+                    let shortImpl = fnRow.querySelector(".shortimpl");
+                    shortImpl.appendChild(document.createTextNode("…"));
+                    headerDesc = fnRow.querySelector(".shortdesc")
+                    headerDesc.appendChild(document.createTextNode(fn.shortDescription));
+                    table.appendChild(fnRow); 
+                }
+                //create subrow
+                if (names[fn.name].size > 1){
+                    let fnSubRow = document.querySelector("#fn_subrow").content.cloneNode(true);
+                    let a = document.createElement("a");
+                    a.href = "#" + fn.hash;
+                    a.appendChild(oneLine(fn.impl.domDeclaration.cloneNode(true)));
+                    fnSubRow.querySelector(".fullimpl").appendChild(a);                    
+                    if (headerDesc.textContent != fn.shortDescription) {
+                        headerDesc.innerHTML="";
+                        headerDesc.appendChild(document.createTextNode("…"));
+                    }
+                    fnSubRow.firstElementChild.style.display="none";
+                    table.appendChild(fnSubRow);       
+                }
+                //create normal raw
+                else{
                     let fnRow = document.querySelector("#fn_row").content.cloneNode(true);
                     fnRow.querySelector(".icon img").src = DocItems["fn"].icon;
                     let a = fnRow.querySelector(".shortname a");
@@ -241,13 +255,13 @@ function refreshContent(){
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
                     table.appendChild(fnRow);
                 }
-            } 
-        }
+            }
+        } 
     }
     else {
         methodSummarySection.style.display = "none";
     }
-    
+
     // Set detail section
     if (content.impls) {
         let methods = document.querySelector("#details");

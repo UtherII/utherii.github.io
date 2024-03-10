@@ -224,16 +224,18 @@ a:link {
     white-space: nowrap;
     font-size: 120%;
     font-weight: bold;
+    z-index: 10;
 }
 .details .method {
     padding-top: 0.2em;
     width: 100%;
     position: sticky;
-    top: 17px;
+    top: 16px;
     height: 30px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    z-index: 9;
 } 
 .details .type {
     margin-left: 1.5em; 

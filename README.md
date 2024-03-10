@@ -1,8 +1,8 @@
 # Why that?
 I do not feel at ease with the way the rustdoc generated pages are currently structured. I fell that the docs are not easy enough to read and navigate into, especially on types with many methods with many different implementations.
 
-I had a few ideas on how to improve the situation, so I decided to experiment them on a tiny proof of concept, demonstrating what I expect from the generated rustdoc to look like. By tinkering it and from feedback from the internal forum, I came up with a huge list of ideas to improve the documentation I would like to discus. Some of them are demonstrated in the prototype.
-The prototype is available [there](https://utherii.github.io/new2.html), but keep in mind that it is absolutely not and will never be usable as a final product (Full javaScript, using old rustdoc data, no accessibility, no mobile mode, no source view, lot of bug, lot of missing features, ...). I just use it to test quickly new ideas. 
+I had a few ideas on how to improve the situation, so I decided to experiment them on a tiny proof of concept, demonstrating what I expect from the generated rustdoc to look like. By tinkering it and from feedback from the internal forum, I came up with a huge list of ideas to improve the documentation I would like to discus. Some of them are partially demonstrated in the prototype.
+The prototype is available [there](https://utherii.github.io/new2.html), but keep in mind that it is absolutely not complete and will never be usable as a final product (full JavaScript, using old rustdoc data, no accessibility, no mobile mode, no source view, lots of bugs, lots of missing features, ...). I just use it to test quickly new ideas and get a rough idea of the visual aspect. 
 
 # List of the different ideas I would like to be considered for rustdoc :
 
@@ -16,17 +16,17 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - I would like to name it Rusty instead of Rust in mdBook to avoid confusion with the language name. It may seem it is some kind of official theme.   
 ### Questions: 
  - Is there a limit to the number of themes we want to support ?
- - Since the number of themes increase, should we use to a dropdown instead of many radio buttons to select the theme ? 
+ - Since the number of themes increase, should we resort on a dropdown instead of many radio buttons to select the theme ? If we do, we might style every line of the dropdown with the matching theme. 
  - Should we support other themes from mdbook too ? They seem less interesting to me since there are already two dark themes.
  - Do we need an authorization from mdbook author(s) ?
 ### What's in the prototype:
- - The prototype support all themes from mdbook. The Rust theme is used by default.
+ - The prototype is based on the theme from mdbook instead of the ones from rustdoc because rustdoc was not using css variables when it was initiated. The Rust theme is used by default.
 
 ## Searchbar on the sidebar
 ### What:
- - Move the searchbar, the gear button and the help button to the sidebar.
+ - Move the searchbar, the gear button and the help button to a fixed area at the top of the sidebar.
 ### Why:
- - Make them easier to reach, since most people don't learn keyboard shortcut.
+ - Make them easier to reach from everywhere in the documentation, since most people don't learn keyboard shortcut.
  - The search bar does not need to be so large.
  - Keep all the features with a general scope in the sidebar.
 ### Question:
@@ -138,21 +138,22 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 
 ## Shortened implementation
 ### What:
- - At some places implementations will be shortened : only the implemented trait appear since the implementer is the item being documented (or a related type).
- - The full trait definition is available in a hover popup.
+ - At some places implementations will be shortened : 
+   - only the implemented trait appear, since the implementer is the item being documented (or a related type)
+   - only the implementer appear (prefixed by <i>for</i>), since the implemented trait is the item being documented.
+ - The full impl definition is available in a hover popup.
  - There will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip if: 
-   - The type in impl clause is not exactly the type being documented (like a reference to the type)
+   - The type in impl clause is not exactly the type being documented (like a reference to the type or a generic using the type).
    - If there was a where clause. 
  - The generic parameters are elided with `<...>`, unless there are only one character long.
  ### Why:
  - Full impl definitions are too complex to be displayed completely in a short list.
 ### Details:
- - In a comma separated list, if different implementations are identical once shortened, they appear once, but all the full implementations appear in the hover popup, separated by an horizontal rule. 
+ - In comma separated list, if some implementations are identical once shortened, they appear only once in the list, but the hover popup will display all the related implementations, separated by an horizontal rule. 
 ### Question
  - Is there a better marker than <sup>🛈</sup>
 ### What's in the prototype:
  - Types are shortened in the "origin"" column in the summary (visible if you don't already group items by implementations) 
  - Generic are always elided with <...> even if they are only one character long.
 
-## Source view
 
