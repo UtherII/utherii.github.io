@@ -36,37 +36,36 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - The popups should be modified to go across the sidebar slider.   
 ### What's in the prototype:
  - The prototype has a text field in the sidebar but it is absolutely not working.
- - The prototype has only theme selection in the options and no help button .
+ - The prototype has only theme selection in the options and no help button.
 
 ## Tree in the sidebar
 ### What:
  - Introduce a tree view of the documentation entries in the sidebar
 ### Why:
  - The sidebar content is currently disturbing. It is sometimes related to the current level, while it is sometimes related to the higher level.
-  - A tree seem natural to represent the crate/module hierarchy and the related items.
+ - A tree seem natural to represent the module hierarchy.
  - Allow to navigate quickly in the tree without charging a new the page every level.
- - The items that do not belong to the crate (Keyword, Primitives, ...) are clearly displayed outside of the crate at the top level.
+ - The items that do not belong to the crate like keyword, primitives or additional doc(see `Integrate other documentation`) are clearly displayed outside of the module tree at the top level.
 ### Details:
  - At page load, the path to the currently displayed item is unfold, but you should be able to unfold the nodes manually. 
- - Stick elements at the top when scrolling.
+ - The elements stick at the top when scrolling.
 ### Questions:
- - Does we include the implemented items in the tree too (as the current doc do), since it would be redundant with the summary (see `Summary: Table`)
- - Do we preload the whole tree. 
- - Witch icons set use for the tree elements? The icon with initials where supposed to be placeholders but they seem to work pretty well. I'm open to suggestions.
+ - Does we include the sub-items (variants, fields, implemented items, ...) in the tree too (as the current doc display them on sidebar), since it would be redundant with the summary (see `Summary: Table`)
+ - Do we preload the whole tree (may be heavy, especially if we include sub-items), or do we load the tree content on deman (need JavaScript). 
+ - Witch icons set use for the tree elements? In my prototype I used initials. They where supposed to be just placeholders but it seems to be clearer than the most of symbols I tried.
 ### What's in the prototype:
  - The prototype has a functional sidebar tree.
 
-## Integrate other kind of documentations
+## Integrate other documentations
 ### What:
- - Allow in the sidebar entries not directly related to a specific element in the code. It might be used to add documentation, like the "Rust Book" for std, a guide for a framework, ...
- - When you click on the item on the sidebar, the documentation is opened at the right side as a regular documentation page.
- - Links in doc-comments to files related to theses items would open on the right side too, as if they had been selected from the sidebar.
+ - Integrate documentations that are currently provided separately, like the "Rust Book" for std, a guide for a framework, ...
+ - Attributes in the crate would define documents to integrate and it's name and location on the documentation tree, for example `[!doc(mdbook="../book", entry="Learning/The Book")]`. Exact syntax TBD.
+ - The integrated documentation would appear on the sidebar. When you click on it, it is opened at the right panel as a regular documentation page.
+ - Links in doc-comments to files related to integrated items would open on the right side too, as if they had been selected from the sidebar.
  - Searches would be able to return entries from the related documents, along with doc-commented items 
 ### Why:
  - For some crates the most interesting pieces of information are not directly in the Rustdoc. It would be interesting to directly access them from the sidebar as a regular item.
  - The documentation not directly related to code would really feel first party. 
-### Details: 
- - Attributes in the crate would define documents to integrate and it's name and location on the documentation tree, for example `[!doc(mdbook = "../book", entry="Learning/The Book")]`. Exact syntax TBD.
 ### Questions:
  - What kind of doc do we want to support ?
    - Markdown files seems obvious since there is already markdown support in rustdoc
@@ -79,7 +78,7 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ## Top-bar to scroll directly to the desired section
 ### What:
  - Every item has a header with the most basic informations(mostly just it's name and path) and a top bar that point the different sections of the documentation : Description, Summary, Details and Source. The content of those section is detailed above
- - The items that can not be implemented (functions, constants, ...) will not get Summary and Detail sections. 
+ - The items with no sub-item (functions, constants, ...) will not get the Summary and Detail sections. 
 ### Why:
  - Move quickly to a section from anywhere in the page. It is particularly useful to :
    - go directly to the summary, if you are looking for a method and don't need the general description.
@@ -89,14 +88,14 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ### Questions:
  - Do we keep the sections consecutive (except maybe for Source) so we can scroll from one to the other, or do we display just one at time.  
 ### What's in the prototype:
- - Mostly working as intended except for the Source section that is not implemented. 
+ - Mostly working as intended, except for the Source section that is not implemented. 
 
 ## Summary : Special (and normal) implementations
- - Display informations about special behavior caused by special Trait implementation at the top of the summary. For example :
-   - Operators ==, !=, [], <, <=, >, >=  available for Vec<…>
+ - Display at the top of the summary section informations about behavior caused by special Trait implementation. For example :
+   - Operators ==, !=, [], <, <=, >, >=  available for Vec<T>>
    - Can be iterated providing `&'a T` items (IntoIterator<sup>🛈</sup))
    - Automatically copied (Copy)
-   - Can be Sent to other thread (Send)
+   - Can not be sent to other thread (!Send)
  - Display a comma separated list of all the regular traits implementations with shortened notation(see `shortened definition`).
 ### Why: 
  - It is especially useful to know that some traits (Send, Copy, Iterators, PartialEq, Add, ...) are implemented on a type since it has a important impact on what you can do with those types.
@@ -108,7 +107,7 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
     - Copy
     - Send / Sync
 ### What's in the prototype:
- - The prototype inform about special implementation about operators and iterators
+ - The prototype inform only about operators and iterators (not IntoIterator).
  - The prototype currently don't list regular implementations.
 
 ## Summary : Table

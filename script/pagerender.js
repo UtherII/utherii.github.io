@@ -192,6 +192,9 @@ function refreshContent(){
                     setPopup(a,fullname)
                     let shortImpl = fnRow.querySelector(".shortimpl");
                     shortImpl.appendChild(fn.impl.domShortDeclaration.cloneNode(true));
+                    if (localStorage.getItem("GroupBy") == "impl") {
+                        shortImpl.style.display = "none";
+                    }
                     let fullimp = fnRow.querySelector(".fullimpl");
                     fullimp.appendChild(fn.impl.domDeclaration.cloneNode(true));
                     setPopup(shortImpl,fullimp);
