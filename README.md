@@ -34,22 +34,22 @@
 ### What:
  - Introduce a tree view of the documentation entries in the sidebar
 ### Why:
- - The sidebar content is currently disturbing. It is sometimes related to the current level, while it is sometimes related to the higher level.
+ - The sidebar content is currently disturbing. It mix content from the current item and sometimes content from the higher level.
  - A tree seem natural to represent the module hierarchy.
  - Allow to navigate quickly in the tree without charging all intermediate level pages.
- - The items that do not belong to the crate like keyword, primitives or additional doc(see `Integrate other documentation`) are clearly displayed outside of the module tree at the top level.
 ### Details:
- - The currently displayed item is highlighted.
- - At page load, the path to the currently displayed item is unfold, but you should be able to unfold the nodes manually. 
- - The elements stick at the top when scrolling.
+ - The crate module is displayed at top level along with other items that does not actually belong the the crate hierarchy like keywords, primitives, related crates or additional documentation (see `Integrate additional documentation`).
+ - The path to the current item is unfold by default. 
+ - The current item is highlighted.
+ - While scrolling the tree, the last element of each level of the tree is stuck at the top.
 ### Questions:
  - Does we include the sub-items (variants, fields, implemented items, ...) in the tree too (as the current doc display them on sidebar), since it would be redundant with the summary (see `Summary: Table`)
- - Do we preload the whole tree (may be heavy, especially if we include sub-items), or do we load the tree content on deman (need JavaScript). 
- - Witch symbols should we use for the tree elements? In my prototype, for item below the module level, I used initials ('s' for struct, 'e' for enum, ...) with the distinct colors. They where supposed to be just placeholders but it is more clear than any alternative symbols I tried.
+ - Do we preload the whole tree (may be heavy, especially if we include sub-items), or do we load the tree content on demand (JavaScript required). 
+ - Can we find better icons ? In my prototype, for items below the module level, I used initials ('s' for struct, 'e' for enum, ...) with the same color code than the current documentation. They where supposed to be placeholders, but it is more clear than any alternative icon I tried.
 ### What's in the prototype:
  - The prototype has a functional sidebar tree, except for 'The book' entry.
 
-# Integrate other documentations
+# Integrate additional documentations
 ### What:
  - Integrate documentations that are currently provided separately, like the "Rust Book" for the rust official documentation, guides for framework documentation, ...
  - Attributes in the crate would define the path to documents to integrate and it's name and location on the documentation tree, for example `#![doc(mdbook="../book", entry="Learning/The Book")]`. Exact syntax TBD.
@@ -121,27 +121,33 @@
   - Remove most of the useless boilerplate.
   - Grouping by name can be useful on types with a lot of overridden method or if you have a idea of the name of the function you are looking for.
 ### Details
-  - When grouping by implementation, sub-item that don't come from implementation (variants, fields, provided/required methods,...) will be displayed in groups, named after their kind, that will be displayed before actual impl groups.
-  - When grouping by self or return type, sub-item that are not functions (variants, fields, constants,...) will be displayed in groups, named after their kind, that will be displayed before self/return type groups.
-  - The "origin" column of the sub-item contains :
-    - The shortened definition (see `shortened definition`) of the trait providing the item, if applicable .
-    - "<i>required</i>" or "<i>provided</i>" for functions defined inside a trait.
-    - "<i>from</i> T" if the method is accessible through and `Deref<Target = T>` implementation.
+ - When grouping by implementation, sub-item that don't come from implementation (variants, fields, provided/required methods,...) will be displayed in groups, named after their kind, that will be displayed before actual impl groups.
+ - When grouping by self type or return type, sub-items that are not functions (variants, fields, constants,...) will be displayed in groups, named after their kind, that will be displayed before the type groups.
+ - The "origin" column of the sub-item contains :
+   - The shortened definition (see `shortened definition`) of the trait providing the item, if applicable.
+   - "<i>required</i>" or "<i>provided</i>" for functions defined inside a trait.
+   - "<i>from</i> T" if the method is accessible through a `Deref<Target = T>` implementation.
+### Questions
+ - How should we trigger hiding :
+   - Using buttons at the top of the method summary.
+   - Using a `[hide/show in summary]` link at the end of the related special implementations.  
+ - Should we add a warning at the end of the table : "🛈 some items are hidden"
 ### What's in the prototype:
   - The feature is mostly working but only for functions
+  - Filtering is implemented with buttons at the top of the table.
   - Sometimes filtering does not work on page load
 
 # Shortened implementation
 ### What:
  - At some places implementations will be shortened : 
-   - only the implemented trait appear, since the implementer is the item being documented (or a related type)
-   - only the implementer appear (prefixed by <i>for</i>), since the implemented trait is the item being documented.
+   - only the implemented trait appear, when the implementer is the item being documented (or a related type)
+   - only the implementer appear (prefixed by <i>for</i>), when the implemented trait is the item being documented.
  - The full impl definition is available in a hover popup.
  - There will be a <sup>🛈</sup> mark at the end of the shortened implementation inviting to look for the full implementation in the tooltip if: 
    - The type in impl clause is not exactly the type being documented (like a reference to the type or a generic using the type).
    - If there was a where clause. 
  - The generic parameters are elided with `<...>`, unless there are only one character long.
- ### Why:
+### Why:
  - Full impl definitions are too complex to be displayed completely in a short list.
 ### Details:
  - In comma separated list, if some implementations are identical once shortened, they appear only once in the list, but the hover popup will display all the related implementations, separated by an horizontal rule. 
