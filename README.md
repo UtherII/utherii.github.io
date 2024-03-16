@@ -16,17 +16,17 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
  - I would like to name it Rusty instead of Rust in mdBook to avoid confusion with the language name. It may seem it is some kind of official theme.   
 ### Questions: 
  - Is there a limit to the number of themes we want to support ?
- - Since the number of themes increase, should we resort on a dropdown instead of many radio buttons to select the theme ? If we do, we might style every line of the dropdown with the matching theme. 
+ - Since the number of themes increase, should we resort on a dropdown instead of many radio buttons to select the theme ? 
  - Should we support other themes from mdbook too ? They seem less interesting to me since there are already two dark themes.
  - Do we need an authorization from mdbook author(s) ?
 ### What's in the prototype:
- - The prototype is based on the theme from mdbook instead of the ones from rustdoc because rustdoc was not using css variables when it was initiated. The Rust theme is used by default.
+ - The prototype support all theme from mdBook including "rust", since it is based on the themes system from mdbook. I did it that way because rustdoc was not using css variables when I initiated the prototype. The Rust theme is used by default.
 
 ## Searchbar on the sidebar
 ### What:
  - Move the searchbar, the gear button and the help button to a fixed area at the top of the sidebar.
 ### Why:
- - Make them easier to reach from everywhere in the documentation, since most people don't learn keyboard shortcut.
+ - Make them easier to reach from everywhere in the documentation, since most people don't remember keyboard shortcuts are available.
  - The search bar does not need to be so large.
  - Keep all the features with a general scope in the sidebar.
 ### Question:
@@ -44,24 +44,25 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ### Why:
  - The sidebar content is currently disturbing. It is sometimes related to the current level, while it is sometimes related to the higher level.
  - A tree seem natural to represent the module hierarchy.
- - Allow to navigate quickly in the tree without charging a new the page every level.
+ - Allow to navigate quickly in the tree without charging all intermediate level pages.
  - The items that do not belong to the crate like keyword, primitives or additional doc(see `Integrate other documentation`) are clearly displayed outside of the module tree at the top level.
 ### Details:
+ - The currently displayed item is highlighted.
  - At page load, the path to the currently displayed item is unfold, but you should be able to unfold the nodes manually. 
  - The elements stick at the top when scrolling.
 ### Questions:
  - Does we include the sub-items (variants, fields, implemented items, ...) in the tree too (as the current doc display them on sidebar), since it would be redundant with the summary (see `Summary: Table`)
  - Do we preload the whole tree (may be heavy, especially if we include sub-items), or do we load the tree content on deman (need JavaScript). 
- - Witch icons set use for the tree elements? In my prototype I used initials. They where supposed to be just placeholders but it seems to be clearer than the most of symbols I tried.
+ - Witch symbols should we use for the tree elements? In my prototype, for item below the module level, I used initials ('s' for struct, 'e' for enum, ...) with the distinct colors. They where supposed to be just placeholders but it is more clear than any alternative symbols I tried.
 ### What's in the prototype:
- - The prototype has a functional sidebar tree.
+ - The prototype has a functional sidebar tree, except for 'The book' entry.
 
 ## Integrate other documentations
 ### What:
- - Integrate documentations that are currently provided separately, like the "Rust Book" for std, a guide for a framework, ...
- - Attributes in the crate would define documents to integrate and it's name and location on the documentation tree, for example `[!doc(mdbook="../book", entry="Learning/The Book")]`. Exact syntax TBD.
+ - Integrate documentations that are currently provided separately, like the "Rust Book" for the rust official documentation, guides for framework documentation, ...
+ - Attributes in the crate would define the path to documents to integrate and it's name and location on the documentation tree, for example `#![doc(mdbook="../book", entry="Learning/The Book")]`. Exact syntax TBD.
  - The integrated documentation would appear on the sidebar. When you click on it, it is opened at the right panel as a regular documentation page.
- - Links in doc-comments to files related to integrated items would open on the right side too, as if they had been selected from the sidebar.
+ - Links in doc-comments to integrated items would open on the right side too, as if they had been selected from the sidebar.
  - Searches would be able to return entries from the related documents, along with doc-commented items 
 ### Why:
  - For some crates the most interesting pieces of information are not directly in the Rustdoc. It would be interesting to directly access them from the sidebar as a regular item.
@@ -69,18 +70,21 @@ The prototype is available [there](https://utherii.github.io/new2.html), but kee
 ### Questions:
  - What kind of doc do we want to support ?
    - Markdown files seems obvious since there is already markdown support in rustdoc
-   - Link to documentation page of websites might be opened in a iframe (maybe sandboxed ?) 
-   - Handling mdBooks might be more complex, but it seems interesting since it a pretty common format to write guides in the Rust community. The Rust source already include multiple mdbook and some of them are referenced in the stdlib doc-comments. 
- - Should we fully integrate, open in a new browser window or offer both options.
+   - Link to documentation page on websites would be convenient. It might be opened in a iframe (maybe sandboxed ?) 
+   - Handling mdBooks might be more complex, but it seems interesting since it is a pretty common format to write guides in the Rust community. The Rust source already include multiple mdbook and some of them are referenced in the stdlib doc-comments. 
+ - Should we :
+   - always integrate the doc? It feels nicer to me, but might not match perfectly how some existing documentations are organized
+   - just open in the doc in a new window? (easier)
+   - offer the choice with and `integrated = false` parameter on the attribute. If so, what should be the default ?
 ### What's in the prototype:
  - The prototype has a "The Book" entry, but nothing happens yet when you click on it
 
 ## Top-bar to scroll directly to the desired section
 ### What:
- - Every item has a header with the most basic informations(mostly just it's name and path) and a top bar that point the different sections of the documentation : Description, Summary, Details and Source. The content of those section is detailed above
- - The items with no sub-item (functions, constants, ...) will not get the Summary and Detail sections. 
+ - Every item has a small header that stay on top while scrolling. I contains the most basic informations about the currently selected item and a top bar that point the different sections of the documentation : Description, Summary, Details and Source. 
+ - The items with no sub-item (functions, constants, ...) will only get the Description and Source sections. 
 ### Why:
- - Move quickly to a section from anywhere in the page. It is particularly useful to :
+ - The bar allow to move quickly to a section from anywhere in the page. It is particularly useful to :
    - go directly to the summary, if you are looking for a method and don't need the general description.
    - go back instantly to the description or summary when browsing the details or the source.
 ### Details:

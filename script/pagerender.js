@@ -353,8 +353,9 @@ function makeSpecialImpl() {
     for (impl of content.impls) {
         if (impl.iterator){ 
             let li=document.createElement("li");
-            li.appendChild(document.createTextNode("Iterator of "));
+            li.appendChild(document.createTextNode("Can be iterated producing "));
             li.appendChild(impl.iterator);
+            li.appendChild(document.createTextNode(" items."));
             specImplList.appendChild(li);    
         }
     }
