@@ -36,6 +36,9 @@
 } 
 
 /* Search box */
+.sidebar #searchbox {
+    display: flex;
+}
 .sidebar #searchbox input {
     width: 85%;
 }

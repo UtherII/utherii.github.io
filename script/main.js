@@ -126,6 +126,7 @@ let config = {
 async function init(){
     // Init theme first to avoid visual glitch
     initTheme();
+    initHelp();
 
     // Init sidebar
     setUnfoldSidebar();
@@ -394,7 +395,7 @@ function setFilterSelect(selectId, stateName){
 let display_popup_timeout;
 let hide_popup_timeout;
 let infobox;
-function setPopup(elt, content) {           
+function setPopupHover(elt, content) {           
     elt.addEventListener("mouseenter", function (evt) {
         display_popup_timeout = setTimeout(function(){
             let x = window.scrollX + evt.target.getBoundingClientRect().left
@@ -460,12 +461,22 @@ function initTheme(){
 
     // Set the theme panel to pop up
     let button = document.querySelector("#theme_btn");
-    setPopup(button,panel);   
+    setPopupHover(button,panel);   
 }
 
 function setTheme(id){
     localStorage.setItem("Theme",id);
     document.documentElement.className=id;
+}
+
+//*****************************************
+// Help message
+//*****************************************
+function initHelp(){
+    // Set the help panel to pop up
+    let panel = document.querySelector("#help_message");
+    let button = document.querySelector("#help_btn");
+    setPopupHover(button,panel);   
 }
 
 //***************************************

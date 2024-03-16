@@ -32,6 +32,17 @@
             </ul>
         </div>
 
+        <!-- The help popup selection popup -->
+        <div id="help_message">
+            <p class="theme_selector">
+                This is a prototype to test a new layout<br>
+                for the Rustdoc tool. It is just a Proof of <br>
+                concept. It is not intended for real use.<br>
+                It is buggy, partially implemented, based on <br>
+                old documentation.<br>
+            </p>
+        </div>
+        
         <!-- The resizable sidebar -->
         <nav class="sidebar" id="sidebar">
             <div id="crateinfo" class="crateinfo">
@@ -41,8 +52,11 @@
             <hr>
             <div id="searchbox">
                 <input placeholder="Type 'S' to search, '?' for help" />
+                <a id="help_btn">
+                    <div class="button">❔</div>
+                </a>
                 <a id="theme_btn">
-                    <div class="button">🎨</div>
+                    <div class="button">⚙️</div>
                 </a>
             </div>
             <hr>

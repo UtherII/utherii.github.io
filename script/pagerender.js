@@ -189,7 +189,7 @@ function refreshContent(){
                     a.appendChild(document.createTextNode(fn.name));
                     let fullname = fnRow.querySelector(".fullname");
                     fullname.appendChild(fn.domDeclaration).cloneNode(true);
-                    setPopup(a,fullname)
+                    setPopupHover(a,fullname)
                     let shortImpl = fnRow.querySelector(".shortimpl");
                     shortImpl.appendChild(fn.impl.domShortDeclaration.cloneNode(true));
                     if (localStorage.getItem("GroupBy") == "impl") {
@@ -197,7 +197,7 @@ function refreshContent(){
                     }
                     let fullimp = fnRow.querySelector(".fullimpl");
                     fullimp.appendChild(fn.impl.domDeclaration.cloneNode(true));
-                    setPopup(shortImpl,fullimp);
+                    setPopupHover(shortImpl,fullimp);
                     fnRow.querySelector(".shortdesc").appendChild(document.createTextNode(fn.shortDescription));
                     table.appendChild(fnRow);
                 }
