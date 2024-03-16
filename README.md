@@ -11,8 +11,8 @@
  - Since the number of themes increase, should we resort on a dropdown instead of many radio buttons to select the theme ? 
  - Should we support other themes from mdbook too ? They seem less interesting to me since there are already two dark themes.
  - Do we need an authorization from mdbook author(s) ?
-### What's in the prototype:
- - The prototype support all theme from mdBook including "rust", since it is based on the themes system from mdbook. I did it that way because rustdoc was not using css variables when I initiated the prototype. The Rust theme is used by default.
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) support all theme from mdBook including "rust", since it is based on the themes system from mdbook. I did it that way because rustdoc was not using css variables when I initiated the prototype. The Rust theme is used by default.
 
 # Searchbar on the sidebar
 ### What:
@@ -26,9 +26,9 @@
 ### Issues to solve:
  - The placeholder text should be shortened.
  - The popups should be modified to go across the sidebar slider.   
-### What's in the prototype:
- - The prototype has a text field in the sidebar but it is absolutely not working.
- - The prototype has only theme selection in the options and no help button.
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) has a text field in the sidebar but it is absolutely not working.
+ - The [prototype](https://utherii.github.io/new2.html) has only theme selection in the options and no help button.
 
 # Tree in the sidebar
 ### What:
@@ -46,8 +46,8 @@
  - Does we include the sub-items (variants, fields, implemented items, ...) in the tree too (as the current doc display them on sidebar), since it would be redundant with the summary (see `Summary: Table`)
  - Do we preload the whole tree (may be heavy, especially if we include sub-items), or do we load the tree content on demand (JavaScript required). 
  - Can we find better icons ? In my prototype, for items below the module level, I used initials ('s' for struct, 'e' for enum, ...) with the same color code than the current documentation. They where supposed to be placeholders, but it is more clear than any alternative icon I tried.
-### What's in the prototype:
- - The prototype has a functional sidebar tree, except for 'The book' entry.
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) has a functional sidebar tree, except for 'The book' entry.
 
 # Integrate additional documentations
 ### What:
@@ -67,8 +67,8 @@
    - open in the right part? (it feels really nicer to me, but might not match perfectly how some existing documentations are organized)
    - just open in the doc in a new window? (easier)
    - offer the choice with and `integrated = false` parameter on the attribute. If so, what should be the default ?
-### What's in the prototype:
- - The prototype has a "The Book" entry, but nothing happens yet when you click on it
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) has a "The Book" entry, but nothing happens yet when you click on it
 
 # Top-bar to scroll directly to the desired section
 ### What:
@@ -82,8 +82,8 @@
  - The opacity of the button change to indicate the sections currently in the scroll view.
 ### Questions:
  - Do we keep the sections consecutive (except maybe for Source) so we can scroll from one to the other, or do we display just one at time.  
-### What's in the prototype:
- - Mostly working as intended, except for the Source section that is not implemented. 
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) has a mostly working top-bar, except for the Source section that is not implemented. 
 
 # Summary : Special (and normal) implementations
  - Display at the top of the summary section informations about behavior caused by special Trait implementation. For example :
@@ -101,9 +101,9 @@
     - Iterator (maybe IntoIterator)
     - Copy
     - Send / Sync
-### What's in the prototype:
- - The prototype inform only about operators and iterators (not IntoIterator).
- - The prototype currently don't list regular implementations.
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) inform only about operators and iterators (not IntoIterator).
+ - The [prototype](https://utherii.github.io/new2.html) currently don't list regular implementations.
 
 # Summary : Table
 ### What:
@@ -131,8 +131,8 @@
    - Using buttons at the top of the method summary.
    - Using a `[hide/show in summary]` link at the end of the related special implementations.  
  - Should we add a warning at the end of the table : "🛈 some items are hidden"
-### What's in the prototype:
-  - The feature is mostly working but only for functions
+### How might this look like:
+  - The feature is mostly working in the [prototype](https://utherii.github.io/new2.html) but only for functions.
   - Filtering is implemented with buttons at the top of the table.
   - Sometimes filtering does not work on page load
 
@@ -152,8 +152,8 @@
  - In comma separated list, if some implementations are identical once shortened, they appear only once in the list, but the hover popup will display all the related implementations, separated by an horizontal rule. 
 ### Question
  - Is there a better marker than <sup>🛈</sup>
-### What's in the prototype:
- - Types are shortened in the "origin"" column in the summary (visible if you don't already group items by implementations) 
+### How might this look like:
+ - The [prototype](https://utherii.github.io/new2.html) une shortened impls in the "origin" column of the summary (visible if you don't already group items by implementations) 
  - Generic are always elided with <...> even if they are only one character long.
 
 
