@@ -12,7 +12,7 @@
  - Should we support other themes from mdbook too ? They seem less interesting to me since there are already two dark themes.
  - Do we need an authorization from mdbook author(s) ?
 ### How might this look like:
- - The [prototype](https://utherii.github.io/new2.html) support all theme from mdBook including "rust", since it is based on the themes system from mdbook. I did it that way because rustdoc was not using css variables when I initiated the prototype. The Rust theme is used by default.
+ - The [prototype](https://utherii.github.io/new2.html) support all themes from mdBook including "rust", since it is based on the themes system from mdbook. I did it that way because rustdoc was not using css variables when I initiated the prototype. The Rust theme is used by default.
 
 # Searchbar on the sidebar
 ### What:
