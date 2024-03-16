@@ -5,7 +5,7 @@
  - Because I like it
  - It is a (mostly) light theme but still pretty different from the existing one. 
 ### Details:
- - I would like to name it Rusty instead of Rust in mdBook to avoid confusion with the language name. It may seem it is some kind of official theme.   
+ - I would like to name it Rusty instead of Rust in mdBook to avoid confusion with the language name. The Rust name make it look like some kind of official theme.   
 ### Questions: 
  - Is there a limit to the number of themes we want to support ?
  - Since the number of themes increase, should we resort on a dropdown instead of many radio buttons to select the theme ? 
@@ -38,7 +38,7 @@
  - A tree seem natural to represent the module hierarchy.
  - Allow to navigate quickly in the tree without charging all intermediate level pages.
 ### Details:
- - The crate module is displayed at top level along with other items that does not actually belong the the crate hierarchy like keywords, primitives, related crates or additional documentation (see `Integrate additional documentation`).
+ - The crate module is displayed at top level along with other items that do not actually belong the the crate hierarchy like keywords, primitives, related crates or additional documentation (see `Integrate additional documentation`).
  - The path to the current item is unfold by default. 
  - The current item is highlighted.
  - While scrolling the tree, the last element of each level of the tree is stuck at the top.
@@ -57,15 +57,14 @@
  - Links in doc-comments to integrated items would open on the right side too, as if they had been selected from the sidebar.
  - Searches would be able to return entries from the related documents, along with doc-commented items 
 ### Why:
- - For some crates the most interesting pieces of information are not directly in the Rustdoc. It would be interesting to directly access them from the sidebar as a regular item.
- - The documentation not directly related to code would really feel first party. 
+ - For some crates the most interesting pieces of information are not directly in the Rustdoc. It's useful to discover them have direct access to them from the rustdoc. 
 ### Questions:
  - What kind of doc do we want to support ?
    - Markdown files seems obvious since there is already markdown support in rustdoc
    - Link to documentation page on websites would be convenient. It might be opened in a iframe (maybe sandboxed ?) 
    - Handling mdBooks might be more complex, but it seems interesting since it is a pretty common format to write guides in the Rust community. The Rust source already include multiple mdbook and some of them are referenced in the stdlib doc-comments. 
  - Should we :
-   - always integrate the doc? It feels nicer to me, but might not match perfectly how some existing documentations are organized
+   - open in the right part? (it feels really nicer to me, but might not match perfectly how some existing documentations are organized)
    - just open in the doc in a new window? (easier)
    - offer the choice with and `integrated = false` parameter on the attribute. If so, what should be the default ?
 ### What's in the prototype:
