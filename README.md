@@ -28,7 +28,7 @@
  - The popups should be modified to go across the sidebar slider.   
 ### How might this look like:
  - The [prototype](https://utherii.github.io/new2.html) has a text field in the sidebar but it is absolutely not working.
- - The [prototype](https://utherii.github.io/new2.html) has only theme selection in the options and no help button.
+ - The [prototype](https://utherii.github.io/new2.html) help and options button are not real button but images with hover popup. I just did it that way to go faster, it is not intended to replace buttons.
 
 # Tree in the sidebar
 ### What:
